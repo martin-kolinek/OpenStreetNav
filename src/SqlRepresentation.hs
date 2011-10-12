@@ -97,9 +97,10 @@ allTableCols = map (\(x,y)->(toLowerS x, y)) [
 
 createTables :: IConnection a => a -> IO()
 createTables conn = do
-    mapM (\x -> run conn x []) [nodesTableCreate, waysTableCreate, edgesTable, relationsCreate,
-        relationContentsCreate, attributesCreate]
-    commit conn
+        mapM exec [nodesTableCreate, waysTableCreate, edgesTable, relationsCreate,
+            relationContentsCreate, attributesCreate]
+        commit conn
+    where exec x = run conn x []
 
 checkAllTablesPresent conn = do
     tables <- getTables conn
@@ -110,20 +111,21 @@ checkAllTableDescriptions conn = checkTableDescriptions conn allTables
 checkTableDescriptions :: IConnection a => a -> [String] -> IO Bool
 checkTableDescriptions _ [] = return True
 checkTableDescriptions conn (table:tables) = do
-    descs <- describeTable conn table
-    val <- checkTableDescriptions conn tables
-    let myCds = lookup table allTableCols
-    let thisVal = isJust myCds && checkTableDescription descs (fromJust myCds)
-    return (val && thisVal)
+    servColDescs <- describeTable conn table
+    rest <- checkTableDescriptions conn tables
+    let myColDescs = lookup table allTableCols
+    let thisVal = isJust myColDescs && checkTableDescription servColDescs (fromJust myColDescs)
+    return (rest && thisVal)
 
 checkTableDescription :: [(String, SqlColDesc)] -> [(String, SqlTypeId, Bool)] -> Bool
-checkTableDescription cds myCds = (length cds == length myCds) && all (checkColumns cds) myCds
+checkTableDescription servColDescs myColDescs = (length servColDescs == length myColDescs) &&
+                                                all (checkColumns servColDescs) myColDescs
 
 checkColumns :: [(String, SqlColDesc)] -> (String, SqlTypeId, Bool) -> Bool
-checkColumns cds myCd@(name, _, _) = let entry = lookup name cds
+checkColumns servColDescs myColDesc@(name, _, _) = let entry = lookup name servColDescs
     in
         isJust entry &&
-        checkColumn (name, fromJust entry) myCd
+        checkColumn (name, fromJust entry) myColDesc
 
 checkColumn :: (String, SqlColDesc) -> (String, SqlTypeId, Bool) -> Bool
 checkColumn (name1, cp) (name2, tp, null) =
@@ -131,7 +133,6 @@ checkColumn (name1, cp) (name2, tp, null) =
     name1 == name2 &&
     not (isJust (colNullable cp)) ||
     fromJust (colNullable cp) == null
-
 
 data InsertNodeStatement = InsertNodeStatement Statement Statement
 
@@ -146,9 +147,10 @@ execInsertNode :: InsertNodeStatement ->
                     Node ->
                     IO ()
 execInsertNode (InsertNodeStatement nodeSt attrSt) node = do
-    execute nodeSt [toSql $ nodeID node, toSql $ latitude node, toSql $ longitude node]
-    mapM (\(x,y) -> execute attrSt [toSql $ nodeID node, toSql NodeType, toSql x,toSql y]) (nodeTags node)
+    execute nodeSt [toSql id, toSql $ latitude node, toSql $ longitude node]
+    mapM (execAttrSt attrSt id NodeType) (nodeTags node)
     return ()
+    where id = nodeID node
 
 data InsertWayStatement = InsertWayStatement Statement Statement Statement
 
@@ -162,11 +164,15 @@ prepareInsertWay conn = do
     return (InsertWayStatement st1 st2 st3)
 
 execInsertWay :: InsertWayStatement -> Way -> IO ()
-execInsertWay (InsertWayStatement waySt wayNodeSt attrSt) way = do
-    execute waySt [toSql $ wayID way]
-    mapM (\(x, y) -> execute attrSt [toSql $ wayID way, toSql WayType, toSql x, toSql y]) $ wayTags way
-    mapM (\(x, y) -> execute wayNodeSt [toSql $ wayID way, toSql x, toSql y]) (pairUp $ nodes way)
+execInsertWay (InsertWayStatement waySt edgeSt attrSt) way = do
+    execute waySt [toSql id]
+    mapM (execAttrSt attrSt id WayType) (wayTags way)
+    mapM execEdgeSt (pairUp $ nodes way)
     return ()
+    where
+        id = wayID way
+        execEdgeSt (x, y) = execute edgeSt [toSql id, toSql x, toSql y]
+
 
 prepareAttrStatement conn = prepare conn $ "INSERT INTO " ++ attributesTable ++
         " (ObjectID, ObjectType, Key, Value) VALUES (?, ?, ?, ?)"
@@ -186,18 +192,20 @@ execInsertRelation :: InsertRelationStatement ->
                         Relation ->
                         IO ()
 execInsertRelation (InsertRelationStatement relSt contentsSt attrSt) rel = do
-    execute relSt [toSql $ relID rel]
-    mapM (\(x, y, z) -> execute contentsSt [toSql $ relID rel, toSql y, toSql z, toSql x])
-            (members rel)
-    mapM (\(x, y) -> execute attrSt [toSql $ relID rel, toSql RelationType, toSql x, toSql y])
-            (relTags rel)
+    execute relSt [toSql id]
+    mapM execAddContents (members rel)
+    mapM (execAttrSt attrSt id RelationType) (relTags rel)
     return ()
+    where
+        id = relID rel
+        execAddContents (objType, objID, role) =
+            execute contentsSt [toSql $ id, toSql role, toSql objID, toSql objType]
 
 pairUp :: [a] -> [(a,a)]
 pairUp [] = []
 pairUp x = zip x (tail x)
 
-
+execAttrSt attrSt id objType (x, y) = execute attrSt [toSql $ id, toSql objType, toSql x,toSql y]
 
 
 
