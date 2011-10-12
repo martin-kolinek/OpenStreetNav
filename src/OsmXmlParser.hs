@@ -1,17 +1,3 @@
------------------------------------------------------------------------------
---
--- Module      :  OsmXmlParser
--- Copyright   :
--- License     :  AllRightsReserved
---
--- Maintainer  :
--- Stability   :
--- Portability :
---
--- |
---
------------------------------------------------------------------------------
-
 module OsmXmlParser (
     parseRelation,
     parseNode,

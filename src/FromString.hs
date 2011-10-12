@@ -1,17 +1,3 @@
------------------------------------------------------------------------------
---
--- Module      :  FromString
--- Copyright   :
--- License     :  GPL Nothing
---
--- Maintainer  :
--- Stability   :
--- Portability :
---
--- |
---
------------------------------------------------------------------------------
-
 {-#LANGUAGE TypeSynonymInstances#-}
 
 module FromString (

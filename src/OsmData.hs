@@ -1,17 +1,3 @@
------------------------------------------------------------------------------
---
--- Module      :  OsmData
--- Copyright   :
--- License     :  AllRightsReserved
---
--- Maintainer  :
--- Stability   :
--- Portability :
---
--- |
---
------------------------------------------------------------------------------
-
 {-# LANGUAGE MultiParamTypeClasses, DeriveDataTypeable #-}
 
 module OsmData (

@@ -1,18 +1,3 @@
------------------------------------------------------------------------------
---
--- Module      :  SqlRepresentation
--- Copyright   :
--- License     :  AllRightsReserved
---
--- Maintainer  :
--- Stability   :
--- Portability :
---
--- |
---
------------------------------------------------------------------------------
-
-
 module SqlRepresentation (
     checkAllTableDescriptions,
     checkAllTablesPresent,
