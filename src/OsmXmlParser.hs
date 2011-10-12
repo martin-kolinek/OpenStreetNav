@@ -23,6 +23,7 @@ import Data.Maybe
 import Data.Typeable
 import qualified OsmData as D
 import Data.Int
+import FromString
 
 parseRelation :: (Node String String) -> Either String D.Relation
 parseRelation n = do
@@ -53,7 +54,9 @@ parseSubchildren :: String ->
                     Either String [b]
 parseSubchildren s f n = mapM f $ filter (\x -> eName x == s) (eChildren n)
 
-parseAttribs :: (Typeable a, Read a, Typeable b, Read b) => Node String String -> Either String [(a, b)]
+parseAttribs :: (Typeable a, Parseable a, Typeable b, Parseable b) =>
+                    Node String String ->
+                    Either String [(a, b)]
 parseAttribs = parseSubchildren "tag" getKV
     where getKV node = do
             key <- lookupA node "k"
@@ -70,7 +73,7 @@ parseRelationMembers = parseSubchildren "member" getMem
     where getMem node = do
             ref <- getRef node
             role <- lookupA node "role"
-            tp <- lookupAUsing readObjectType node "type"
+            tp <- lookupA node "type"
             return (tp, ref, role)
 
 
@@ -78,38 +81,32 @@ maybeToEither :: a -> Maybe b -> Either a b
 maybeToEither _ (Just r) = Right r
 maybeToEither l Nothing = Left l
 
-lookupA :: (Typeable a, Read a) => (Node String String) -> String -> Either String a
-lookupA = lookupAUsing tryRead
-
-lookupAUsing :: (Typeable a) =>
-                (String -> Maybe a) ->
-                (Node String String) ->
-                String ->
-                (Either String a)
-lookupAUsing readFunc node attr = do
+lookupA :: (Typeable a, Parseable a) =>
+            (Node String String) ->
+            String ->
+            (Either String a)
+lookupA node attr = do
         val <- maybeToEither notFoundMsg (lookup attr (eAttributes node))
-        convertAttrUsing readFunc attr val
+        convertAttr attr val
     where
         notFoundMsg = "Key " ++ attr ++ " not found in " ++ (eName node)
 
-convertAttrUsing :: Typeable a => (String -> Maybe a) -> String -> String -> Either String a
-convertAttrUsing readFunc attr val = maybeToEither (convertErrMsg retType) ret
+convertAttr :: (Typeable a, Parseable a) => String -> String -> Either String a
+convertAttr attr val = maybeToEither (convertErrMsg retType) ret
     where
-        ret = readFunc val
+        ret = parseString val
         retType = typeOf $ fromJust ret
         convertErrMsg tp = "Unable to convert attribute " ++ attr ++ "'s value " ++ val ++ " to desired type " ++ show tp
 
-tryRead :: Read a => String -> Maybe a
-tryRead str = let r = reads str
-              in
-                if null r
-                    then tryRead $ "\""++str++"\""
-                    else Just (fst . head $ r)
 
 
-readObjectType :: String -> Maybe D.ObjectType
-readObjectType "node" = Just D.NodeType
-readObjectType "way" = Just D.WayType
-readObjectType "relation" = Just D.RelationType
-readObjectType _ = Nothing
+
+
+
+
+
+
+
+
+
 
