@@ -97,15 +97,17 @@ allTableCols = map (\(x,y)->(toLowerS x, y)) [
 
 createTables :: IConnection a => a -> IO()
 createTables conn = do
-        mapM exec [nodesTableCreate, waysTableCreate, edgesTable, relationsCreate,
+        mapM exec [nodesTableCreate, waysTableCreate, edgesTableCreate, relationsCreate,
             relationContentsCreate, attributesCreate]
         commit conn
     where exec x = run conn x []
 
+checkAllTablesPresent :: IConnection a => a -> IO Bool
 checkAllTablesPresent conn = do
     tables <- getTables conn
     return (allTables == (sort . (map toLowerS)) tables)
 
+checkAllTableDescriptions :: IConnection a => a -> IO Bool
 checkAllTableDescriptions conn = checkTableDescriptions conn allTables
 
 checkTableDescriptions :: IConnection a => a -> [String] -> IO Bool
