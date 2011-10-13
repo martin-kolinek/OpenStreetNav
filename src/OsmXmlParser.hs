@@ -38,7 +38,10 @@ parseSubchildren :: String ->
                     (Node String String -> Either String b) ->
                     Node String String ->
                     Either String [b]
-parseSubchildren s f n = mapM f $ filter (\x -> eName x == s) (eChildren n)
+parseSubchildren s f n = mapM f $ filter (\x -> eName x == s) (filter elements $ eChildren n)
+    where
+        elements (Element _ _ _) = True
+        elements _ = False
 
 parseAttribs :: (Typeable a, Parseable a, Typeable b, Parseable b) =>
                     Node String String ->
