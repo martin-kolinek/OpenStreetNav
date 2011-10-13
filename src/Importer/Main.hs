@@ -47,18 +47,43 @@ importData osm sqlite = do
     conn <- connectSqlite3 sqlite
     checkDB conn
     text <- L.readFile osm
-    let (tree, err) = parse defaultParseOptions text :: (UNode String, Maybe XMLParseError)
-    --catchSql (importOsm tree)
-    case err of
+    let p = parse defaultParseOptions text :: (UNode String, Maybe XMLParseError)
+    result <- catchSql (importOsm p conn) (handleErr)
+    case result of
         Nothing -> do
             commit conn
-            hPutStrLn stderr "Success"
-        Just e -> do
+            putStrLn "Success"
+        Just msg -> do
             rollback conn
-            hPutStrLn stderr $ "Error parsing osm: " ++ show e
+            hPutStrLn stderr msg
     disconnect conn
+    where handleErr err = return $ Just $ "Database error: " ++ show err
 
-importOsm tree = return ()
+importOsm (tree, err) conn = do
+    nodeSt <- prepareInsertNode conn
+    waySt <- prepareInsertWay conn
+    relSt <- prepareInsertRelation conn
+    xmlRes <- foldM (foldFunc nodeSt waySt relSt) (Right ()) (eChildren tree)
+    case (err, xmlRes) of
+        (Nothing, Right _) -> return Nothing
+        (Nothing, Left msg) -> return $ Just $ "Wrong osm format: " ++ msg
+        (Just e, _) -> return $ Just $ "Error parsing osm: " ++ show e
+    where foldFunc nodeSt waySt relSt lastResult n = do
+                                newResult <- (importNode nodeSt waySt relSt n)
+                                return (lastResult >> newResult)
+
+importNode nodeSt waySt relSt n@(Element name _ _) = do
+    case name of
+        "node" -> eitherIO (execInsertNode nodeSt) (parseNode n)
+        "way" -> eitherIO (execInsertWay waySt) (parseWay n)
+        "relation" -> eitherIO (execInsertRelation relSt) (parseRelation n)
+        _ -> return (Right ())
+    where
+        eitherIO :: (a -> IO ()) -> (Either String a) -> IO (Either String ())
+        eitherIO f (Left s) = return (Left s)
+        eitherIO f (Right x) = f x >>= (return . Right)
+importNode nodeSt waySt relSt _ = return (Right ())
+
 
 checkDB conn = do
     tables <- getTables conn
@@ -66,7 +91,7 @@ checkDB conn = do
         then createTables conn
         else do
             result1 <- checkAllTablesPresent conn
-            result2 <- checkAllTableDescriptions conn
+            result2 <- trySelecting conn
             if result1  && result2
                 then return ()
                 else do
