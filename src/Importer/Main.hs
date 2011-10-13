@@ -67,7 +67,7 @@ checkDB conn = do
         else do
             result1 <- checkAllTablesPresent conn
             result2 <- checkAllTableDescriptions conn
-            if result1 && result2
+            if result1  && result2
                 then return ()
                 else do
                     hPutStrLn stderr "SqLite file already contains different schema"

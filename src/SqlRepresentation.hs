@@ -10,7 +10,8 @@ module SqlRepresentation (
     prepareInsertNode,
     execInsertRelation,
     execInsertWay,
-    execInsertNode
+    execInsertNode,
+    trySelecting
 ) where
 
 import Data.Int
@@ -49,6 +50,13 @@ relationContentsCreate = "CREATE TABLE " ++ relationContentsTable ++
 
 attributesCreate = "CREATE TABLE " ++ attributesTable ++
     " (ObjectID INTEGER NOT NULL, ObjectType INTEGER NOT NULL, Key TEXT, Value TEXT)"
+
+nodesTest = "SELECT ID, Latitude, Longitude FROM " ++ nodesTable ++ " LIMIT 1"
+waysTest = "SELECT ID FROM " ++ waysTable ++ " LIMIT 1"
+edgeTest = "SELECT WayID, StartNodeID, EndNodeID FROM " ++ edgesTable ++ " LIMIT 1"
+relationTest = "SELECT ID FROM " ++ relationsTable ++ " LIMIT 1"
+relContentsTest = "SELECT RelationID, Role, ObjectID, ObjectType FROM " ++ relationContentsTable ++ " LIMIT 1"
+attributesTest = "SELECT ObjectID, ObjectType, Key, Value FROM " ++ attributesTable ++ " LIMIT 1"
 
 toLowerS = map toLower
 
@@ -120,6 +128,16 @@ checkColumn (name1, cp) (name2, tp, null) =
     name1 == name2 &&
     not (isJust (colNullable cp)) ||
     fromJust (colNullable cp) == null
+
+trySelecting :: IConnection a => a -> IO Bool
+trySelecting conn = do
+    catchSql runTestSelects catchErr
+        where
+            execTest t = quickQuery' conn t []
+            runTestSelects = do
+                mapM execTest [nodesTest, waysTest, edgeTest, relationTest, relContentsTest, attributesTest]
+                return True
+            catchErr x = return False
 
 data InsertNodeStatement = InsertNodeStatement Statement Statement
 
