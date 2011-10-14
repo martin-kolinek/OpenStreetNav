@@ -13,6 +13,9 @@ import Control.Monad
 import qualified Data.ByteString.Lazy as L
 import Text.XML.Expat.Tree
 import OsmXmlParser
+import Control.Seq
+import Control.Exception
+import Control.DeepSeq
 
 validArgs =
     [
@@ -42,6 +45,8 @@ getConf parsedArgs = do
     sqlite <- getArg parsedArgs "sqlite"
     return (osm, sqlite)
 
+
+
 importData :: String -> String -> IO ()
 importData osm sqlite = do
     conn <- connectSqlite3 sqlite
@@ -64,13 +69,17 @@ importOsm (tree, err) conn = do
     waySt <- prepareInsertWay conn
     relSt <- prepareInsertRelation conn
     xmlRes <- foldM (foldFunc nodeSt waySt relSt) (Right ()) (eChildren tree)
-    case (err, xmlRes) of
-        (Nothing, Right _) -> return Nothing
-        (Nothing, Left msg) -> return $ Just $ "Wrong osm format: " ++ msg
-        (Just e, _) -> return $ Just $ "Error parsing osm: " ++ show e
+    case xmlRes of
+        Right _ -> return Nothing
+        Left msg -> return $ Just msg
     where foldFunc nodeSt waySt relSt lastResult n = do
-                                newResult <- (importNode nodeSt waySt relSt n)
-                                return (lastResult >> newResult)
+                                let n' = withStrategy rdeepseq n
+                                evaluate n'
+                                newResult <- (importNode nodeSt waySt relSt n')
+                                let r' = withStrategy rdeepseq (lastResult >> newResult)
+                                evaluate r'
+                                return r'
+
 
 importNode nodeSt waySt relSt n@(Element name _ _) = do
     case name of
@@ -79,7 +88,7 @@ importNode nodeSt waySt relSt n@(Element name _ _) = do
         "relation" -> eitherIO (execInsertRelation relSt) (parseRelation n)
         _ -> return (Right ())
     where
-        eitherIO :: (a -> IO ()) -> (Either String a) -> IO (Either String ())
+        eitherIO :: (a -> IO b) -> (Either String a) -> IO (Either String b)
         eitherIO f (Left s) = return (Left s)
         eitherIO f (Right x) = f x >>= (return . Right)
 importNode nodeSt waySt relSt _ = return (Right ())
