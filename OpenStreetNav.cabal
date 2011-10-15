@@ -14,7 +14,9 @@ library
   build-depends: base -any, parseargs -any, hexpat -any,
                convertible -any, bytestring -any, base -any, HDBC-sqlite3 -any,
                HDBC -any
-  exposed-modules: OsmData, OsmXmlParser, SqlRepresentation, FromString
+  exposed-modules: OsmData, OsmXmlParser, FromString
+               SqlRepresentation.BasicInsertion, 
+               SqlRepresentation.TableDefinition
   ghc-prof-options: -auto-all -prof
   ghc-options: -rtsopts
 

@@ -2,7 +2,8 @@ module Main (
     main
 ) where
 
-import SqlRepresentation
+import SqlRepresentation.BasicInsertion
+import SqlRepresentation.TableDefinition
 import Database.HDBC
 import Database.HDBC.Sqlite3
 import System.Exit

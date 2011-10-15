@@ -7,7 +7,8 @@ import System.Exit
 import OsmXmlParser
 import Database.HDBC
 import Database.HDBC.Sqlite3
-import SqlRepresentation
+import SqlRepresentation.BasicInsertion
+import SqlRepresentation.TableDefinition
 import qualified Text.XML.Expat.Tree as Xml
 import qualified Data.ByteString.Lazy.Char8 as BS
 import qualified OsmData as D
