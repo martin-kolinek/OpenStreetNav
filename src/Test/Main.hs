@@ -139,13 +139,13 @@ testDBStatements = TestCase $ finally test cleanup
             assertEqual "1 way" 1 (length rows)
             let row = head rows
             assertBool "way id" $ row !! 0 == toSql (22 :: Int64)
-            rows <- quickQuery' conn "SELECT WayID, StartNodeID, EndNodeID FROM Edges" []
+            rows <- quickQuery' conn "SELECT ID, WayID, StartNodeID, EndNodeID FROM Edges" []
             assertEqual "1 edge" 1 (length rows)
             let row = head rows
             assertBool "edge tests" $
-                row !! 0 == toSql (22 :: Int64) &&
-                row !! 1 == toSql (11 :: Int64) &&
-                row !! 2 == toSql (12 :: Int64)
+                row !! 1 == toSql (22 :: Int64) &&
+                row !! 2 == toSql (11 :: Int64) &&
+                row !! 3 == toSql (12 :: Int64)
             rel <- prepareInsertRelation conn
             execInsertRelation rel testRel'
             commit conn
@@ -154,48 +154,48 @@ testDBStatements = TestCase $ finally test cleanup
             let row = head rows
             assertBool "rel id" $
                 row !! 0 == toSql (43 :: Int64)
-            rows <- quickQuery' conn "SELECT RelationID, Role, ObjectID, ObjectType FROM RelationContents" []
+            rows <- quickQuery' conn "SELECT ID, RelationID, Role, ObjectID, ObjectType FROM RelationContents" []
             assertEqual "3 relcont" 3 (length rows)
-            let rows' = sortBy (\x y -> compare (fromSql (x !! 2) :: Int64) (fromSql (y !! 2) :: Int64)) rows
+            let rows' = sortBy (\x y -> compare (fromSql (x !! 3) :: Int64) (fromSql (y !! 3) :: Int64)) rows
             let row = rows' !! 0
             assertBool "relcont1" $
-                row !! 0 == toSql (43 :: Int64) &&
-                row !! 1 == toSql ("role" :: String) &&
-                row !! 2 == toSql (10 :: Int64) &&
-                row !! 3 == toSql NodeType
+                row !! 1 == toSql (43 :: Int64) &&
+                row !! 2 == toSql ("role" :: String) &&
+                row !! 3 == toSql (10 :: Int64) &&
+                row !! 4 == toSql NodeType
             let row = rows' !! 1
             assertBool "relcont2" $
-                row !! 0 == toSql (43 :: Int64) &&
-                row !! 1 == toSql ("role" :: String) &&
-                row !! 2 == toSql (11 :: Int64) &&
-                row !! 3 == toSql WayType
+                row !! 1 == toSql (43 :: Int64) &&
+                row !! 2 == toSql ("role" :: String) &&
+                row !! 3 == toSql (11 :: Int64) &&
+                row !! 4 == toSql WayType
             let row = rows' !! 2
             assertBool "relcont2" $
-                row !! 0 == toSql (43 :: Int64) &&
-                row !! 1 == toSql ("role" :: String) &&
-                row !! 2 == toSql (12 :: Int64) &&
-                row !! 3 == toSql RelationType
-            rows <- quickQuery' conn "SELECT ObjectID, ObjectType, Key, Value FROM Attributes" []
+                row !! 1 == toSql (43 :: Int64) &&
+                row !! 2 == toSql ("role" :: String) &&
+                row !! 3 == toSql (12 :: Int64) &&
+                row !! 4 == toSql RelationType
+            rows <- quickQuery' conn "SELECT ID, ObjectID, ObjectType, Key, Value FROM Attributes" []
             assertEqual "tagcount 3" 3 $ length rows
-            let rows' = sortBy (\x y -> compare (fromSql (x !! 0) :: Int64) (fromSql (y !! 0) :: Int64)) rows
+            let rows' = sortBy (\x y -> compare (fromSql (x !! 1) :: Int64) (fromSql (y !! 1) :: Int64)) rows
             let row = rows' !! 0
             assertBool "tag1" $
-                row !! 0 == toSql (22 :: Int64) &&
-                row !! 1 == toSql WayType &&
-                row !! 2 == toSql ("key" :: String) &&
-                row !! 3 == toSql ("val" :: String)
+                row !! 1 == toSql (22 :: Int64) &&
+                row !! 2 == toSql WayType &&
+                row !! 3 == toSql ("key" :: String) &&
+                row !! 4 == toSql ("val" :: String)
             let row = rows' !! 1
             assertBool "tag1" $
-                row !! 0 == toSql (23 :: Int64) &&
-                row !! 1 == toSql NodeType &&
-                row !! 2 == toSql ("key" :: String) &&
-                row !! 3 == toSql ("val" :: String)
+                row !! 1 == toSql (23 :: Int64) &&
+                row !! 2 == toSql NodeType &&
+                row !! 3 == toSql ("key" :: String) &&
+                row !! 4 == toSql ("val" :: String)
             let row = rows' !! 2
             assertBool "tag1" $
-                row !! 0 == toSql (43 :: Int64) &&
-                row !! 1 == toSql RelationType &&
-                row !! 2 == toSql ("key" :: String) &&
-                row !! 3 == toSql ("val" :: String)
+                row !! 1 == toSql (43 :: Int64) &&
+                row !! 2 == toSql RelationType &&
+                row !! 3 == toSql ("key" :: String) &&
+                row !! 4 == toSql ("val" :: String)
             disconnect conn
         cleanup = removeFile "test2.db"
 

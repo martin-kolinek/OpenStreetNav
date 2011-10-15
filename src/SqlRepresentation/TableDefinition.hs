@@ -20,16 +20,26 @@ waysTableCreate = "CREATE TABLE " ++ waysTable ++
     " (ID INTEGER NOT NULL PRIMARY KEY)"
 
 edgesTableCreate = "CREATE TABLE " ++ edgesTable ++
-    " (WayID INTEGER NOT NULL, StartNodeID INTEGER NOT NULL, EndNodeID INTEGER NOT NULL)"
+    " (ID INTEGER NOT NULL PRIMARY KEY, WayID INTEGER NOT NULL, StartNodeID INTEGER NOT NULL, EndNodeID INTEGER NOT NULL)"
 
 relationsCreate = "CREATE TABLE " ++ relationsTable ++
     " (ID INTEGER NOT NULL PRIMARY KEY)"
 
 relationContentsCreate = "CREATE TABLE " ++ relationContentsTable ++
-    " (RelationID INTEGER NOT NULL, Role TEXT NOT NULL, ObjectID INTEGER NOT NULL, ObjectType INTEGER NOT NULL)"
+    " (ID INTEGER NOT NULL PRIMARY KEY, RelationID INTEGER NOT NULL, Role TEXT NOT NULL, ObjectID INTEGER NOT NULL, ObjectType INTEGER NOT NULL)"
 
 attributesCreate = "CREATE TABLE " ++ attributesTable ++
-    " (ObjectID INTEGER NOT NULL, ObjectType INTEGER NOT NULL, Key TEXT, Value TEXT)"
+    " (ID INTEGER NOT NULL PRIMARY KEY, ObjectID INTEGER NOT NULL, ObjectType INTEGER NOT NULL, Key TEXT, Value TEXT)"
+
+attributesIndex1 = "CREATE INDEX IX_Attributes_Object ON " ++ attributesTable ++ "(ObjectID, ObjectType)"
+attributesIndex2 = "CREATE INDEX IX_Attributes_Key ON " ++ attributesTable ++ "(Key)"
+attributesIndex3 = "CREATE INDEX IX_Attributes_Value ON " ++ attributesTable ++ "(Value)"
+edgeIndesStart = "CREATE INDEX IX_Edges_Start ON " ++ edgesTable ++ "(StartNodeID)"
+edgeIndesEnd = "CREATE INDEX IX_Edges_End ON " ++ edgesTable ++ "(EndNodeID)"
+nodeIndexLat = "CREATE INDEX IX_Nodes_Lat ON " ++ nodesTable ++ "(Latitude)"
+nodeIndexLon = "CREATE INDEX IX_Nodes_Lon ON " ++ nodesTable ++ "(Longitude)"
+relationContentsIndexObject = "CREATE INDEX IX_RelationContents_Object ON " ++ relationContentsTable ++ "(ObjectID, ObjectType)"
+relationContentsIndex = "CREATE INDEX IX_RelationContents_Relation ON " ++ relationContentsTable ++ "(RelationID)"
 
 nodesTest = "SELECT ID, Latitude, Longitude FROM " ++ nodesTable ++ " LIMIT 1"
 waysTest = "SELECT ID FROM " ++ waysTable ++ " LIMIT 1"
@@ -71,7 +81,9 @@ allTableCols = map (\(x,y)->(toLowerS x, y)) [
 createTables :: IConnection a => a -> IO()
 createTables conn = do
         mapM exec [nodesTableCreate, waysTableCreate, edgesTableCreate, relationsCreate,
-            relationContentsCreate, attributesCreate]
+            relationContentsCreate, attributesCreate, attributesIndex1, attributesIndex2,
+            attributesIndex3, edgeIndesStart, edgeIndesEnd, nodeIndexLat, nodeIndexLon,
+            relationContentsIndexObject, relationContentsIndex ]
         commit conn
     where exec x = run conn x []
 
