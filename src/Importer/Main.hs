@@ -17,6 +17,8 @@ import Control.Seq
 import Control.Exception
 import Control.DeepSeq
 
+progressStep = 10000
+
 validArgs =
     [
     Arg {argIndex = "osm",
@@ -68,30 +70,41 @@ importOsm (tree, err) conn = do
     nodeSt <- prepareInsertNode conn
     waySt <- prepareInsertWay conn
     relSt <- prepareInsertRelation conn
-    xmlRes <- foldM (foldFunc nodeSt waySt relSt) (Right ()) (eChildren tree)
+    xmlRes <- foldM (foldFunc nodeSt waySt relSt) (Right 0) (eChildren tree)
     case xmlRes of
         Right _ -> return Nothing
         Left msg -> return $ Just msg
-    where foldFunc nodeSt waySt relSt lastResult n = do
-                                let n' = withStrategy rdeepseq n
-                                evaluate n'
-                                newResult <- (importNode nodeSt waySt relSt n')
-                                let r' = withStrategy rdeepseq (lastResult >> newResult)
-                                evaluate r'
-                                return r'
+    where
+        foldFunc nodeSt waySt relSt lastResult n = do
+            case lastResult of
+                failure@(Left _) -> return failure
+                Right int -> do
+                    newResult <- (importNode nodeSt waySt relSt n int)
+                    let r' = withStrategy rdeepseq newResult
+                    evaluate r'
+                    showProgress int
+                    return r'
+        showProgress int = when (int `mod` progressStep == 0) (putStrLn (msg int))
+        msg int = "Processed " ++ show int ++ "xml pieces"
 
-
-importNode nodeSt waySt relSt n@(Element name _ _) = do
+importNode :: InsertNodeStatement ->
+                InsertWayStatement ->
+                InsertRelationStatement ->
+                UNode String ->
+                Int ->
+                IO (Either String Int)
+importNode nodeSt waySt relSt n@(Element name _ _) int = do
     case name of
         "node" -> eitherIO (execInsertNode nodeSt) (parseNode n)
         "way" -> eitherIO (execInsertWay waySt) (parseWay n)
         "relation" -> eitherIO (execInsertRelation relSt) (parseRelation n)
-        _ -> return (Right ())
+        _ -> return success
     where
-        eitherIO :: (a -> IO b) -> (Either String a) -> IO (Either String b)
+        eitherIO :: (a -> IO b) -> (Either String a) -> IO (Either String Int)
         eitherIO f (Left s) = return (Left s)
-        eitherIO f (Right x) = f x >>= (return . Right)
-importNode nodeSt waySt relSt _ = return (Right ())
+        eitherIO f (Right x) = f x >> return success
+        success = Right $ int + 1
+importNode nodeSt waySt relSt _ int = return (Right (int+1))
 
 
 checkDB conn = do
