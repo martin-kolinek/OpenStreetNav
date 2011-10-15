@@ -34,6 +34,9 @@ testRel = (fst . Xml.parse Xml.defaultParseOptions $ BS.pack (
 testNode2 = fst . Xml.parse Xml.defaultParseOptions $ BS.pack (
     "<node id=\"5410667\" lat=\"48.1528677\" lon=\"17.1138423\" user=\"YuraH\" uid=\"374661\" visible=\"true\" version=\"7\" changeset=\"9445252\" timestamp=\"2011-10-01T19:29:09Z\">  <tag k=\"highway\" v=\"traffic_signals\"/> </node>")
 
+testNode3 = fst . Xml.parse Xml.defaultParseOptions $ BS.pack (
+    "<node id=\"5410667\" lat=\"48.1528677\" lon=\"17.1138423\" user=\"YuraH\" uid=\"374661\" visible=\"true\" version=\"7\" changeset=\"9445252\" timestamp=\"2011-10-01T19:29:09Z\">  <tag k=\"highway\\\" v=\"traffic_signals\"/> </node>")
+
 testNode' = D.Node {D.nodeID = 23, D.latitude = 1.5, D.longitude = 2.5, D.nodeTags = [("key", "val")]}
 testWay' = D.Way {D.wayID = 22, D.nodes = [11,12], D.wayTags = [("key", "val")]}
 testRel' = D.Relation {D.relID = 43, D.members = [(D.NodeType, 10, "role"), (D.WayType, 11, "role"), (D.RelationType, 12, "role")],
@@ -41,7 +44,7 @@ testRel' = D.Relation {D.relID = 43, D.members = [(D.NodeType, 10, "role"), (D.W
 
 testXmlParser = TestLabel "Xml parser" $ TestList
         [TestLabel "way" testParseWay, TestLabel "node" testParseNode, TestLabel "rel" testParseRel,
-        TestLabel "node2" testParseNode2]
+        TestLabel "node2" testParseNode2, TestLabel "node3" testParseNode3]
 
 testParseWay = TestCase $ do
     let tway = parseWay testWay
@@ -63,6 +66,12 @@ testParseRel = TestCase $ do
 
 testParseNode2 = TestCase $ do
     let tnode = parseNode testNode2
+    case tnode of
+        (Left err) -> assertFailure err
+        _ -> return ()
+
+testParseNode3 = TestCase $ do
+    let tnode = parseNode testNode3
     case tnode of
         (Left err) -> assertFailure err
         _ -> return ()

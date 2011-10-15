@@ -18,7 +18,7 @@ tryRead x = let r = reads x
                     else Just (fst . head $ r)
 
 instance Parseable String where
-    parseString x = tryRead $ "\"" ++ x ++ "\""
+    parseString = Just . id
 
 instance Parseable Int where
     parseString = tryRead
