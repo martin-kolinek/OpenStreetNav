@@ -13,10 +13,11 @@ library
   hs-source-dirs: src
   build-depends: base -any, parseargs -any, hexpat -any,
                convertible -any, bytestring -any, base -any, HDBC-sqlite3 -any,
-               HDBC -any
+               HDBC -any, containers -any
   exposed-modules: OsmData, OsmXmlParser, FromString
                SqlRepresentation.BasicInsertion, 
-               SqlRepresentation.TableDefinition
+               SqlRepresentation.TableDefinition,
+               SlabDecomposition
   ghc-prof-options: -auto-all -prof
   ghc-options: -rtsopts
 
