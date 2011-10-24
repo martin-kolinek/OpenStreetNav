@@ -35,7 +35,7 @@ test-suite tests
   main-is: Test/Main.hs
   build-depends: base -any, parseargs -any, hexpat -any,
                convertible -any, bytestring -any, base -any, HDBC-sqlite3 -any,
-               HDBC -any, OpenStreetNav -any, HUnit -any, directory -any
+               HDBC -any, OpenStreetNav -any, HUnit -any, directory -any, containers -any
   type: exitcode-stdio-1.0
   hs-source-dirs: src
   ghc-prof-options: -auto-all -prof

@@ -17,6 +17,15 @@ import Data.Int
 import Data.List
 import OsmData
 import Control.Exception
+import SlabDecomposition
+
+data TestSegment = TSegment Point Point Int deriving (Show, Eq)
+instance Segment TestSegment where
+    left (TSegment (Point x1 y1) (Point x2 y2) _) = min x1 x2
+    right (TSegment (Point x1 y1) (Point x2 y2) _) = max x1 x2
+    points (TSegment p1 p2 _) = (min p1 p2, max p1 p2)
+
+segm x1 y1 x2 y2 val = TSegment (Point x1 y1) (Point x2 y2) val
 
 testNode = (fst . Xml.parse Xml.defaultParseOptions $ BS.pack
     "<node id=\"23\" lat=\"1.5\" lon=\"2.5\"><tag k=\"key\" v=\"val\" /></node>" :: (Xml.Node String String))
@@ -199,7 +208,21 @@ testDBStatements = TestCase $ finally test cleanup
             disconnect conn
         cleanup = removeFile "test2.db"
 
-allTests = TestList [testDB, testXmlParser]
+extractTSegValue :: Maybe TestSegment -> Maybe Int
+extractTSegValue Nothing = Nothing
+extractTSegValue (Just (TSegment _ _ val)) = Just val
+
+extractTSegValues :: (Maybe TestSegment, Maybe TestSegment) -> (Maybe Int, Maybe Int)
+extractTSegValues (x, y) = (extractTSegValue x, extractTSegValue y)
+
+testSlabs = TestCase $ do
+    let slmap = constructSlabMap [segm 1 1 2 1 1,
+                                    segm 2 1 2 2 2,
+                                    segm 2 2 1 2 3,
+                                    segm 1 2 1 1 4] 0
+    assertEqual "1.5 1.5" (Just 1, Just 3) $ extractTSegValues (getUpDownSegments (Point 1.5 1.5) slmap)
+
+allTests = TestList [testDB, testXmlParser, testSlabs]
 
 isRight (Right _) = True
 isRight _ = False
