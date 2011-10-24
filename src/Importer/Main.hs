@@ -60,6 +60,8 @@ importData osm sqlite = do
     case result of
         Nothing -> do
             commit conn
+            putStrLn "Creating indexes..."
+            createIndexes conn
             putStrLn "Success"
         Just msg -> do
             rollback conn

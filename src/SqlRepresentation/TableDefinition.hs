@@ -2,7 +2,8 @@ module SqlRepresentation.TableDefinition (
     checkAllTableDescriptions,
     checkAllTablesPresent,
     createTables,
-    trySelecting
+    trySelecting,
+    createIndexes
 ) where
 
 import SqlRepresentation.Common
@@ -36,6 +37,7 @@ attributesIndex2 = "CREATE INDEX IX_Attributes_Key ON " ++ attributesTable ++ "(
 attributesIndex3 = "CREATE INDEX IX_Attributes_Value ON " ++ attributesTable ++ "(Value)"
 edgeIndesStart = "CREATE INDEX IX_Edges_Start ON " ++ edgesTable ++ "(StartNodeID)"
 edgeIndesEnd = "CREATE INDEX IX_Edges_End ON " ++ edgesTable ++ "(EndNodeID)"
+edgeIndexWay = "CREATE INDEX IX_Edges_Way ON " ++ edgesTable ++ "(WayID)"
 nodeIndexLat = "CREATE INDEX IX_Nodes_Lat ON " ++ nodesTable ++ "(Latitude)"
 nodeIndexLon = "CREATE INDEX IX_Nodes_Lon ON " ++ nodesTable ++ "(Longitude)"
 relationContentsIndexObject = "CREATE INDEX IX_RelationContents_Object ON " ++ relationContentsTable ++ "(ObjectID, ObjectType)"
@@ -81,9 +83,14 @@ allTableCols = map (\(x,y)->(toLowerS x, y)) [
 createTables :: IConnection a => a -> IO()
 createTables conn = do
         mapM exec [nodesTableCreate, waysTableCreate, edgesTableCreate, relationsCreate,
-            relationContentsCreate, attributesCreate, attributesIndex1, attributesIndex2,
+            relationContentsCreate, attributesCreate]
+        commit conn
+    where exec x = run conn x []
+
+createIndexes conn = do
+        mapM exec [attributesIndex1, attributesIndex2,
             attributesIndex3, edgeIndesStart, edgeIndesEnd, nodeIndexLat, nodeIndexLon,
-            relationContentsIndexObject, relationContentsIndex ]
+            relationContentsIndexObject, relationContentsIndex, edgeIndexWay ]
         commit conn
     where exec x = run conn x []
 
