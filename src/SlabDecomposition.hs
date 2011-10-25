@@ -2,22 +2,33 @@ module SlabDecomposition (
     SlabMap,
     Segment(..),
     Point(..),
+    CanonicalSegment(..),
     getUpDownSegments,
-    constructSlabMap
+    constructSlabMap,
+    findInSlab
 ) where
 
 import qualified Data.Map as M
 import Data.List
+import Data.Maybe
 import Control.Monad
+import Debug.Trace
 
-data Slab s = Slab Double (M.Map (Double, Double) s)
+data Slab s = Slab Double (M.Map (Double, Double) s) deriving Show
 
 type SlabMap s = M.Map Double (Slab s)
 
 class Segment a where
     left :: a -> Double
+    left s = let (Point x _, _) = points s in x
     right :: a -> Double
+    right s = let (_, Point x _) = points s in x
     points :: a -> (Point, Point)
+
+data CanonicalSegment a = CanonSegment Point Point a deriving (Show, Eq)
+
+instance Segment (CanonicalSegment a) where
+    points (CanonSegment p1 p2 _) = (min p1 p2, max p1 p2)
 
 data Point = Point Double Double deriving (Eq, Ord, Show)
 
@@ -39,16 +50,11 @@ addSegment seg map = foldl' (modifyMap seg) map (subkeys map (left seg) (right s
 
 findClosestLeft :: Ord k => k -> M.Map k v -> (k, v)
 findClosestLeft value = M.findMax . fst . M.split value
-findClosestRight value = M.findMin . snd . M.split value
-findClosest value map = let l@(left, _) = findClosestLeft value map
-                            r@(right, _) = findClosestRight value map
-                        in
-                            if abs (left - value) > abs (right - value) then r else l
 
 subkeys map min max = [min] ++ skeys ++ [max]
     where
         uppermap = (snd . M.split min) map
-        boundedmap = (fst . M.split max) map
+        boundedmap = (fst . M.split max) uppermap
         skeys = M.keys boundedmap
 
 extendSlab :: Segment s => Slab s -> Double -> Slab s
@@ -56,7 +62,7 @@ extendSlab (Slab origLeft map) newLeft = Slab newLeft $ foldl' addLine M.empty (
     where
         addLine m (y, seg)
             | right seg == origLeft = m
-            | otherwise = M.insert (getYOnLine seg newLeft, getYOnLine seg newLeft + 1) seg m
+            | otherwise = M.insert (getYOnLine seg newLeft, getYOnLine seg (newLeft + 1)) seg m
 
 include :: (a, [b]) -> [(a, b)]
 include (x, ys) = map (\y -> (x,y)) ys
@@ -75,7 +81,7 @@ getYOnLine' (Point x1 y1) (Point x2 y2) x
                   in k*x + q
 
 splitSlab :: Segment s => s -> Slab s -> Slab s
-splitSlab seg (Slab x map) = Slab x $ M.insert (getYOnLine seg x, getYOnLine seg x+1) seg map
+splitSlab seg (Slab x map) = Slab x $ M.insert (getYOnLine seg x, getYOnLine seg (x+1)) seg map
 
 emptySlabMap minx = M.singleton minx (Slab minx M.empty)
 
@@ -85,22 +91,42 @@ constructSlabMap segments min = foldl' addSegmentProperly (emptySlabMap min) seg
         addSegmentProperly :: Segment s => SlabMap s -> s -> SlabMap s
         addSegmentProperly m s
             | left s == right s = m
-            | otherwise = (addSegment s) . (addPoint (left s)) . (addPoint (right s)) $ m
+            | otherwise = (addSegment s) .(addPoint (left s)) . (addPoint (right s)) $ m
 
-getUpDownSegments :: Segment s => Point -> SlabMap s -> (Maybe s, Maybe s)
+getUpDownSegments :: (Eq s) => Segment s => Point -> SlabMap s -> (Maybe s, Maybe s)
 getUpDownSegments p@(Point x y) map = let (_, slab) = findClosestLeft x map
                                     in
-                                        extractFirst $ findInSlab p slab
+                                        findInSlab p slab
 
-findInSlab :: Segment s => Point -> Slab s -> (Maybe (s, Double), Maybe (s, Double))
-findInSlab (Point x y) (Slab slabx map) = let (_, segs1) = findClosestLeft (y, 0) map
-                                              (_, segs2) = findClosestRight (y, 0) map
-                                              segs = segs1 : [segs2]
-                                              assignY seg = (seg, getYOnLine seg x)
-                                              segsWithYs = fmap assignY segs
-                                              sortFunc (_, y1) (_, y2) = compare y1 y2
-                                              sortedSegs = sortBy sortFunc segsWithYs
-                                          in getTreshold ((<y) . snd) sortedSegs
+abovePoint (Point x y) segm = (getYOnLine segm x) > y
+
+findInSlab :: (Eq s) => Segment s => Point -> Slab s -> (Maybe s, Maybe s)
+findInSlab p@(Point x y) (Slab _ map)
+    | M.null map = (Nothing, Nothing)
+    | otherwise = let (lower, _) = M.split (y, 0) map
+                      kv = if M.null lower then M.elemAt 0 map else M.findMax lower
+                      (ml, mh) = findTreshold (abovePoint p) kv map
+                  in (fmap snd ml, fmap snd mh)
+
+
+findTreshold :: (Ord k, Eq v) => (v -> Bool) -> (k, v) -> M.Map k v -> (Maybe (k, v), Maybe (k, v))
+findTreshold pred start map = findTreshold' (Nothing, Nothing) pred start map
+
+findTreshold' :: (Ord k, Eq v) => (Maybe (k,v), Maybe (k,v)) -> (v -> Bool) -> (k,v) -> M.Map k v -> (Maybe (k,v), Maybe (k,v))
+findTreshold' found@(foundf, foundt) pred start@(startk, startv) map
+    | pred startv = if foundt == Just start
+            then found
+            else
+                let (lower, _) = M.split startk map
+                in if M.null lower then (Nothing, Just start)
+                        else findTreshold' (foundf, Just start) pred (M.findMax lower) map
+    | otherwise = if foundf == Just start
+            then found
+            else
+                let (_, higher) = M.split startk map
+                in if M.null higher then (Just start, Nothing)
+                        else findTreshold' (Just start, foundt) pred (M.findMin higher) map
+
 
 extractFirst :: (Maybe (a, b), Maybe (a, b)) -> (Maybe a, Maybe a)
 extractFirst (mx, my) = (mx >>= f, my >>= f)

@@ -1,5 +1,6 @@
 module Main (
-    main
+    main,
+    slmap
 ) where
 
 import Test.HUnit
@@ -18,8 +19,10 @@ import Data.List
 import OsmData
 import Control.Exception
 import SlabDecomposition
+import Debug.Trace
+import qualified Data.Map as M
 
-data TestSegment = TSegment Point Point Int deriving (Show, Eq)
+data TestSegment = TSegment Point Point Int deriving (Show, Eq, Ord)
 instance Segment TestSegment where
     left (TSegment (Point x1 y1) (Point x2 y2) _) = min x1 x2
     right (TSegment (Point x1 y1) (Point x2 y2) _) = max x1 x2
@@ -215,12 +218,31 @@ extractTSegValue (Just (TSegment _ _ val)) = Just val
 extractTSegValues :: (Maybe TestSegment, Maybe TestSegment) -> (Maybe Int, Maybe Int)
 extractTSegValues (x, y) = (extractTSegValue x, extractTSegValue y)
 
+slmap = constructSlabMap [segm 1 1 2 1 1,
+                            segm 2 1 2 2 2,
+                            segm 2 2 1 2 3,
+                            segm 1 2 1 1 4,
+                            segm 3 3 4 3 5,
+                            segm 4 3 5 6 6,
+                            segm 5 6 4 4 7,
+                            segm 4 4 3 3 8,
+                            segm 3 3 4 5 9,
+                            segm 4 5 5 6 10,
+                            segm 5 6 4 6 11,
+                            segm 4 6 3 3 12] 0
+
 testSlabs = TestCase $ do
-    let slmap = constructSlabMap [segm 1 1 2 1 1,
-                                    segm 2 1 2 2 2,
-                                    segm 2 2 1 2 3,
-                                    segm 1 2 1 1 4] 0
-    assertEqual "1.5 1.5" (Just 1, Just 3) $ extractTSegValues (getUpDownSegments (Point 1.5 1.5) slmap)
+    assertPoint "1.5 1.5" (Just 1, Just 3) 1.5 1.5 slmap
+    assertPoint "0.5 1" (Nothing, Nothing) 0.5 1 slmap
+    assertPoint "1.5 0.5" (Nothing, Just 1) 1.5 0.5 slmap
+    assertPoint "1.5 2.5" (Just 3, Nothing) 1.5 2.5 slmap
+    assertPoint "3.9 3.3" (Just 5, Just 8) 3.9 3.3 slmap
+    assertPoint "3.9 4.1" (Just 8, Just 9) 3.9 4.1 slmap
+    assertPoint "3.9 5.1" (Just 9, Just 12) 3.9 5.1 slmap
+    assertPoint "3.5 2" (Nothing, Just 5) 3.5 2 slmap
+    assertPoint "3.5 6.5" (Just 12, Nothing) 3.5 6.5 slmap
+    assertPoint "1 1.5" (Nothing, Nothing) 1 1.5 slmap
+    where assertPoint s p x y map = assertEqual s p $ extractTSegValues (getUpDownSegments (Point x y) map)
 
 allTests = TestList [testDB, testXmlParser, testSlabs]
 
