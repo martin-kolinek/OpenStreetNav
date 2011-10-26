@@ -13,7 +13,8 @@ library
   hs-source-dirs: src
   build-depends: base -any, parseargs -any, hexpat -any,
                convertible -any, bytestring -any, base -any, HDBC-sqlite3 -any,
-               HDBC -any, containers -any, directory -any, bytestring-lexing -any
+               HDBC -any, containers -any, directory -any, bytestring-lexing -any,
+               array -any
   exposed-modules: OsmData, OsmXmlParser, FromString
                SqlRepresentation.BasicInsertion, 
                SqlRepresentation.TableDefinition,
@@ -36,7 +37,7 @@ executable OsmSlabTest
   build-depends: base -any, parseargs -any, hexpat -any,
                convertible -any, bytestring -any, base -any, HDBC-sqlite3 -any,
                HDBC -any, OpenStreetNav -any, deepseq -any, parallel -any,
-               text -any, containers -any
+               text -any, containers -any, array -any
   hs-source-dirs: src
   ghc-prof-options: -auto-all -prof
   ghc-options: -rtsopts 
@@ -46,7 +47,7 @@ test-suite tests
   build-depends: base -any, parseargs -any, hexpat -any,
                convertible -any, bytestring -any, base -any, HDBC-sqlite3 -any,
                HDBC -any, OpenStreetNav -any, HUnit -any, directory -any, containers -any,
-               bytestring-lexing -any
+               bytestring-lexing -any, array -any
   type: exitcode-stdio-1.0
   hs-source-dirs: src
   ghc-prof-options: -auto-all -prof

@@ -1,9 +1,11 @@
 module SlabDecomposition (
+    FinSlabMap,
     SlabMap,
     Segment(..),
     Point(..),
     CanonicalSegment(..),
     getUpDownSegments,
+    getUpDownSegments',
     constructSlabMap,
     findInSlab
 ) where
@@ -12,11 +14,15 @@ import qualified Data.Map as M
 import Data.List
 import Data.Maybe
 import Control.Monad
+import qualified Data.Array.IArray as A
 import Debug.Trace
 
-data Slab s = Slab Double (M.Map (Double, Double) s) deriving Show
+data Slab s = Slab Double (M.Map (Double, Double) s) |
+              FinSlab Double (A.Array Int ((Double, Double), s)) deriving Show
 
 type SlabMap s = M.Map Double (Slab s)
+
+type FinSlabMap s = A.Array Int (Double, Slab s)
 
 class Segment a where
     left :: a -> Double
@@ -80,25 +86,57 @@ getYOnLine' (Point x1 y1) (Point x2 y2) x
                       q = y1 - k*x1
                   in k*x + q
 
+finalizeSlab (Slab x map) = FinSlab x arr
+    where
+        max = M.size map - 1
+        arr = A.array (0, max) $ zip [0..max] (M.toAscList map)
+
+finalizeSlabMap m = A.array (0, max) $ zip [0..max] (M.toAscList (M.map finalizeSlab m))
+    where
+        max = M.size m - 1
+
 splitSlab :: Segment s => s -> Slab s -> Slab s
 splitSlab seg (Slab x map) = Slab x $ M.insert (getYOnLine seg x, getYOnLine seg (x+1)) seg map
 
 emptySlabMap minx = M.singleton minx (Slab minx M.empty)
 
-constructSlabMap :: Segment s => [s] -> Double -> SlabMap s
-constructSlabMap segments min = foldl' addSegmentProperly (emptySlabMap min) segments
+constructSlabMap :: Segment s => [s] -> Double -> FinSlabMap s
+constructSlabMap segments min = finalizeSlabMap $
+                                    foldl' addSegmentProperly (emptySlabMap min) segments
     where
         addSegmentProperly :: Segment s => SlabMap s -> s -> SlabMap s
         addSegmentProperly m s
             | left s == right s = m
             | otherwise = (addSegment s) .(addPoint (left s)) . (addPoint (right s)) $ m
 
-getUpDownSegments :: (Eq s) => Segment s => Point -> SlabMap s -> (Maybe s, Maybe s)
-getUpDownSegments p@(Point x y) map = let (_, slab) = findClosestLeft x map
-                                    in
+getUpDownSegments :: (Eq s) => Segment s => Point -> FinSlabMap s -> (Maybe s, Maybe s)
+getUpDownSegments p@(Point x y) map = let (b1, b2) = A.bounds map
+                                          (slab, _) = binSearch ((>=x) . fst) b1 b2 map
+                                      in
+                                        findInSlab p (snd (fromJust slab))
+
+getUpDownSegments' :: (Eq s) => Segment s => Point -> SlabMap s -> (Maybe s, Maybe s)
+getUpDownSegments' p@(Point x y) map = let (_, slab) = findClosestLeft x map
+                                      in
                                         findInSlab p slab
 
+
 abovePoint (Point x y) segm = (getYOnLine segm x) > y
+
+binSearch :: (A.Ix i, A.IArray a v, Integral i) => (v -> Bool) -> i -> i -> a i v -> (Maybe v, Maybe v)
+binSearch pred b1 b2 arr
+    | b2<b1 = (Nothing, Nothing)
+    | b1 == b2 && pred (arr A.! b1) = (Nothing, Just $ arr A.! b1)
+    | b1 == b2 = (Just $ arr A.! b1, Nothing)
+    | pred (arr A.! b1) && pred (arr A.! b2) = (Nothing, Just $ arr A.! b1)
+    | not (pred (arr A.! b1)) && not (pred (arr A.! b2)) = (Just $ arr A.! b2, Nothing)
+    | b2 - b1 == 1 = (Just $ arr A.! b1, Just $ arr A.! b2)
+    | otherwise = let
+                    mid = b1 + ((b2-b1) `div` 2)
+                    val = arr A.! mid
+                  in if pred val then binSearch pred b1 mid arr else binSearch pred mid b2 arr
+
+
 
 findInSlab :: (Eq s) => Segment s => Point -> Slab s -> (Maybe s, Maybe s)
 findInSlab p@(Point x y) (Slab _ map)
@@ -107,7 +145,12 @@ findInSlab p@(Point x y) (Slab _ map)
                       kv = if M.null lower then M.elemAt 0 map else M.findMax lower
                       (ml, mh) = findTreshold (abovePoint p) kv map
                   in (fmap snd ml, fmap snd mh)
-
+findInSlab p (FinSlab _ arr) = let (b1, b2) = A.bounds arr
+                                   (a, b) = binSearch pred b1 b2 arr
+                               in (fmap snd a, fmap snd b)
+    where
+        pred :: (Eq s, Segment s) => ((Double, Double), s) -> Bool
+        pred = (abovePoint p) . snd
 
 findTreshold :: (Ord k, Eq v) => (v -> Bool) -> (k, v) -> M.Map k v -> (Maybe (k, v), Maybe (k, v))
 findTreshold pred start map = findTreshold' (Nothing, Nothing) pred start map
