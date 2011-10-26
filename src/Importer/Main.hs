@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main (
     main
 ) where
@@ -12,6 +14,7 @@ import System.Console.ParseArgs
 import Data.Maybe
 import Control.Monad
 import qualified Data.ByteString.Lazy as L
+import qualified Data.ByteString as B
 import Text.XML.Expat.Tree
 import OsmXmlParser
 import Control.Seq
@@ -55,7 +58,7 @@ importData osm sqlite = do
     conn <- connectSqlite3 sqlite
     checkDB conn
     text <- L.readFile osm
-    let p = parse defaultParseOptions text :: (UNode String, Maybe XMLParseError)
+    let p = parse defaultParseOptions text :: (UNode B.ByteString, Maybe XMLParseError)
     result <- catchSql (importOsm p conn) (handleErr)
     case result of
         Nothing -> do
@@ -78,7 +81,7 @@ importOsm (tree, err) conn = do
         Right _ -> return Nothing
         Left msg -> return $ Just msg
     where
-        foldFunc nodeSt waySt relSt lastResult n = do
+        foldFunc nodeSt waySt relSt lastResult n =  do
             case lastResult of
                 failure@(Left _) -> return failure
                 Right int -> do
@@ -93,7 +96,7 @@ importOsm (tree, err) conn = do
 importNode :: InsertNodeStatement ->
                 InsertWayStatement ->
                 InsertRelationStatement ->
-                UNode String ->
+                UNode B.ByteString ->
                 Int ->
                 IO (Either String Int)
 importNode nodeSt waySt relSt n@(Element name _ _) int = do

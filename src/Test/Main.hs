@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main (
     main,
     slmap
@@ -12,6 +14,7 @@ import SqlRepresentation.BasicInsertion
 import SqlRepresentation.TableDefinition
 import qualified Text.XML.Expat.Tree as Xml
 import qualified Data.ByteString.Lazy.Char8 as BS
+import qualified Data.ByteString as B
 import qualified OsmData as D
 import System.Directory
 import Data.Int
@@ -31,10 +34,10 @@ instance Segment TestSegment where
 segm x1 y1 x2 y2 val = TSegment (Point x1 y1) (Point x2 y2) val
 
 testNode = (fst . Xml.parse Xml.defaultParseOptions $ BS.pack
-    "<node id=\"23\" lat=\"1.5\" lon=\"2.5\"><tag k=\"key\" v=\"val\" /></node>" :: (Xml.Node String String))
+    "<node id=\"23\" lat=\"1.5\" lon=\"2.5\"><tag k=\"key\" v=\"val\" /></node>" :: (Xml.UNode B.ByteString))
 
 testWay = (fst . Xml.parse Xml.defaultParseOptions $ BS.pack
-    "<way id=\"22\"><nd ref=\"11\"/><nd ref=\"12\" /><tag k=\"key\" v=\"val\" /></way>" :: (Xml.Node String String))
+    "<way id=\"22\"><nd ref=\"11\"/><nd ref=\"12\" /><tag k=\"key\" v=\"val\" /></way>" :: (Xml.UNode B.ByteString))
 
 testRel = (fst . Xml.parse Xml.defaultParseOptions $ BS.pack (
     "<relation id=\"43\">"++
@@ -42,7 +45,7 @@ testRel = (fst . Xml.parse Xml.defaultParseOptions $ BS.pack (
         "<member type=\"way\" ref=\"11\" role=\"role\"/>"++
         "<member type=\"relation\" ref=\"12\" role=\"role\"/>"++
         "<tag k=\"key\" v=\"val\" />"++
-    "</relation>") :: (Xml.Node String String))
+    "</relation>") :: (Xml.UNode B.ByteString))
 
 testNode2 = fst . Xml.parse Xml.defaultParseOptions $ BS.pack (
     "<node id=\"5410667\" lat=\"48.1528677\" lon=\"17.1138423\" user=\"YuraH\" uid=\"374661\" visible=\"true\" version=\"7\" changeset=\"9445252\" timestamp=\"2011-10-01T19:29:09Z\">  <tag k=\"highway\" v=\"traffic_signals\"/> </node>")

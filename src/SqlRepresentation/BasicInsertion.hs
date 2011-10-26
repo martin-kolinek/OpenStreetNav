@@ -32,7 +32,7 @@ execInsertNode :: InsertNodeStatement ->
                     IO ()
 execInsertNode (InsertNodeStatement nodeSt attrSt) node = do
     execute nodeSt [toSql id, toSql $ latitude node, toSql $ longitude node]
-    mapM (execAttrSt attrSt id NodeType) (nodeTags node)
+    mapM_ (execAttrSt attrSt id NodeType) (nodeTags node)
     return ()
     where id = nodeID node
 

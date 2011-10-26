@@ -1,4 +1,4 @@
-{-#LANGUAGE TypeSynonymInstances#-}
+{-#LANGUAGE TypeSynonymInstances, OverloadedStrings#-}
 
 module FromString (
     Parseable,
@@ -7,30 +7,25 @@ module FromString (
 
 import Data.Int
 import OsmData
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Char8 as BC
+import Data.ByteString.Lex.Double
+import Data.Char
 
 class Parseable a where
-    parseString :: String -> Maybe a
+    parseString :: B.ByteString -> Maybe a
 
-tryRead x = let r = reads x
-              in
-                if null r
-                    then Nothing
-                    else Just (fst . head $ r)
-
-instance Parseable String where
-    parseString = Just . id
+instance Parseable B.ByteString where
+    parseString = Just
 
 instance Parseable Int where
-    parseString = tryRead
+    parseString = (fmap fst) . BC.readInt
 
 instance Parseable Int64 where
-    parseString = tryRead
+    parseString = (fmap fromInteger) . ((fmap fst) . BC.readInteger)
 
 instance Parseable Double where
-    parseString = tryRead
-
-instance Parseable Float where
-    parseString = tryRead
+    parseString = (fmap fst) . readDouble
 
 instance Parseable ObjectType where
     parseString "node" = Just NodeType
