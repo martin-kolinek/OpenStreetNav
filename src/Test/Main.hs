@@ -8,14 +8,16 @@ module Main (
 import Test.HUnit
 import System.Exit
 import OsmXmlParser
-import Database.HDBC
-import Database.HDBC.Sqlite3
+import qualified Database.HDBC as H
+import qualified Database.HDBC.Sqlite3 as HS
 import SqlRepresentation.BasicInsertion
 import SqlRepresentation.TableDefinition
 import qualified Text.XML.Expat.Tree as Xml
 import qualified Data.ByteString.Lazy.Char8 as BS
 import qualified Data.ByteString as B
 import qualified OsmData as D
+import SqlRepresentation.Common
+import Database.SQLite3 hiding (finalize)
 import System.Directory
 import Data.Int
 import Data.List
@@ -100,11 +102,11 @@ testDB = TestLabel "Sql representation" $ TestList
 testDBCreate = TestCase $ finally test cleanup
     where
         test = do
-            conn <- connectSqlite3 "test1.db"
+            conn <- HS.connectSqlite3 "test1.db"
             createTables conn
-            commit conn
-            disconnect conn
-            conn2 <- connectSqlite3 "test1.db"
+            H.commit conn
+            H.disconnect conn
+            conn2 <- HS.connectSqlite3 "test1.db"
             a <- checkAllTablesPresent conn2
             assertBool "all tables present" a
             --disabled due to sqlite3 backend not supporting describeTable
@@ -112,106 +114,112 @@ testDBCreate = TestCase $ finally test cleanup
             --assertBool "descriptions alright" b
             b <- trySelecting conn2
             assertBool "selection" b
-            disconnect conn2
+            H.disconnect conn2
         cleanup = removeFile "test1.db"
 
 
 testDBWrongSchema = TestCase $ finally test cleanup
     where
         test = do
-            conn <- connectSqlite3 "test3.db"
-            run conn "CREATE TABLE Test (TestCol INTEGER NOT NULL)" []
-            commit conn
-            disconnect conn
-            conn <- connectSqlite3 "test3.db"
+            conn <- HS.connectSqlite3 "test3.db"
+            H.run conn "CREATE TABLE Test (TestCol INTEGER NOT NULL)" []
+            H.commit conn
+            H.disconnect conn
+            conn <- HS.connectSqlite3 "test3.db"
             a <- checkAllTablesPresent conn
             assertBool "tables present test" $ not a
             b <- trySelecting conn
             assertBool "selection test " $ not b
-            disconnect conn
+            H.disconnect conn
         cleanup = removeFile "test3.db"
 
 testDBStatements = TestCase $ finally test cleanup
     where
         test = do
-            conn <- connectSqlite3 "test2.db"
+            conn <- HS.connectSqlite3 "test2.db"
             createTables conn
-            commit conn
+            H.commit conn
+            H.disconnect conn
+            conn <- open "test2.db"
+            beginTran conn
             nd <- prepareInsertNode conn
             execInsertNode nd testNode'
-            commit conn
-            rows <- quickQuery' conn "SELECT ID, Latitude, Longitude FROM Nodes" []
+            finalize nd
+            w <- prepareInsertWay conn
+            execInsertWay w testWay'
+            finalize w
+            rel <- prepareInsertRelation conn
+            execInsertRelation rel testRel'
+            finalize rel
+            commitTran conn
+            close conn
+            conn <- HS.connectSqlite3 "test2.db"
+            rows <- H.quickQuery' conn "SELECT ID, Latitude, Longitude FROM Nodes" []
             assertEqual "1 node" 1 (length rows)
             let row = head rows
             assertBool "node value tests" $
-                row !! 0 == toSql (23 :: Int64) &&
-                row !! 1 == toSql (1.5 :: Double) &&
-                row !! 2 == toSql (2.5 :: Double)
-            w <- prepareInsertWay conn
-            execInsertWay w testWay'
-            commit conn
-            rows <- quickQuery' conn "SELECT ID FROM Ways" []
+                row !! 0 == H.toSql (23 :: Int64) &&
+                row !! 1 == H.toSql (1.5 :: Double) &&
+                row !! 2 == H.toSql (2.5 :: Double)
+            rows <- H.quickQuery' conn "SELECT ID FROM Ways" []
             assertEqual "1 way" 1 (length rows)
             let row = head rows
-            assertBool "way id" $ row !! 0 == toSql (22 :: Int64)
-            rows <- quickQuery' conn "SELECT ID, WayID, StartNodeID, EndNodeID FROM Edges" []
+            assertBool "way id" $ row !! 0 == H.toSql (22 :: Int64)
+            rows <- H.quickQuery' conn "SELECT ID, WayID, StartNodeID, EndNodeID FROM Edges" []
             assertEqual "1 edge" 1 (length rows)
             let row = head rows
             assertBool "edge tests" $
-                row !! 1 == toSql (22 :: Int64) &&
-                row !! 2 == toSql (11 :: Int64) &&
-                row !! 3 == toSql (12 :: Int64)
-            rel <- prepareInsertRelation conn
-            execInsertRelation rel testRel'
-            commit conn
-            rows <- quickQuery' conn "SELECT ID FROM Relations" []
+                row !! 1 == H.toSql (22 :: Int64) &&
+                row !! 2 == H.toSql (11 :: Int64) &&
+                row !! 3 == H.toSql (12 :: Int64)
+            rows <- H.quickQuery' conn "SELECT ID FROM Relations" []
             assertEqual "1 rel" 1 (length rows)
             let row = head rows
             assertBool "rel id" $
-                row !! 0 == toSql (43 :: Int64)
-            rows <- quickQuery' conn "SELECT ID, RelationID, Role, ObjectID, ObjectType FROM RelationContents" []
+                row !! 0 == H.toSql (43 :: Int64)
+            rows <- H.quickQuery' conn "SELECT ID, RelationID, Role, ObjectID, ObjectType FROM RelationContents" []
             assertEqual "3 relcont" 3 (length rows)
-            let rows' = sortBy (\x y -> compare (fromSql (x !! 3) :: Int64) (fromSql (y !! 3) :: Int64)) rows
+            let rows' = sortBy (\x y -> compare (H.fromSql (x !! 3) :: Int64) (H.fromSql (y !! 3) :: Int64)) rows
             let row = rows' !! 0
             assertBool "relcont1" $
-                row !! 1 == toSql (43 :: Int64) &&
-                row !! 2 == toSql ("role" :: String) &&
-                row !! 3 == toSql (10 :: Int64) &&
-                row !! 4 == toSql NodeType
+                row !! 1 == H.toSql (43 :: Int64) &&
+                row !! 2 == H.toSql ("role" :: String) &&
+                row !! 3 == H.toSql (10 :: Int64) &&
+                row !! 4 == H.toSql NodeType
             let row = rows' !! 1
             assertBool "relcont2" $
-                row !! 1 == toSql (43 :: Int64) &&
-                row !! 2 == toSql ("role" :: String) &&
-                row !! 3 == toSql (11 :: Int64) &&
-                row !! 4 == toSql WayType
+                row !! 1 == H.toSql (43 :: Int64) &&
+                row !! 2 == H.toSql ("role" :: String) &&
+                row !! 3 == H.toSql (11 :: Int64) &&
+                row !! 4 == H.toSql WayType
             let row = rows' !! 2
             assertBool "relcont2" $
-                row !! 1 == toSql (43 :: Int64) &&
-                row !! 2 == toSql ("role" :: String) &&
-                row !! 3 == toSql (12 :: Int64) &&
-                row !! 4 == toSql RelationType
-            rows <- quickQuery' conn "SELECT ID, ObjectID, ObjectType, Key, Value FROM Attributes" []
+                row !! 1 == H.toSql (43 :: Int64) &&
+                row !! 2 == H.toSql ("role" :: String) &&
+                row !! 3 == H.toSql (12 :: Int64) &&
+                row !! 4 == H.toSql RelationType
+            rows <- H.quickQuery' conn "SELECT ID, ObjectID, ObjectType, Key, Value FROM Attributes" []
             assertEqual "tagcount 3" 3 $ length rows
-            let rows' = sortBy (\x y -> compare (fromSql (x !! 1) :: Int64) (fromSql (y !! 1) :: Int64)) rows
+            let rows' = sortBy (\x y -> compare (H.fromSql (x !! 1) :: Int64) (H.fromSql (y !! 1) :: Int64)) rows
             let row = rows' !! 0
             assertBool "tag1" $
-                row !! 1 == toSql (22 :: Int64) &&
-                row !! 2 == toSql WayType &&
-                row !! 3 == toSql ("key" :: String) &&
-                row !! 4 == toSql ("val" :: String)
+                row !! 1 == H.toSql (22 :: Int64) &&
+                row !! 2 == H.toSql WayType &&
+                row !! 3 == H.toSql ("key" :: String) &&
+                row !! 4 == H.toSql ("val" :: String)
             let row = rows' !! 1
             assertBool "tag1" $
-                row !! 1 == toSql (23 :: Int64) &&
-                row !! 2 == toSql NodeType &&
-                row !! 3 == toSql ("key" :: String) &&
-                row !! 4 == toSql ("val" :: String)
+                row !! 1 == H.toSql (23 :: Int64) &&
+                row !! 2 == H.toSql NodeType &&
+                row !! 3 == H.toSql ("key" :: String) &&
+                row !! 4 == H.toSql ("val" :: String)
             let row = rows' !! 2
             assertBool "tag1" $
-                row !! 1 == toSql (43 :: Int64) &&
-                row !! 2 == toSql RelationType &&
-                row !! 3 == toSql ("key" :: String) &&
-                row !! 4 == toSql ("val" :: String)
-            disconnect conn
+                row !! 1 == H.toSql (43 :: Int64) &&
+                row !! 2 == H.toSql RelationType &&
+                row !! 3 == H.toSql ("key" :: String) &&
+                row !! 4 == H.toSql ("val" :: String)
+            H.disconnect conn
         cleanup = removeFile "test2.db"
 
 extractTSegValue :: Maybe TestSegment -> Maybe Int

@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses, DeriveDataTypeable #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 module OsmData (
     Tag,
@@ -33,16 +33,6 @@ data Relation = Relation {relID:: Int64, members:: [RelationMapping], relTags:: 
 
 data ObjectType = NodeType | WayType | RelationType deriving (Eq, Typeable, Show, Read)
 
-instance Convertible ObjectType SqlValue where
-    safeConvert NodeType = Right (SqlInt32 0)
-    safeConvert WayType = Right (SqlInt32 1)
-    safeConvert RelationType = Right (SqlInt32 2)
-
-instance Convertible SqlValue ObjectType where
-    safeConvert (SqlInt32 0) = Right NodeType
-    safeConvert (SqlInt32 1) = Right WayType
-    safeConvert (SqlInt32 2) = Right RelationType
-    safeConvert v = convError "Value out of range" v
 
 
 

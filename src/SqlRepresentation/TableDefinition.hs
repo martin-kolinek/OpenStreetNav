@@ -7,8 +7,9 @@ module SqlRepresentation.TableDefinition (
 ) where
 
 import SqlRepresentation.Common
+import qualified Database.HDBC as H
+import Database.SQLite3
 import Data.Int
-import Database.HDBC
 import Data.List
 import Data.Char
 import Data.Maybe
@@ -55,84 +56,82 @@ toLowerS = map toLower
 allTables = sort . (map toLowerS) $
     [nodesTable, waysTable, edgesTable, relationsTable, relationContentsTable, attributesTable]
 
-allTableCols = map (\(x,y)->(toLowerS x, y)) [
-    (nodesTable,
-        [("ID", SqlIntegerT, False),
-        ("Latitude", SqlRealT, False),
-        ("Longitude", SqlRealT, False)]),
-    (waysTable,
-        [("ID", SqlIntegerT, False)]),
-    (edgesTable,
-        [("WayID", SqlIntegerT, False),
-        ("StartNodeID", SqlIntegerT, False),
-        ("EndNodeID", SqlIntegerT, False)]),
-    (relationsTable,
-        [("ID", SqlIntegerT, False)]),
-    (relationContentsTable,
-        [("RelationID", SqlIntegerT, False),
-        ("Role", SqlVarCharT, False),
-        ("ObjectID", SqlIntegerT, False),
-        ("ObjectType", SqlIntegerT, False)]),
-    (attributesTable,
-        [("ObjectID", SqlIntegerT, False),
-        ("ObjectType", SqlIntegerT, False),
-        ("Key", SqlVarCharT, False),
-        ("Value", SqlVarCharT, False)])
-    ]
-
-createTables :: IConnection a => a -> IO()
+createTables :: H.IConnection a => a -> IO()
 createTables conn = do
-        mapM exec [nodesTableCreate, waysTableCreate, edgesTableCreate, relationsCreate,
+        mapM_ exec [nodesTableCreate, waysTableCreate, edgesTableCreate, relationsCreate,
             relationContentsCreate, attributesCreate]
-        commit conn
-    where exec x = run conn x []
+    where exec x = H.run conn x []
 
 createIndexes conn = do
         mapM exec [attributesIndex1, attributesIndex2,
             attributesIndex3, edgeIndesStart, edgeIndesEnd, nodeIndexLat, nodeIndexLon,
             relationContentsIndexObject, relationContentsIndex, edgeIndexWay ]
-        commit conn
     where exec x = run conn x []
 
-checkAllTablesPresent :: IConnection a => a -> IO Bool
+allTableCols = map (\(x,y)->(toLowerS x, y)) [
+    (nodesTable,
+        [("ID", H.SqlIntegerT, False),
+        ("Latitude", H.SqlRealT, False),
+        ("Longitude", H.SqlRealT, False)]),
+    (waysTable,
+        [("ID", H.SqlIntegerT, False)]),
+    (edgesTable,
+        [("WayID", H.SqlIntegerT, False),
+        ("StartNodeID", H.SqlIntegerT, False),
+        ("EndNodeID", H.SqlIntegerT, False)]),
+    (relationsTable,
+        [("ID", H.SqlIntegerT, False)]),
+    (relationContentsTable,
+        [("RelationID", H.SqlIntegerT, False),
+        ("Role", H.SqlVarCharT, False),
+        ("ObjectID", H.SqlIntegerT, False),
+        ("ObjectType", H.SqlIntegerT, False)]),
+    (attributesTable,
+        [("ObjectID", H.SqlIntegerT, False),
+        ("ObjectType", H.SqlIntegerT, False),
+        ("Key", H.SqlVarCharT, False),
+        ("Value", H.SqlVarCharT, False)])
+    ]
+
+checkAllTablesPresent :: H.IConnection a => a -> IO Bool
 checkAllTablesPresent conn = do
-    tables <- getTables conn
+    tables <- H.getTables conn
     return (allTables == (sort . (map toLowerS)) tables)
 
-checkAllTableDescriptions :: IConnection a => a -> IO Bool
+checkAllTableDescriptions :: H.IConnection a => a -> IO Bool
 checkAllTableDescriptions conn = checkTableDescriptions conn allTables
 
-checkTableDescriptions :: IConnection a => a -> [String] -> IO Bool
+checkTableDescriptions :: H.IConnection a => a -> [String] -> IO Bool
 checkTableDescriptions _ [] = return True
 checkTableDescriptions conn (table:tables) = do
-    servColDescs <- describeTable conn table
+    servColDescs <- H.describeTable conn table
     rest <- checkTableDescriptions conn tables
     let myColDescs = lookup table allTableCols
     let thisVal = isJust myColDescs && checkTableDescription servColDescs (fromJust myColDescs)
     return (rest && thisVal)
 
-checkTableDescription :: [(String, SqlColDesc)] -> [(String, SqlTypeId, Bool)] -> Bool
+checkTableDescription :: [(String, H.SqlColDesc)] -> [(String, H.SqlTypeId, Bool)] -> Bool
 checkTableDescription servColDescs myColDescs = (length servColDescs == length myColDescs) &&
                                                 all (checkColumns servColDescs) myColDescs
 
-checkColumns :: [(String, SqlColDesc)] -> (String, SqlTypeId, Bool) -> Bool
+checkColumns :: [(String, H.SqlColDesc)] -> (String, H.SqlTypeId, Bool) -> Bool
 checkColumns servColDescs myColDesc@(name, _, _) = let entry = lookup name servColDescs
     in
         isJust entry &&
         checkColumn (name, fromJust entry) myColDesc
 
-checkColumn :: (String, SqlColDesc) -> (String, SqlTypeId, Bool) -> Bool
+checkColumn :: (String, H.SqlColDesc) -> (String, H.SqlTypeId, Bool) -> Bool
 checkColumn (name1, cp) (name2, tp, null) =
-    colType cp == tp &&
+    H.colType cp == tp &&
     name1 == name2 &&
-    not (isJust (colNullable cp)) ||
-    fromJust (colNullable cp) == null
+    not (isJust (H.colNullable cp)) ||
+    fromJust (H.colNullable cp) == null
 
-trySelecting :: IConnection a => a -> IO Bool
+trySelecting :: H.IConnection a => a -> IO Bool
 trySelecting conn = do
-    catchSql runTestSelects catchErr
+    H.catchSql runTestSelects catchErr
         where
-            execTest t = quickQuery' conn t []
+            execTest t = H.quickQuery' conn t []
             runTestSelects = do
                 mapM execTest [nodesTest, waysTest, edgeTest, relationTest, relContentsTest, attributesTest]
                 return True

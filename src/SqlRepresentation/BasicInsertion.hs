@@ -7,12 +7,14 @@ module SqlRepresentation.BasicInsertion (
     prepareInsertNode,
     execInsertRelation,
     execInsertWay,
-    execInsertNode
+    execInsertNode,
+    finalize
 ) where
 
 import SqlRepresentation.Common
 import Data.Int
-import Database.HDBC
+import Database.SQLite3 hiding (finalize)
+import qualified Database.SQLite3 as S
 import Data.List
 import Data.Char
 import Data.Maybe
@@ -20,7 +22,7 @@ import OsmData
 
 data InsertNodeStatement = InsertNodeStatement Statement Statement
 
-prepareInsertNode :: IConnection a => a -> IO InsertNodeStatement
+prepareInsertNode :: Database -> IO InsertNodeStatement
 prepareInsertNode conn = do
     st <- prepare conn $
         "INSERT INTO " ++ nodesTable ++ " (ID, Latitude, Longitude) VALUES (?, ?, ?)"
@@ -38,7 +40,7 @@ execInsertNode (InsertNodeStatement nodeSt attrSt) node = do
 
 data InsertWayStatement = InsertWayStatement Statement Statement Statement
 
-prepareInsertWay :: IConnection a => a -> IO InsertWayStatement
+prepareInsertWay :: Database -> IO InsertWayStatement
 prepareInsertWay conn = do
     st1 <- prepare conn $
         "INSERT INTO " ++ waysTable ++ " (ID) VALUES (?)"
@@ -63,7 +65,7 @@ prepareAttrStatement conn = prepare conn $ "INSERT INTO " ++ attributesTable ++
 
 data InsertRelationStatement = InsertRelationStatement Statement Statement Statement
 
-prepareInsertRelation :: IConnection a => a -> IO InsertRelationStatement
+prepareInsertRelation :: Database -> IO InsertRelationStatement
 prepareInsertRelation conn = do
     st1 <- prepare conn $ "INSERT INTO " ++ relationsTable ++
         " (ID) VALUES (?)"
@@ -91,3 +93,16 @@ pairUp x = zip x (tail x)
 
 execAttrSt attrSt id objType (x, y) = execute attrSt [toSql $ id, toSql objType, toSql x,toSql y]
 
+class Finalizable a where
+    finalize :: a -> IO ()
+
+finalizeArr args = mapM_ S.finalize args
+
+instance Finalizable InsertNodeStatement where
+    finalize (InsertNodeStatement a b) = finalizeArr [a, b]
+
+instance Finalizable InsertWayStatement where
+    finalize (InsertWayStatement a b c) = finalizeArr [a, b, c]
+
+instance Finalizable InsertRelationStatement where
+    finalize (InsertRelationStatement a b c) = finalizeArr [a, b, c]

@@ -6,8 +6,10 @@ module Main (
 
 import SqlRepresentation.BasicInsertion
 import SqlRepresentation.TableDefinition
-import Database.HDBC
-import Database.HDBC.Sqlite3
+import SqlRepresentation.Common
+import Database.HDBC.Sqlite3 as HS
+import Database.HDBC as H
+import Database.SQLite3
 import System.Exit
 import System.IO
 import System.Console.ParseArgs
@@ -51,32 +53,35 @@ getConf parsedArgs = do
     sqlite <- getArg parsedArgs "sqlite"
     return (osm, sqlite)
 
-
-
 importData :: String -> String -> IO ()
 importData osm sqlite = do
-    conn <- connectSqlite3 sqlite
+    conn <- HS.connectSqlite3 sqlite
     checkDB conn
+    H.disconnect conn
+    conn2 <- open sqlite
     text <- L.readFile osm
     let p = parse defaultParseOptions text :: (UNode B.ByteString, Maybe XMLParseError)
-    result <- catchSql (importOsm p conn) (handleErr)
+    beginTran conn2
+    result <- importOsm p conn2
     case result of
         Nothing -> do
-            commit conn
+            commitTran conn2
             putStrLn "Creating indexes..."
-            createIndexes conn
+            createIndexes conn2
             putStrLn "Success"
         Just msg -> do
-            rollback conn
+            rollbackTran conn2
             hPutStrLn stderr msg
-    disconnect conn
-    where handleErr err = return $ Just $ "Database error: " ++ show err
+
 
 importOsm (tree, err) conn = do
     nodeSt <- prepareInsertNode conn
     waySt <- prepareInsertWay conn
     relSt <- prepareInsertRelation conn
     xmlRes <- foldM (foldFunc nodeSt waySt relSt) (Right 0) (eChildren tree)
+    finalize nodeSt
+    finalize waySt
+    finalize relSt
     case xmlRes of
         Right _ -> return Nothing
         Left msg -> return $ Just msg
@@ -112,7 +117,7 @@ importNode nodeSt waySt relSt n@(Element name _ _) int = do
         success = Right $ int + 1
 importNode nodeSt waySt relSt _ int = return (Right (int+1))
 
-
+checkDB :: IConnection a => a -> IO ()
 checkDB conn = do
     tables <- getTables conn
     if tables == []
