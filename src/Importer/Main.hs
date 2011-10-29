@@ -9,7 +9,7 @@ import SqlRepresentation.TableDefinition
 import SqlRepresentation.Common
 import Database.HDBC.Sqlite3 as HS
 import Database.HDBC as H
-import Database.SQLite3
+import Database.SQLite3 hiding (finalize)
 import System.Exit
 import System.IO
 import System.Console.ParseArgs
@@ -121,7 +121,7 @@ checkDB :: IConnection a => a -> IO ()
 checkDB conn = do
     tables <- getTables conn
     if tables == []
-        then createTables conn
+        then createTables conn >> H.commit conn
         else do
             result1 <- checkAllTablesPresent conn
             result2 <- trySelecting conn
