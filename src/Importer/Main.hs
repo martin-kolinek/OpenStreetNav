@@ -23,7 +23,7 @@ import Control.Seq
 import Control.Exception
 import Control.DeepSeq
 
-progressStep = 10000
+progressStep = 100
 
 validArgs =
     [

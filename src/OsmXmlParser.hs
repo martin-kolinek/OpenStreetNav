@@ -24,8 +24,16 @@ parseOsmSAX :: (a -> D.Node -> a) ->
             a ->
             [SAXEvent B.ByteString B.ByteString] ->
             a
-parseOsmSAX n w r e p s ((StartElement "osm" []):rest) = parseSAXEvents n w r e p 0 s rest
-parseOsmSAX _ _ _ e _ _ _ = e "wrong xml start"
+parseOsmSAX _ _ _ e _ _ [] = e "empty sax events"
+parseOsmSAX n w r e p s ((XMLDeclaration _ _ _):rest) = parseOsmSAX n w r e p s rest
+parseOsmSAX n w r e p s ((Comment _):rest) = parseOsmSAX n w r e p s rest
+parseOsmSAX n w r e p s ((CharacterData d):rest) = if BC.all isSpace d
+    then
+        parseOsmSAX n w r e p s rest
+    else
+        e $ "unexpected character data " ++ (BC.unpack d)
+parseOsmSAX n w r e p s ((StartElement "osm" _):rest) = parseSAXEvents n w r e p 0 s rest
+parseOsmSAX _ _ _ e _ _ (pc:_) = e $ "wrong xml start " ++ (show pc)
 
 parseSAXEvents :: (a -> D.Node -> a) ->
             (a -> D.Way -> a) ->
@@ -55,6 +63,7 @@ parseSAXEvents n w r e p int s sax@((StartElement name _):_) = internal
             | name == "node" = handleTopLevel getNode n
             | name == "relation" = handleTopLevel getRelation r
             | name == "way" = handleTopLevel getWay w
+            | otherwise = handleTopLevel getNothing noHandler
 parseSAXEvents n w r e p int s ((Comment _):rest) = parseSAXEvents n w r e p int s rest
 parseSAXEvents n w r e p int s ((CharacterData d):rest) = if BC.all isSpace d
     then
@@ -62,6 +71,26 @@ parseSAXEvents n w r e p int s ((CharacterData d):rest) = if BC.all isSpace d
     else
         e $ "unexpected character data " ++ (BC.unpack d)
 parseSAXEvents _ _ _ e _ _ _ (pc:_) = e $ "unexpected xml piece " ++ (show pc)
+
+noHandler s _ = s
+
+getNothing :: [SAXEvent B.ByteString B.ByteString] ->
+              Either String ([SAXEvent B.ByteString B.ByteString], ())
+getNothing [] = return ([], ())
+getNothing ((StartElement nm _):rest) = dummyParse nm rest
+
+dummyParse :: B.ByteString ->
+              [SAXEvent B.ByteString B.ByteString] ->
+              Either String ([SAXEvent B.ByteString B.ByteString], ())
+dummyParse nm ret@((EndElement nm2):rest) = if nm == nm2
+    then
+        Right (ret, ())
+    else
+        Left $ "mismatched element names " ++ (BC.unpack nm) ++ " " ++ (BC.unpack nm2)
+dummyParse nm sax@((StartElement nm2 _):_) = do
+    (rest, _) <- getNothing sax
+    dummyParse nm rest
+dummyParse nm (_:rest) = dummyParse nm rest
 
 getNode ((StartElement name attrs):rest) = do
     id <- lookupA attrs "id"
