@@ -12,7 +12,7 @@ import qualified Database.HDBC as H
 import qualified Database.HDBC.Sqlite3 as HS
 import SqlRepresentation.BasicInsertion
 import SqlRepresentation.TableDefinition
-import qualified Text.XML.Expat.Tree as Xml
+import qualified Text.XML.Expat.SAX as Xml
 import qualified Data.ByteString.Lazy.Char8 as BS
 import qualified Data.ByteString as B
 import qualified OsmData as D
@@ -35,25 +35,25 @@ instance Segment TestSegment where
 
 segm x1 y1 x2 y2 val = TSegment (Point x1 y1) (Point x2 y2) val
 
-testNode = (fst . Xml.parse Xml.defaultParseOptions $ BS.pack
-    "<node id=\"23\" lat=\"1.5\" lon=\"2.5\"><tag k=\"key\" v=\"val\" /></node>" :: (Xml.UNode B.ByteString))
+testNode = Xml.parse Xml.defaultParseOptions $ BS.pack
+    "<osm><node id=\"23\" lat=\"1.5\" lon=\"2.5\"><tag k=\"key\" v=\"val\" /></node></osm>" :: [Xml.SAXEvent B.ByteString B.ByteString]
 
-testWay = (fst . Xml.parse Xml.defaultParseOptions $ BS.pack
-    "<way id=\"22\"><nd ref=\"11\"/><nd ref=\"12\" /><tag k=\"key\" v=\"val\" /></way>" :: (Xml.UNode B.ByteString))
+testWay = Xml.parse Xml.defaultParseOptions $ BS.pack
+    "<osm><way id=\"22\"><nd ref=\"11\"/><nd ref=\"12\" /><tag k=\"key\" v=\"val\" /></way></osm>" :: [Xml.SAXEvent B.ByteString B.ByteString]
 
-testRel = (fst . Xml.parse Xml.defaultParseOptions $ BS.pack (
-    "<relation id=\"43\">"++
+testRel = Xml.parse Xml.defaultParseOptions $ BS.pack (
+    "<osm><relation id=\"43\">"++
         "<member type=\"node\" ref=\"10\" role=\"role\"/>"++
         "<member type=\"way\" ref=\"11\" role=\"role\"/>"++
         "<member type=\"relation\" ref=\"12\" role=\"role\"/>"++
         "<tag k=\"key\" v=\"val\" />"++
-    "</relation>") :: (Xml.UNode B.ByteString))
+    "</relation></osm>") :: [Xml.SAXEvent B.ByteString B.ByteString]
 
-testNode2 = fst . Xml.parse Xml.defaultParseOptions $ BS.pack (
-    "<node id=\"5410667\" lat=\"48.1528677\" lon=\"17.1138423\" user=\"YuraH\" uid=\"374661\" visible=\"true\" version=\"7\" changeset=\"9445252\" timestamp=\"2011-10-01T19:29:09Z\">  <tag k=\"highway\" v=\"traffic_signals\"/> </node>")
+testNode2 = Xml.parse Xml.defaultParseOptions $ BS.pack (
+    "<osm> <node id=\"5410667\" lat=\"48.1528677\" lon=\"17.1138423\" user=\"YuraH\" uid=\"374661\" visible=\"true\" version=\"7\" changeset=\"9445252\" timestamp=\"2011-10-01T19:29:09Z\"> <!-- asdf --> <tag k=\"highway\" v=\"traffic_signals\"/> </node> <!-- adsf --> </osm>") :: [Xml.SAXEvent B.ByteString B.ByteString]
 
-testNode3 = fst . Xml.parse Xml.defaultParseOptions $ BS.pack (
-    "<node id=\"5410667\" lat=\"48.1528677\" lon=\"17.1138423\" user=\"YuraH\" uid=\"374661\" visible=\"true\" version=\"7\" changeset=\"9445252\" timestamp=\"2011-10-01T19:29:09Z\">  <tag k=\"highway\\\" v=\"traffic_signals\"/> </node>")
+testNode3 = Xml.parse Xml.defaultParseOptions $ BS.pack (
+    "<osm><node id=\"5410667\" lat=\"48.1528677\" lon=\"17.1138423\" user=\"YuraH\" uid=\"374661\" visible=\"true\" version=\"7\" changeset=\"9445252\" timestamp=\"2011-10-01T19:29:09Z\">  <tag k=\"highway\\\" v=\"traffic_signals\"/> </node></osm>") :: [Xml.SAXEvent B.ByteString B.ByteString]
 
 testNode' = D.Node {D.nodeID = 23, D.latitude = 1.5, D.longitude = 2.5, D.nodeTags = [("key", "val")]}
 testWay' = D.Way {D.wayID = 22, D.nodes = [11,12], D.wayTags = [("key", "val")]}
@@ -64,32 +64,36 @@ testXmlParser = TestLabel "Xml parser" $ TestList
         [TestLabel "way" testParseWay, TestLabel "node" testParseNode, TestLabel "rel" testParseRel,
         TestLabel "node2" testParseNode2, TestLabel "node3" testParseNode3]
 
+errHandler = Left
+noHandler x _ = x
+justHandler _ = Right
+
 testParseWay = TestCase $ do
-    let tway = parseWay testWay
+    let tway = parseOsmSAX noHandler justHandler noHandler errHandler noHandler (Left "start") testWay
     case tway of
         (Left err) -> assertFailure err
         (Right way) -> assertEqual "Way equality" way testWay'
 
 testParseNode = TestCase $ do
-    let tnode = parseNode testNode
+    let tnode = parseOsmSAX justHandler noHandler noHandler errHandler noHandler (Left "start") testNode
     case tnode of
         (Left err) -> assertFailure err
         (Right node) -> assertEqual "Node equality" node testNode'
 
 testParseRel = TestCase $ do
-    let trel = parseRelation testRel
+    let trel = parseOsmSAX noHandler noHandler justHandler errHandler noHandler (Left "start") testRel
     case trel of
         (Left err) -> assertFailure err
         (Right rel) -> assertEqual "Node equality" rel testRel'
 
 testParseNode2 = TestCase $ do
-    let tnode = parseNode testNode2
+    let tnode = parseOsmSAX justHandler noHandler noHandler errHandler noHandler (Left "start") testNode2
     case tnode of
         (Left err) -> assertFailure err
         _ -> return ()
 
 testParseNode3 = TestCase $ do
-    let tnode = parseNode testNode3
+    let tnode = parseOsmSAX justHandler noHandler noHandler errHandler noHandler (Left "start") testNode3
     case tnode of
         (Left err) -> assertFailure err
         _ -> return ()

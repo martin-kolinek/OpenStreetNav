@@ -17,7 +17,7 @@ import Data.Maybe
 import Control.Monad
 import qualified Data.ByteString.Lazy as L
 import qualified Data.ByteString as B
-import Text.XML.Expat.Tree
+import Text.XML.Expat.SAX
 import OsmXmlParser
 import Control.Seq
 import Control.Exception
@@ -60,62 +60,38 @@ importData osm sqlite = do
     H.disconnect conn
     conn2 <- open sqlite
     text <- L.readFile osm
-    let p = parse defaultParseOptions text :: (UNode B.ByteString, Maybe XMLParseError)
+    nodeSt <- prepareInsertNode conn2
+    waySt <- prepareInsertWay conn2
+    relSt <- prepareInsertRelation conn2
     beginTran conn2
-    result <- importOsm p conn2
-    case result of
-        Nothing -> do
+    let p = parse defaultParseOptions text :: [SAXEvent B.ByteString B.ByteString]
+    success <- parseOsmSAX
+                    (addInsertNode nodeSt)
+                    (addInsertWay waySt)
+                    (addInsertRel relSt)
+                    errorHandler
+                    progressHandler
+                    (return True)
+                    p
+    if success
+        then do
             commitTran conn2
             putStrLn "Creating indexes..."
             createIndexes conn2
             putStrLn "Success"
-        Just msg -> do
+        else do
             rollbackTran conn2
-            hPutStrLn stderr msg
+            putStrLn "Aborted"
 
+addInsertNode nodeSt act node = act >> execInsertNode nodeSt node >> return True
+addInsertWay waySt act way = act >> execInsertWay waySt way >> return True
+addInsertRel relSt act rel = act >> execInsertRelation relSt rel >> return True
+errorHandler str = putStrLn str >> return False
+progressHandler act int = do
+    val <- act
+    when (int `mod` progressStep == 0) $ putStrLn ("Processed " ++ show int ++ " xml pieces")
+    return val
 
-importOsm (tree, err) conn = do
-    nodeSt <- prepareInsertNode conn
-    waySt <- prepareInsertWay conn
-    relSt <- prepareInsertRelation conn
-    xmlRes <- foldM (foldFunc nodeSt waySt relSt) (Right 0) (eChildren tree)
-    finalize nodeSt
-    finalize waySt
-    finalize relSt
-    case xmlRes of
-        Right _ -> return Nothing
-        Left msg -> return $ Just msg
-    where
-        foldFunc nodeSt waySt relSt lastResult n =  do
-            case lastResult of
-                failure@(Left _) -> return failure
-                Right int -> do
-                    newResult <- (importNode nodeSt waySt relSt n int)
-                    let r' = withStrategy rdeepseq newResult
-                    evaluate r'
-                    showProgress int
-                    return r'
-        showProgress int = when (int `mod` progressStep == 0) (putStrLn (msg int))
-        msg int = "Processed " ++ show int ++ "xml pieces"
-
-importNode :: InsertNodeStatement ->
-                InsertWayStatement ->
-                InsertRelationStatement ->
-                UNode B.ByteString ->
-                Int ->
-                IO (Either String Int)
-importNode nodeSt waySt relSt n@(Element name _ _) int = do
-    case name of
-        "node" -> eitherIO (execInsertNode nodeSt) (parseNode n)
-        "way" -> eitherIO (execInsertWay waySt) (parseWay n)
-        "relation" -> eitherIO (execInsertRelation relSt) (parseRelation n)
-        _ -> return success
-    where
-        eitherIO :: (a -> IO b) -> (Either String a) -> IO (Either String Int)
-        eitherIO f (Left s) = return (Left s)
-        eitherIO f (Right x) = f x >> return success
-        success = Right $ int + 1
-importNode nodeSt waySt relSt _ int = return (Right (int+1))
 
 checkDB :: IConnection a => a -> IO ()
 checkDB conn = do

@@ -12,7 +12,9 @@ module SqlRepresentation.Common (
     run,
     beginTran,
     commitTran,
-    rollbackTran
+    rollbackTran,
+    query,
+    strictQuery
 ) where
 
 import Database.SQLite3
@@ -21,6 +23,8 @@ import OsmData
 import Data.Int
 import qualified Database.HDBC as H
 import qualified Data.ByteString.Char8 as B
+import System.IO.Unsafe
+import Debug.Trace
 
 nodesTable = "Nodes"
 
@@ -43,6 +47,36 @@ beginTran db = run db "BEGIN TRANSACTION" []
 commitTran db = run db "COMMIT TRANSACTION" []
 
 rollbackTran db = run db "ROLLBACK TRANSACTION" []
+
+query :: Statement -> [SQLData] -> IO [[SQLData]]
+query st args = do
+    bind st args
+    queryInternal st
+    where queryInternal st = unsafeInterleaveIO $ do
+            res <- step st
+            if (res == Done)
+                then
+                    return []
+                else do
+                    cols <- columns st
+                    rem <- queryInternal st
+                    return (cols : rem)
+
+strictQuery :: Statement -> [SQLData] -> IO [[SQLData]]
+strictQuery st args = do
+    bind st args
+    queryInternal st
+    where queryInternal st = do
+            res <- step st
+            if res == Done
+                then do
+                    reset st
+                    return []
+                else do
+                    cols <- columns st
+                    rest <- queryInternal st
+                    return (cols:rest)
+
 
 execute :: Statement -> [SQLData] -> IO ()
 execute st args = do
