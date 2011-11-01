@@ -37,7 +37,7 @@ executable OsmSlabTest
   build-depends: base -any, parseargs -any, hexpat -any,
                convertible -any, bytestring -any, base -any, HDBC-sqlite3 -any,
                HDBC -any, OpenStreetNav -any, deepseq -any, parallel -any,
-               text -any, containers -any, array -any
+               text -any, containers -any, array -any, direct-sqlite -any
   hs-source-dirs: src
   ghc-prof-options: -auto-all -prof
   ghc-options: -rtsopts 
