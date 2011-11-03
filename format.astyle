@@ -1,0 +1,9 @@
+--style=allman
+--indent=spaces=4
+--indent-switches
+--indent-cases
+--align-pointer=type
+--pad-oper
+--pad-header
+--suffix=none
+
