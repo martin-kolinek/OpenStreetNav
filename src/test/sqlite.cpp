@@ -1,8 +1,5 @@
 #include <cstdio>
-#include "../sqlite/Statement.h"
-#include "../sqlite/Database.h"
-#include "../sqlite/SqliteException.h"
-#include "../sqlite/InvalidUseException.h"
+#include "../sqlite/sqlitewrap.h"
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 #include <iostream>
