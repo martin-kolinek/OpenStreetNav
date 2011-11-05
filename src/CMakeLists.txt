@@ -7,3 +7,5 @@ include_directories(${Boost_INCLUDE_DIRS})
 add_subdirectory(sqlite)
 
 add_subdirectory(test)
+
+add_subdirectory(elements)

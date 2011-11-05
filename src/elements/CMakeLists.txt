@@ -1,0 +1,1 @@
+add_library(osmelements Node.cpp Relation.cpp Relation.cpp RelationMapping.cpp Tag.cpp Way.cpp)
