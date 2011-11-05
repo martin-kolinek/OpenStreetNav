@@ -31,6 +31,8 @@ void prepare_test_db(sqlite::Database& db)
     BOOST_REQUIRE_MESSAGE(st.done(), "st is not done");
     st = sqlite::Statement("CREATE TABLE empty(ID INTEGER PRIMARY KEY)", db);
     st.step();
+    st = sqlite::Statement("CREATE TABLE empty2(ID INTEGER PRIMARY KEY, A REAL)", db);
+    st.step();
 }
 void insert_data(sqlite::Database& db)
 {
@@ -129,6 +131,23 @@ BOOST_AUTO_TEST_CASE(step_failure)
         BOOST_CHECK(st2.has_row());
     }
     BOOST_CHECK_EQUAL(0, db.unfinalized());
+}
+
+BOOST_AUTO_TEST_CASE(bind)
+{
+    sqlite::Statement st("INSERT INTO empty2 (ID, A) VALUES(?,?)", db);
+    st.bind_int(1, 20);
+    st.bind_double(2, 3);
+    BOOST_CHECK_THROW(st.bind_double(0, 19), sqlite::SqliteException);
+    BOOST_CHECK_THROW(st.bind_double(3, 29), sqlite::SqliteException);
+    st.step();
+    sqlite::Statement st2("SELECT ID, A FROM empty2", db);
+    st2.step();
+    BOOST_CHECK(st2.has_row());
+    BOOST_CHECK_EQUAL(st2.val_int(0), 20);
+    BOOST_CHECK_CLOSE(st2.val_double(1), 3, 0.0001);
+    st2.step();
+    BOOST_CHECK(st2.done());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

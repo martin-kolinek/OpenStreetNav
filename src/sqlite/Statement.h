@@ -63,28 +63,53 @@ public:
 
     /**
      *
-     * @param col_index
+     * @param col_index index of retrieved column
      * @return value of a column in current row as double
      */
     double val_double(int col_index);
     /**
      *
-     * @param col_index
+     * @param col_index index of retrieved column
      * @return value of a column in current row as int
      */
     int val_int(int col_index);
     /**
      *
-     * @param col_index
+     * @param col_index index of retrieved column
      * @return value of a column in current row as 64 bit integer
      */
     int64_t val_int64(int col_index);
     /**
      *
-     * @param col_index
+     * @param col_index index of retrieved column
      * @return value of a column in current row as string
      */
     std::string val_string(int col_index);
+
+    /**
+     * Binds a value to prepared statement parameter
+     * @param param_index
+     * @param value
+     */
+    void bind_double(int param_index, double value);
+    /**
+     * Binds a value to prepared statement parameter
+     * @param param_index
+     * @param value
+     */
+    void bind_int(int param_index, int value);
+    /**
+     * Binds a value to prepared statement parameter
+     * @param param_index
+     * @param value
+     */
+    void bind_int64(int param_index, int64_t value);
+    /**
+     * Binds a value to prepared statement parameter
+     * @param param_index
+     * @param value
+     */
+    void bind_string(int param_index, std::string const& value);
 
 private:
     void reset_internal();

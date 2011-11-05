@@ -134,8 +134,8 @@ double Statement::val_double(int col_index)
 
 int64_t Statement::val_int64(int col_index)
 {
-	check_value_conditions(col_index);
-	return sqlite3_column_int64(stmt, col_index);
+    check_value_conditions(col_index);
+    return sqlite3_column_int64(stmt, col_index);
 }
 
 int Statement::val_int(int col_index)
@@ -150,6 +150,26 @@ std::string Statement::val_string(int col_index)
     const unsigned char* ptr = sqlite3_column_text(stmt, col_index);
     const char* cptr = reinterpret_cast<const char*>(ptr);
     return std::string(cptr);
+}
+
+void Statement::bind_double(int param_index, double value)
+{
+    throw_sqlite_status(sqlite3_bind_double(stmt, param_index, value), db->cobj());
+}
+
+void Statement::bind_int(int param_index, int value)
+{
+    throw_sqlite_status(sqlite3_bind_int(stmt, param_index, value), db->cobj());
+}
+
+void Statement::bind_int64(int param_index, int64_t value)
+{
+    throw_sqlite_status(sqlite3_bind_int64(stmt, param_index, value), db->cobj());
+}
+
+void Statement::bind_string(int param_index, const std::string& value)
+{
+    throw_sqlite_status(sqlite3_bind_text(stmt, param_index, value.c_str(), value.size(), SQLITE_TRANSIENT), db->cobj());
 }
 
 void Statement::check_value_conditions(int col)
@@ -170,6 +190,8 @@ void Statement::finalize()
     db->unregister_statement(*this);
     stmt = NULL;
 }
+
+
 
 }
 
