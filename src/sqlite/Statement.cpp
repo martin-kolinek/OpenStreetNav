@@ -126,16 +126,16 @@ void Statement::reset_nothrow()
     sqlite3_reset(stmt);
 }
 
-const void* Statement::val_blob(int col_index)
-{
-    check_value_conditions(col_index);
-    return sqlite3_column_blob(stmt, col_index);
-}
-
 double Statement::val_double(int col_index)
 {
     check_value_conditions(col_index);
     return sqlite3_column_double(stmt, col_index);
+}
+
+int64_t Statement::val_int64(int col_index)
+{
+	check_value_conditions(col_index);
+	return sqlite3_column_int64(stmt, col_index);
 }
 
 int Statement::val_int(int col_index)

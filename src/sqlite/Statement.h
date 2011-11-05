@@ -5,11 +5,12 @@
  *      Author: martin
  */
 
-#include <sqlite3.h>
-#include "Database.h"
-
 #ifndef STATEMENT_H_
 #define STATEMENT_H_
+
+#include <sqlite3.h>
+#include "Database.h"
+#include <cstdint>
 
 namespace sqlite
 {
@@ -46,10 +47,8 @@ public:
      * Step the statement as in get next row or execute insert, update etc.
      */
     void step();
-    void const* val_blob(int col_index);
-    double val_double(int col_index);
-    int val_int(int col_index);
-    std::string val_string(int col_index);
+
+
     /**
      * Reset the statement. Resets done and has_row flags. If it is a query stepping will result in rows
      * being returned from beginning again. Otherwise it has no apparent reason to call this since step
@@ -61,6 +60,32 @@ public:
      * after this.
      */
     void finalize();
+
+    /**
+     *
+     * @param col_index
+     * @return value of a column in current row as double
+     */
+    double val_double(int col_index);
+    /**
+     *
+     * @param col_index
+     * @return value of a column in current row as int
+     */
+    int val_int(int col_index);
+    /**
+     *
+     * @param col_index
+     * @return value of a column in current row as 64 bit integer
+     */
+    int64_t val_int64(int col_index);
+    /**
+     *
+     * @param col_index
+     * @return value of a column in current row as string
+     */
+    std::string val_string(int col_index);
+
 private:
     void reset_internal();
     void reset_nothrow();
