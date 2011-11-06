@@ -35,6 +35,11 @@ private:
             return T();
         }
     };
+    friend Statement::ColType<double> coldouble();
+    friend Statement::ColType<int> colint();
+    friend Statement::ColType<int64_t> colint64();
+    friend Statement::ColType<std::string> colstr();
+
 public:
     /**
      * Constructs statement. Also registers the constructed statement with the database connection.
@@ -47,11 +52,6 @@ public:
     Statement& operator=(Statement const&) = delete;
     Statement(Statement && other);
     Statement& operator=(Statement && other);
-
-    static ColType<int> colint();
-    static ColType<double> coldouble();
-    static ColType<int64_t> colint64();
-    static ColType<std::string> colstring();
 
     /**
      * @return whether the statement is done, as in all of it has been executed
@@ -130,11 +130,21 @@ public:
      */
     void bind_string(int param_index, std::string const& value);
 
+    /**
+     *
+     * @param types types of returned columns (see \ref colint, \ref coldouble, \ref colint64, \ref colstring)
+     * @return current row as tuple
+     */
     template<typename... Args> std::tuple<Args...> get_row(ColType<Args>... types)
     {
         return get_row_internal(0, types...);
     }
 
+    /**
+     *
+     * @param types the same as in \ref get_row
+     * @return all remaining rows as tuples
+     */
     template<typename... Args> std::vector<std::tuple<Args...> > get_remaining_rows(ColType<Args>... types)
     {
         std::vector<std::tuple<Args...> > ret;
@@ -146,6 +156,23 @@ public:
         }
         return ret;
     }
+
+    /**
+     * Column type int
+     */
+    static ColType<int> colint;
+    /**
+     * Column type double
+     */
+    static ColType<double> coldouble;
+    /**
+     * Column type int64
+     */
+    static ColType<int64_t> colint64;
+    /**
+     * Column type string
+     */
+    static ColType<std::string> colstring;
 
 private:
     void reset_internal();
@@ -176,6 +203,13 @@ private:
  */
 void execute_sql(std::string sql, Database& db);
 
+/**
+ *
+ * @param sql sql query
+ * @param db database connection
+ * @param types same as in \ref Statement::get_row
+ * @return vector of returned rows as tuples
+ */
 template<typename... Args> std::vector<std::tuple<Args...> > query_sql(std::string sql, Database& db, Statement::ColType<Args>... types)
 {
     Statement st(sql, db);
@@ -221,6 +255,14 @@ public:
         return st.val_string(col_index);
     }
 };
+
+Statement::ColType<double> coldouble();
+
+Statement::ColType<int> colint();
+
+Statement::ColType<int64_t> colint64();
+
+Statement::ColType<std::string> colstr();
 
 }
 

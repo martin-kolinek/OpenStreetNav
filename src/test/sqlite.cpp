@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE(exec)
     sqlite::execute_sql("INSERT INTO empty3 (A, B, C) VALUES(1, 2, 3)", db);
     sqlite::execute_sql("INSERT INTO empty3 (A, B, C) VALUES(4, 5, 6)", db);
     std::vector<std::tuple<int, int, int> > exp {std::make_tuple(1, 2, 3), std::make_tuple(4, 5, 6)};
-    std::vector<std::tuple<int, int, int> > ret = sqlite::query_sql(std::string("SELECT A, B, C FROM empty3"), db, sqlite::Statement::colint(), sqlite::Statement::colint(), sqlite::Statement::colint());
+    std::vector<std::tuple<int, int, int> > ret = sqlite::query_sql(std::string("SELECT A, B, C FROM empty3"), db, sqlite::colint(), sqlite::colint(), sqlite::colint());
     std::sort(ret.begin(), ret.end());
     BOOST_CHECK(ret == exp);
 }

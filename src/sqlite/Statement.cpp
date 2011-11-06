@@ -173,24 +173,24 @@ void Statement::bind_string(int param_index, const std::string& value)
     throw_sqlite_status(sqlite3_bind_text(stmt, param_index, value.c_str(), value.size(), SQLITE_TRANSIENT), db->cobj());
 }
 
-Statement::ColType<int> Statement::colint()
+Statement::ColType<double> coldouble()
 {
-    return Statement::ColType<int>();
+    return Statement::coldouble;
 }
 
-Statement::ColType<double> Statement::coldouble()
+Statement::ColType<int> colint()
 {
-    return Statement::ColType<double>();
+    return Statement::colint;
 }
 
-Statement::ColType<int64_t> Statement::colint64()
+Statement::ColType<int64_t> colint64()
 {
-    return Statement::ColType<int64_t>();
+    return Statement::colint64;
 }
 
-Statement::ColType<std::string> Statement::colstring()
+Statement::ColType<std::string> colstr()
 {
-    return Statement::ColType<std::string>();
+    return Statement::colstring;
 }
 
 void Statement::check_value_conditions(int col)
