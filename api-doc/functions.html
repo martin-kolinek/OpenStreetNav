@@ -48,13 +48,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li class="current"><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
+      <li><a href="functions_vars.html"><span>Variables</span></a></li>
     </ul>
   </div>
 </div>
 <div class="contents">
 <div class="textblock">Here is a list of all documented struct and union fields with links to the struct/union documentation for each field:</div><ul>
+<li>bind_double()
+: <a class="el" href="classsqlite_1_1Statement.html#a98043bd129d6e0a4c7f531e46b828fbe">sqlite::Statement</a>
+</li>
+<li>bind_int()
+: <a class="el" href="classsqlite_1_1Statement.html#a977d0a052ed2ea162eb67a4c2f504380">sqlite::Statement</a>
+</li>
+<li>bind_int64()
+: <a class="el" href="classsqlite_1_1Statement.html#a6b1647166511662615d5d31a9b1a6ae6">sqlite::Statement</a>
+</li>
+<li>bind_string()
+: <a class="el" href="classsqlite_1_1Statement.html#a2e726bcdd8e43b36dd3dd9fd462c0ade">sqlite::Statement</a>
+</li>
 <li>close()
 : <a class="el" href="classsqlite_1_1Database.html#a3b1011ab3faa16ee4ef301c0420bba17">sqlite::Database</a>
+</li>
+<li>coldouble
+: <a class="el" href="classsqlite_1_1Statement.html#aa92b0146b798be7a94c33d769d4d53b5">sqlite::Statement</a>
+</li>
+<li>colint
+: <a class="el" href="classsqlite_1_1Statement.html#a91a3e2895796414674345e4f6c507595">sqlite::Statement</a>
+</li>
+<li>colint64
+: <a class="el" href="classsqlite_1_1Statement.html#ab63283f8ceb48ce261e6621b479d61bf">sqlite::Statement</a>
+</li>
+<li>colstring
+: <a class="el" href="classsqlite_1_1Statement.html#abd0eb9cc12206924108726675c116957">sqlite::Statement</a>
 </li>
 <li>Database()
 : <a class="el" href="classsqlite_1_1Database.html#a3047f8106ffd09740f0ce3b337110d53">sqlite::Database</a>
@@ -67,6 +92,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>force_close()
 : <a class="el" href="classsqlite_1_1Database.html#a2c2339700222c26bc786b6d4f65d1c03">sqlite::Database</a>
+</li>
+<li>get_remaining_rows()
+: <a class="el" href="classsqlite_1_1Statement.html#ae13d54d2f6041bcd514ae73e4785bba7">sqlite::Statement</a>
+</li>
+<li>get_row()
+: <a class="el" href="classsqlite_1_1Statement.html#a8b8ac108b9ef2ef640c9a4347a3a3a6e">sqlite::Statement</a>
 </li>
 <li>has_row()
 : <a class="el" href="classsqlite_1_1Statement.html#a7bc0d84f6b313ccb3834dcf138cae6d4">sqlite::Statement</a>
@@ -89,6 +120,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>unregister_statement()
 : <a class="el" href="classsqlite_1_1Database.html#af7ddfa487ec7a9416bd04ee87257784f">sqlite::Database</a>
 </li>
+<li>val_double()
+: <a class="el" href="classsqlite_1_1Statement.html#aee7c431b9ede9cf8e8fc04c359918736">sqlite::Statement</a>
+</li>
+<li>val_int()
+: <a class="el" href="classsqlite_1_1Statement.html#ad0242bd4d408139f7cce16aee22aaa27">sqlite::Statement</a>
+</li>
+<li>val_int64()
+: <a class="el" href="classsqlite_1_1Statement.html#a7697d148766b3ff510311cd52a0714b0">sqlite::Statement</a>
+</li>
+<li>val_string()
+: <a class="el" href="classsqlite_1_1Statement.html#a104f9debd2b964d617e519f14c980535">sqlite::Statement</a>
+</li>
 </ul>
 </div>
 <!-- window showing the filter options -->
@@ -96,7 +139,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -105,7 +148,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 4 2011 00:19:03 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Nov 6 2011 15:16:05 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

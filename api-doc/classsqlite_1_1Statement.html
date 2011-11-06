@@ -53,7 +53,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#friends">Friends</a>  </div>
   <div class="headertitle">
 <div class="title">sqlite::Statement Class Reference</div>  </div>
 </div>
@@ -61,6 +64,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <!-- doxytag: class="sqlite::Statement" -->
 <p><code>#include &lt;<a class="el" href="Statement_8h_source.html">Statement.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr><td colspan="2"><h2><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><b>ColType</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement_1_1ColType_3_01double_01_4.html">ColType&lt; double &gt;</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement_1_1ColType_3_01int_01_4.html">ColType&lt; int &gt;</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement_1_1ColType_3_01int64__t_01_4.html">ColType&lt; int64_t &gt;</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement_1_1ColType_3_01std_1_1string_01_4.html">ColType&lt; std::string &gt;</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a0f125162b5543d8b4b3ffd06cfaeb643">Statement</a> (std::string const &amp;sql, <a class="el" href="classsqlite_1_1Database.html">Database</a> &amp;db)</td></tr>
@@ -75,21 +85,41 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a2debee0d82c26ea8bb6508b6034ee2bd">done</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a7bc0d84f6b313ccb3834dcf138cae6d4">has_row</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#ac70f89c6b035f6b762af5eb9c9cfd655">step</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab67d0488a9b2ea904c42abb740218943"></a><!-- doxytag: member="sqlite::Statement::val_blob" ref="ab67d0488a9b2ea904c42abb740218943" args="(int col_index)" -->
-void const *&#160;</td><td class="memItemRight" valign="bottom"><b>val_blob</b> (int col_index)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aee7c431b9ede9cf8e8fc04c359918736"></a><!-- doxytag: member="sqlite::Statement::val_double" ref="aee7c431b9ede9cf8e8fc04c359918736" args="(int col_index)" -->
-double&#160;</td><td class="memItemRight" valign="bottom"><b>val_double</b> (int col_index)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad0242bd4d408139f7cce16aee22aaa27"></a><!-- doxytag: member="sqlite::Statement::val_int" ref="ad0242bd4d408139f7cce16aee22aaa27" args="(int col_index)" -->
-int&#160;</td><td class="memItemRight" valign="bottom"><b>val_int</b> (int col_index)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a104f9debd2b964d617e519f14c980535"></a><!-- doxytag: member="sqlite::Statement::val_string" ref="a104f9debd2b964d617e519f14c980535" args="(int col_index)" -->
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>val_string</b> (int col_index)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a94ad3cc02d5e023453af9d4faec80704">reset</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#adb80dc2d94f7054d1d802a7cad3acb18">finalize</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#aee7c431b9ede9cf8e8fc04c359918736">val_double</a> (int col_index)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#ad0242bd4d408139f7cce16aee22aaa27">val_int</a> (int col_index)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a7697d148766b3ff510311cd52a0714b0">val_int64</a> (int col_index)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a104f9debd2b964d617e519f14c980535">val_string</a> (int col_index)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a98043bd129d6e0a4c7f531e46b828fbe">bind_double</a> (int param_index, double value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a977d0a052ed2ea162eb67a4c2f504380">bind_int</a> (int param_index, int value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a6b1647166511662615d5d31a9b1a6ae6">bind_int64</a> (int param_index, int64_t value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a2e726bcdd8e43b36dd3dd9fd462c0ade">bind_string</a> (int param_index, std::string const &amp;value)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; Args...&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a8b8ac108b9ef2ef640c9a4347a3a3a6e">get_row</a> (ColType&lt; Args &gt;...types)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; Args...&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#ae13d54d2f6041bcd514ae73e4785bba7">get_remaining_rows</a> (ColType&lt; Args &gt;...types)</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static ColType&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#a91a3e2895796414674345e4f6c507595">colint</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static ColType&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#aa92b0146b798be7a94c33d769d4d53b5">coldouble</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static ColType&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#ab63283f8ceb48ce261e6621b479d61bf">colint64</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static ColType&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsqlite_1_1Statement.html#abd0eb9cc12206924108726675c116957">colstring</a></td></tr>
+<tr><td colspan="2"><h2><a name="friends"></a>
+Friends</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ea933a5fa4811924606ae352519ef0e"></a><!-- doxytag: member="sqlite::Statement::coldouble" ref="a6ea933a5fa4811924606ae352519ef0e" args="()" -->
+Statement::ColType&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>coldouble</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeeed5ed6a4f1cfbba8332e15fb31e2a2"></a><!-- doxytag: member="sqlite::Statement::colint" ref="aeeed5ed6a4f1cfbba8332e15fb31e2a2" args="()" -->
+Statement::ColType&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>colint</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a67a8cde6eb45895a70b69291e1375e41"></a><!-- doxytag: member="sqlite::Statement::colint64" ref="a67a8cde6eb45895a70b69291e1375e41" args="()" -->
+Statement::ColType&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>colint64</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab83dbb12067487e9528c38ca2ebaa4c9"></a><!-- doxytag: member="sqlite::Statement::colstr" ref="ab83dbb12067487e9528c38ca2ebaa4c9" args="()" -->
+Statement::ColType&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>colstr</b> ()</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Sqlite statement wrapper. Finalizes statement on destruction. </p>
 
-<p>Definition at line <a class="el" href="Statement_8h_source.html#l00021">21</a> of file <a class="el" href="Statement_8h_source.html">Statement.h</a>.</p>
+<p>Definition at line <a class="el" href="Statement_8h_source.html#l00026">26</a> of file <a class="el" href="Statement_8h_source.html">Statement.h</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a0f125162b5543d8b4b3ffd06cfaeb643"></a><!-- doxytag: member="sqlite::Statement::Statement" ref="a0f125162b5543d8b4b3ffd06cfaeb643" args="(std::string const &amp;sql, Database &amp;db)" -->
 <div class="memitem">
@@ -124,11 +154,159 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>val_string</b>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00016">16</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00017">17</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a98043bd129d6e0a4c7f531e46b828fbe"></a><!-- doxytag: member="sqlite::Statement::bind_double" ref="a98043bd129d6e0a4c7f531e46b828fbe" args="(int param_index, double value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sqlite::Statement::bind_double </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>param_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Binds a value to prepared statement parameter </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param_index</td><td></td></tr>
+    <tr><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00156">156</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a977d0a052ed2ea162eb67a4c2f504380"></a><!-- doxytag: member="sqlite::Statement::bind_int" ref="a977d0a052ed2ea162eb67a4c2f504380" args="(int param_index, int value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sqlite::Statement::bind_int </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>param_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Binds a value to prepared statement parameter </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param_index</td><td></td></tr>
+    <tr><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00161">161</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6b1647166511662615d5d31a9b1a6ae6"></a><!-- doxytag: member="sqlite::Statement::bind_int64" ref="a6b1647166511662615d5d31a9b1a6ae6" args="(int param_index, int64_t value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sqlite::Statement::bind_int64 </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>param_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int64_t&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Binds a value to prepared statement parameter </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param_index</td><td></td></tr>
+    <tr><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00166">166</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2e726bcdd8e43b36dd3dd9fd462c0ade"></a><!-- doxytag: member="sqlite::Statement::bind_string" ref="a2e726bcdd8e43b36dd3dd9fd462c0ade" args="(int param_index, std::string const &amp;value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sqlite::Statement::bind_string </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>param_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Binds a value to prepared statement parameter </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param_index</td><td></td></tr>
+    <tr><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00171">171</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a2debee0d82c26ea8bb6508b6034ee2bd"></a><!-- doxytag: member="sqlite::Statement::done" ref="a2debee0d82c26ea8bb6508b6034ee2bd" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -144,7 +322,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>val_string</b>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>whether the statement is done, as in all of it has been executed </dd></dl>
 
-<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00054">54</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00055">55</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
 
 </div>
 </div>
@@ -163,7 +341,63 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>val_string</b>
 <div class="memdoc">
 <p>Finalizes the statement before destruction. No other function than finalize can be called on it after this. </p>
 
-<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00165">165</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00206">206</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae13d54d2f6041bcd514ae73e4785bba7"></a><!-- doxytag: member="sqlite::Statement::get_remaining_rows" ref="ae13d54d2f6041bcd514ae73e4785bba7" args="(ColType&lt; Args &gt;...types)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Args&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::tuple&lt;Args...&gt; &gt; sqlite::Statement::get_remaining_rows </td>
+          <td>(</td>
+          <td class="paramtype">ColType&lt; Args &gt;...&#160;</td>
+          <td class="paramname"><em>types</em></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">types</td><td>the same as in <a class="el" href="classsqlite_1_1Statement.html#a8b8ac108b9ef2ef640c9a4347a3a3a6e">get_row</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>all remaining rows as tuples </dd></dl>
+
+<p>Definition at line <a class="el" href="Statement_8h_source.html#l00148">148</a> of file <a class="el" href="Statement_8h_source.html">Statement.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8b8ac108b9ef2ef640c9a4347a3a3a6e"></a><!-- doxytag: member="sqlite::Statement::get_row" ref="a8b8ac108b9ef2ef640c9a4347a3a3a6e" args="(ColType&lt; Args &gt;...types)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Args&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::tuple&lt;Args...&gt; sqlite::Statement::get_row </td>
+          <td>(</td>
+          <td class="paramtype">ColType&lt; Args &gt;...&#160;</td>
+          <td class="paramname"><em>types</em></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">types</td><td>types of returned columns (see <a class="el" href="classsqlite_1_1Statement.html#a91a3e2895796414674345e4f6c507595">colint</a>, <a class="el" href="classsqlite_1_1Statement.html#aa92b0146b798be7a94c33d769d4d53b5">coldouble</a>, <a class="el" href="classsqlite_1_1Statement.html#ab63283f8ceb48ce261e6621b479d61bf">colint64</a>, <a class="el" href="classsqlite_1_1Statement.html#abd0eb9cc12206924108726675c116957">colstring</a>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>current row as tuple </dd></dl>
+
+<p>Definition at line <a class="el" href="Statement_8h_source.html#l00138">138</a> of file <a class="el" href="Statement_8h_source.html">Statement.h</a>.</p>
 
 </div>
 </div>
@@ -182,7 +416,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>val_string</b>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>whether row data can be queried using val_* functions </dd></dl>
 
-<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00061">61</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00062">62</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
 
 </div>
 </div>
@@ -201,7 +435,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>val_string</b>
 <div class="memdoc">
 <p>Reset the statement. Resets done and has_row flags. If it is a query stepping will result in rows being returned from beginning again. Otherwise it has no apparent reason to call this since step can be called again even without reset. </p>
 
-<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00102">102</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00103">103</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
 
 </div>
 </div>
@@ -220,7 +454,176 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>val_string</b>
 <div class="memdoc">
 <p>Step the statement as in get next row or execute insert, update etc. </p>
 
-<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00068">68</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00069">69</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aee7c431b9ede9cf8e8fc04c359918736"></a><!-- doxytag: member="sqlite::Statement::val_double" ref="aee7c431b9ede9cf8e8fc04c359918736" args="(int col_index)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double sqlite::Statement::val_double </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>col_index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">col_index</td><td>index of retrieved column </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>value of a column in current row as double </dd></dl>
+
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00130">130</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad0242bd4d408139f7cce16aee22aaa27"></a><!-- doxytag: member="sqlite::Statement::val_int" ref="ad0242bd4d408139f7cce16aee22aaa27" args="(int col_index)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int sqlite::Statement::val_int </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>col_index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">col_index</td><td>index of retrieved column </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>value of a column in current row as int </dd></dl>
+
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00142">142</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7697d148766b3ff510311cd52a0714b0"></a><!-- doxytag: member="sqlite::Statement::val_int64" ref="a7697d148766b3ff510311cd52a0714b0" args="(int col_index)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int64_t sqlite::Statement::val_int64 </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>col_index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">col_index</td><td>index of retrieved column </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>value of a column in current row as 64 bit integer </dd></dl>
+
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00136">136</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a104f9debd2b964d617e519f14c980535"></a><!-- doxytag: member="sqlite::Statement::val_string" ref="a104f9debd2b964d617e519f14c980535" args="(int col_index)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string sqlite::Statement::val_string </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>col_index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">col_index</td><td>index of retrieved column </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>value of a column in current row as string </dd></dl>
+
+<p>Definition at line <a class="el" href="Statement_8cpp_source.html#l00148">148</a> of file <a class="el" href="Statement_8cpp_source.html">Statement.cpp</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Field Documentation</h2>
+<a class="anchor" id="aa92b0146b798be7a94c33d769d4d53b5"></a><!-- doxytag: member="sqlite::Statement::coldouble" ref="aa92b0146b798be7a94c33d769d4d53b5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ColType&lt;double&gt; <a class="el" href="classsqlite_1_1Statement.html#aa92b0146b798be7a94c33d769d4d53b5">sqlite::Statement::coldouble</a><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Column type double </p>
+
+<p>Definition at line <a class="el" href="Statement_8h_source.html#l00167">167</a> of file <a class="el" href="Statement_8h_source.html">Statement.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a91a3e2895796414674345e4f6c507595"></a><!-- doxytag: member="sqlite::Statement::colint" ref="a91a3e2895796414674345e4f6c507595" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ColType&lt;int&gt; <a class="el" href="classsqlite_1_1Statement.html#a91a3e2895796414674345e4f6c507595">sqlite::Statement::colint</a><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Column type int </p>
+
+<p>Definition at line <a class="el" href="Statement_8h_source.html#l00163">163</a> of file <a class="el" href="Statement_8h_source.html">Statement.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab63283f8ceb48ce261e6621b479d61bf"></a><!-- doxytag: member="sqlite::Statement::colint64" ref="ab63283f8ceb48ce261e6621b479d61bf" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ColType&lt;int64_t&gt; <a class="el" href="classsqlite_1_1Statement.html#ab63283f8ceb48ce261e6621b479d61bf">sqlite::Statement::colint64</a><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Column type int64 </p>
+
+<p>Definition at line <a class="el" href="Statement_8h_source.html#l00171">171</a> of file <a class="el" href="Statement_8h_source.html">Statement.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abd0eb9cc12206924108726675c116957"></a><!-- doxytag: member="sqlite::Statement::colstring" ref="abd0eb9cc12206924108726675c116957" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ColType&lt;std::string&gt; <a class="el" href="classsqlite_1_1Statement.html#abd0eb9cc12206924108726675c116957">sqlite::Statement::colstring</a><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Column type string </p>
+
+<p>Definition at line <a class="el" href="Statement_8h_source.html#l00175">175</a> of file <a class="el" href="Statement_8h_source.html">Statement.h</a>.</p>
 
 </div>
 </div>
@@ -234,7 +637,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>val_string</b>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -243,7 +646,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>val_string</b>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 4 2011 00:19:03 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Nov 6 2011 15:16:05 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

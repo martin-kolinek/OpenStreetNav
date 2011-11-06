@@ -63,29 +63,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00014"></a>00014 
 <a name="l00015"></a>00015 <span class="keyword">namespace </span>sqlite
 <a name="l00016"></a>00016 {
-<a name="l00017"></a>00017 <span class="keyword">class </span>Statement;
-<a name="l00018"></a>00018 
-<a name="l00024"></a><a class="code" href="classsqlite_1_1Database.html">00024</a> <span class="keyword">class </span><a class="code" href="classsqlite_1_1Database.html">Database</a>
-<a name="l00025"></a>00025 {
-<a name="l00026"></a>00026 <span class="keyword">public</span>:
-<a name="l00031"></a>00031     <a class="code" href="classsqlite_1_1Database.html#a3047f8106ffd09740f0ce3b337110d53">Database</a>(std::string <span class="keyword">const</span>&amp; filename);
-<a name="l00032"></a>00032     <span class="keyword">virtual</span> ~<a class="code" href="classsqlite_1_1Database.html">Database</a>();
-<a name="l00033"></a>00033     <a class="code" href="classsqlite_1_1Database.html">Database</a>&amp; operator=(<a class="code" href="classsqlite_1_1Database.html">Database</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;
-<a name="l00034"></a>00034     <a class="code" href="classsqlite_1_1Database.html#a3047f8106ffd09740f0ce3b337110d53">Database</a>(<a class="code" href="classsqlite_1_1Database.html">Database</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;
-<a name="l00035"></a>00035     <a class="code" href="classsqlite_1_1Database.html">Database</a>&amp; operator=(<a class="code" href="classsqlite_1_1Database.html">Database</a> &amp;&amp; other);
-<a name="l00036"></a>00036     <a class="code" href="classsqlite_1_1Database.html#a3047f8106ffd09740f0ce3b337110d53">Database</a>(<a class="code" href="classsqlite_1_1Database.html">Database</a> &amp;&amp; other);
-<a name="l00040"></a>00040     <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Database.html#a3b1011ab3faa16ee4ef301c0420bba17">close</a>();
-<a name="l00044"></a>00044     <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Database.html#a2c2339700222c26bc786b6d4f65d1c03">force_close</a>() <span class="keywordflow">throw</span>();
-<a name="l00050"></a>00050     <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Database.html#a984a42475a25df7053d3dfff4e19112d">register_statement</a>(<a class="code" href="classsqlite_1_1Statement.html">Statement</a>&amp; st);
-<a name="l00056"></a>00056     <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Database.html#af7ddfa487ec7a9416bd04ee87257784f">unregister_statement</a>(<a class="code" href="classsqlite_1_1Statement.html">Statement</a>&amp; st);
-<a name="l00061"></a>00061     <span class="keywordtype">int</span> <a class="code" href="classsqlite_1_1Database.html#a9f86f61155b6201cdc31d684aa1cef45">unfinalized</a>();
-<a name="l00062"></a>00062     sqlite3* <span class="keyword">const</span>&amp; cobj();
-<a name="l00063"></a>00063 <span class="keyword">private</span>:
-<a name="l00064"></a>00064     sqlite3* conn;
-<a name="l00065"></a>00065     std::set&lt;Statement*&gt; stmts;
-<a name="l00066"></a>00066 };
-<a name="l00067"></a>00067 }
-<a name="l00068"></a>00068 <span class="preprocessor">#endif </span><span class="comment">/* DATABASE_H_ */</span>
+<a name="l00017"></a>00017 
+<a name="l00018"></a>00018 <span class="keyword">class </span>Statement;
+<a name="l00019"></a>00019 
+<a name="l00025"></a><a class="code" href="classsqlite_1_1Database.html">00025</a> <span class="keyword">class </span><a class="code" href="classsqlite_1_1Database.html">Database</a>
+<a name="l00026"></a>00026 {
+<a name="l00027"></a>00027 <span class="keyword">public</span>:
+<a name="l00032"></a>00032     <a class="code" href="classsqlite_1_1Database.html#a3047f8106ffd09740f0ce3b337110d53">Database</a>(std::string <span class="keyword">const</span>&amp; filename);
+<a name="l00033"></a>00033     <span class="keyword">virtual</span> ~<a class="code" href="classsqlite_1_1Database.html">Database</a>();
+<a name="l00034"></a>00034     <a class="code" href="classsqlite_1_1Database.html">Database</a>&amp; operator=(<a class="code" href="classsqlite_1_1Database.html">Database</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;
+<a name="l00035"></a>00035     <a class="code" href="classsqlite_1_1Database.html#a3047f8106ffd09740f0ce3b337110d53">Database</a>(<a class="code" href="classsqlite_1_1Database.html">Database</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;
+<a name="l00036"></a>00036     <a class="code" href="classsqlite_1_1Database.html">Database</a>&amp; operator=(<a class="code" href="classsqlite_1_1Database.html">Database</a> &amp;&amp; other);
+<a name="l00037"></a>00037     <a class="code" href="classsqlite_1_1Database.html#a3047f8106ffd09740f0ce3b337110d53">Database</a>(<a class="code" href="classsqlite_1_1Database.html">Database</a> &amp;&amp; other);
+<a name="l00041"></a>00041     <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Database.html#a3b1011ab3faa16ee4ef301c0420bba17">close</a>();
+<a name="l00045"></a>00045     <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Database.html#a2c2339700222c26bc786b6d4f65d1c03">force_close</a>() <span class="keywordflow">throw</span>();
+<a name="l00051"></a>00051     <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Database.html#a984a42475a25df7053d3dfff4e19112d">register_statement</a>(<a class="code" href="classsqlite_1_1Statement.html">Statement</a>&amp; st);
+<a name="l00057"></a>00057     <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Database.html#af7ddfa487ec7a9416bd04ee87257784f">unregister_statement</a>(<a class="code" href="classsqlite_1_1Statement.html">Statement</a>&amp; st);
+<a name="l00062"></a>00062     <span class="keywordtype">int</span> <a class="code" href="classsqlite_1_1Database.html#a9f86f61155b6201cdc31d684aa1cef45">unfinalized</a>();
+<a name="l00063"></a>00063     sqlite3* <span class="keyword">const</span>&amp; cobj();
+<a name="l00064"></a>00064 <span class="keyword">private</span>:
+<a name="l00065"></a>00065     sqlite3* conn;
+<a name="l00066"></a>00066     std::set&lt;Statement*&gt; stmts;
+<a name="l00067"></a>00067 };
+<a name="l00068"></a>00068 }
+<a name="l00069"></a>00069 <span class="preprocessor">#endif </span><span class="comment">/* DATABASE_H_ */</span>
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -93,7 +94,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -102,7 +103,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 4 2011 00:19:03 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Nov 6 2011 15:16:05 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
