@@ -8,11 +8,16 @@
 #ifndef OBJECTTYPE_H_
 #define OBJECTTYPE_H_
 
+namespace osm
+{
+
 enum class ObjectType
 {
     Node = 1,
     Way = 2,
     Relation = 3
 };
+
+}
 
 #endif /* OBJECTTYPE_H_ */

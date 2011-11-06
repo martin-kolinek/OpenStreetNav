@@ -36,6 +36,8 @@ private:
     sqlite::Statement way_st;
     sqlite::Statement member_st;
     sqlite::Statement rel_st;
+    void insert_attributes(std::vector<osm::Tag> const& tags, int64_t id, osm::ObjectType tp);
+
 };
 
 }
