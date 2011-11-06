@@ -14,9 +14,17 @@
 namespace osmdb
 {
 
+/**
+ * \class OsmDatabase
+ * Database connection which automatically creates tables for storing osm objects
+ */
 class OsmDatabase
 {
 public:
+    /**
+     *
+     * @param file filename where to store sqlite database
+     */
     OsmDatabase(std::string const& file);
     virtual ~OsmDatabase();
     std::string const nodes_table;
@@ -25,7 +33,15 @@ public:
     std::string const relations_table;
     std::string const relation_contents_table;
     std::string const attributes_table;
+    /**
+     *
+     * @return underlying database connection
+     */
     sqlite::Database& get_db();
+    /**
+     * Creates indexes, this does not happen right away for optimization purposes.
+     * Call after inserting most of the data.
+     */
     void create_indexes();
 private:
     sqlite::Database db;

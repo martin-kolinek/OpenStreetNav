@@ -8,8 +8,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 #include "../osmdb/OsmDatabase.h"
-#include "../osmdb/WrongDBException.h"
-#include "../osmdb/ElementInsertion.h"
+#include "../osmdb/osmdb.h"
 
 class OsmDBFixture
 {

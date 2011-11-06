@@ -14,13 +14,33 @@
 namespace osmdb
 {
 
+/**
+ * \class ElementInsertion
+ * Responsible for inserting osm elements into database
+ */
 class ElementInsertion
 {
 public:
+    /**
+     *
+     * @param db database connection
+     */
     ElementInsertion(OsmDatabase& db);
     virtual ~ElementInsertion();
+    /**
+     * Inserts node into database
+     * @param nd node to insert
+     */
     void insert_node(osm::Node const& nd);
+    /**
+     * Inserts way into database
+     * @param w way to insert
+     */
     void insert_way(osm::Way const& w);
+    /**
+     * Inserts relation into database
+     * @param rel relation to insert
+     */
     void insert_relation(osm::Relation const& rel);
 private:
     OsmDatabase& db;
