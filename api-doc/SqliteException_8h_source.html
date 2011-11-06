@@ -17,6 +17,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
@@ -40,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 <div class="header">
@@ -47,7 +49,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">/home/martin/workspace/OpenStreetNav/src/sqlite/SqliteException.h</div>  </div>
 </div>
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#include &lt;exception&gt;</span>
+<a href="SqliteException_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#include &lt;exception&gt;</span>
 <a name="l00002"></a>00002 <span class="preprocessor">#include &lt;string&gt;</span>
 <a name="l00003"></a>00003 <span class="preprocessor">#include &lt;sqlite3.h&gt;</span>
 <a name="l00004"></a>00004 
@@ -57,17 +59,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00008"></a><a class="code" href="classsqlite_1_1SqliteException.html">00008</a> <span class="keyword">class </span><a class="code" href="classsqlite_1_1SqliteException.html">SqliteException</a> : <span class="keyword">public</span> std::exception
 <a name="l00009"></a>00009 {
 <a name="l00010"></a>00010 <span class="keyword">public</span>:
-<a name="l00011"></a>00011     <a class="code" href="classsqlite_1_1SqliteException.html">SqliteException</a>(sqlite3* db);
-<a name="l00012"></a>00012     <a class="code" href="classsqlite_1_1SqliteException.html">SqliteException</a>(<span class="keywordtype">int</span> code, sqlite3* db);
-<a name="l00013"></a>00013     <a class="code" href="classsqlite_1_1SqliteException.html">SqliteException</a>(<span class="keywordtype">int</span> code, std::string <span class="keyword">const</span>&amp; msg);
-<a name="l00014"></a>00014     <span class="keyword">virtual</span> ~<a class="code" href="classsqlite_1_1SqliteException.html">SqliteException</a>() <span class="keywordflow">throw</span>();
-<a name="l00015"></a>00015     <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* what() <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00011"></a>00011     <a class="code" href="classsqlite_1_1SqliteException.html#af592f6e7b575babb95f7d77a75c87874">SqliteException</a>(sqlite3* db);
+<a name="l00012"></a>00012     <a class="code" href="classsqlite_1_1SqliteException.html#af592f6e7b575babb95f7d77a75c87874">SqliteException</a>(<span class="keywordtype">int</span> code, sqlite3* db);
+<a name="l00013"></a>00013     <a class="code" href="classsqlite_1_1SqliteException.html#af592f6e7b575babb95f7d77a75c87874">SqliteException</a>(<span class="keywordtype">int</span> code, std::string <span class="keyword">const</span>&amp; msg);
+<a name="l00014"></a>00014     <span class="keyword">virtual</span> <a class="code" href="classsqlite_1_1SqliteException.html#a50f68ee3d87e2bc26b93a3f753957705">~SqliteException</a>() <span class="keywordflow">throw</span>();
+<a name="l00015"></a>00015     <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="classsqlite_1_1SqliteException.html#a5275a9d62bb9abc6b5e84f559d5ad84a">what</a>() <span class="keyword">const</span> <span class="keywordflow">throw</span>();
 <a name="l00016"></a>00016 <span class="keyword">private</span>:
 <a name="l00017"></a>00017     std::string msg;
 <a name="l00018"></a>00018     <span class="keywordtype">int</span> code;
 <a name="l00019"></a>00019 };
 <a name="l00020"></a>00020 
-<a name="l00021"></a>00021 <span class="keywordtype">void</span> throw_sqlite_status(<span class="keywordtype">int</span> code, sqlite3* db);
+<a name="l00021"></a>00021 <span class="keywordtype">void</span> <a class="code" href="namespacesqlite.html#aca4e505415e118d97b5d30d66b04efa9">throw_sqlite_status</a>(<span class="keywordtype">int</span> code, sqlite3* db);
 <a name="l00022"></a>00022 
 <a name="l00023"></a>00023 }
 </pre></div></div>
@@ -77,7 +79,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -86,7 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Nov 6 2011 15:16:05 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Nov 7 2011 00:02:47 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

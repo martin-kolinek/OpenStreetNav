@@ -17,6 +17,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
@@ -40,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 <div class="header">
@@ -47,7 +49,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">/home/martin/workspace/OpenStreetNav/src/elements/RelationMapping.h</div>  </div>
 </div>
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a href="RelationMapping_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment"> * RelationMapping.h</span>
 <a name="l00003"></a>00003 <span class="comment"> *</span>
 <a name="l00004"></a>00004 <span class="comment"> *  Created on: Nov 5, 2011</span>
@@ -57,7 +59,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00008"></a>00008 <span class="preprocessor">#ifndef RELATIONMAPPING_H_</span>
 <a name="l00009"></a>00009 <span class="preprocessor"></span><span class="preprocessor">#define RELATIONMAPPING_H_</span>
 <a name="l00010"></a>00010 <span class="preprocessor"></span>
-<a name="l00011"></a>00011 <span class="preprocessor">#include &quot;ObjectType.h&quot;</span>
+<a name="l00011"></a>00011 <span class="preprocessor">#include &quot;<a class="code" href="ObjectType_8h.html">ObjectType.h</a>&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;stdint.h&gt;</span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;string&gt;</span>
 <a name="l00014"></a>00014 
@@ -67,11 +69,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00018"></a><a class="code" href="classosm_1_1RelationMapping.html">00018</a> <span class="keyword">class </span><a class="code" href="classosm_1_1RelationMapping.html">RelationMapping</a>
 <a name="l00019"></a>00019 {
 <a name="l00020"></a>00020 <span class="keyword">public</span>:
-<a name="l00021"></a>00021     <a class="code" href="classosm_1_1RelationMapping.html">RelationMapping</a>(std::string <span class="keyword">const</span>&amp; role, ObjectType type, int64_t <span class="keywordtype">id</span>);
-<a name="l00022"></a>00022     <span class="keyword">virtual</span> ~<a class="code" href="classosm_1_1RelationMapping.html">RelationMapping</a>();
-<a name="l00023"></a>00023     std::string role;
-<a name="l00024"></a>00024     ObjectType type;
-<a name="l00025"></a>00025     int64_t id;
+<a name="l00021"></a>00021     <a class="code" href="classosm_1_1RelationMapping.html#a8d249ac077118b12a9adbd9fa221d38a">RelationMapping</a>(std::string <span class="keyword">const</span>&amp; <a class="code" href="classosm_1_1RelationMapping.html#a7bbe7b542d0cab3f03dcec7b611228e0">role</a>, <a class="code" href="namespaceosm.html#a43a9306ba3e7fd761cbd843f3e3f0faa">ObjectType</a> <a class="code" href="classosm_1_1RelationMapping.html#a16f45fc71408dac27dd973cc9322bea0">type</a>, int64_t <span class="keywordtype">id</span>);
+<a name="l00022"></a>00022     <span class="keyword">virtual</span> <a class="code" href="classosm_1_1RelationMapping.html#a6e2737211351ec2d61c93bd2730e1d93">~RelationMapping</a>();
+<a name="l00023"></a><a class="code" href="classosm_1_1RelationMapping.html#a7bbe7b542d0cab3f03dcec7b611228e0">00023</a>     std::string <a class="code" href="classosm_1_1RelationMapping.html#a7bbe7b542d0cab3f03dcec7b611228e0">role</a>;
+<a name="l00024"></a><a class="code" href="classosm_1_1RelationMapping.html#a16f45fc71408dac27dd973cc9322bea0">00024</a>     <a class="code" href="namespaceosm.html#a43a9306ba3e7fd761cbd843f3e3f0faa">ObjectType</a> <a class="code" href="classosm_1_1RelationMapping.html#a16f45fc71408dac27dd973cc9322bea0">type</a>;
+<a name="l00025"></a><a class="code" href="classosm_1_1RelationMapping.html#a2ef49f594fa434e94a7a74267c3f349c">00025</a>     int64_t <a class="code" href="classosm_1_1RelationMapping.html#a2ef49f594fa434e94a7a74267c3f349c">id</a>;
 <a name="l00026"></a>00026 };
 <a name="l00027"></a>00027 
 <a name="l00028"></a>00028 }
@@ -83,7 +85,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -92,7 +94,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Nov 6 2011 15:16:05 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Nov 7 2011 00:02:47 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

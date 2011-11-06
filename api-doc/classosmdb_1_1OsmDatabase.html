@@ -17,6 +17,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
@@ -46,28 +47,216 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><b>osmdb</b>      </li>
+      <li class="navelem"><a class="el" href="namespaceosmdb.html">osmdb</a>      </li>
       <li class="navelem"><a class="el" href="classosmdb_1_1OsmDatabase.html">OsmDatabase</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
 <div class="title">osmdb::OsmDatabase Class Reference</div>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="osmdb::OsmDatabase" --><table class="memberdecls">
+<!-- doxytag: class="osmdb::OsmDatabase" -->
+<p>Database connection which automatically creates tables for storing osm objects.  
+ <a href="classosmdb_1_1OsmDatabase.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a>&gt;</code></p>
+<table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abcdae9d69b7c82842eae75cb5ed8438e"></a><!-- doxytag: member="osmdb::OsmDatabase::OsmDatabase" ref="abcdae9d69b7c82842eae75cb5ed8438e" args="(std::string const &amp;file)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>OsmDatabase</b> (std::string const &amp;file)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#abcdae9d69b7c82842eae75cb5ed8438e">OsmDatabase</a> (std::string const &amp;file)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#a93945b4dd90755abb7d02c32d00de12a">~OsmDatabase</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsqlite_1_1Database.html">sqlite::Database</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#ae7c4db74906ad3dda7ba360c86b5c0f1">get_db</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#ae2ca98550971cbdb7943c110a9931df2">create_indexes</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates indexes, this does not happen right away for optimization purposes.  <a href="#ae2ca98550971cbdb7943c110a9931df2"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#a6535fa91eeab1948dbd04ddc0a12b760">nodes_table</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#ab665ab78b5e73ff336f20f4cd42fbb97">ways_table</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#a144b7f46fa356dd974a89bde339662a8">edges_table</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#aaa8ce07c5998c833511708c4a311dc70">relations_table</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#af9eff8f203eb6a107276d6c8fff03928">relation_contents_table</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classosmdb_1_1OsmDatabase.html#a965d5c340b74cf894945e9de885e0d2c">attributes_table</a></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="OsmDatabase_8h_source.html#l00017">17</a> of file <a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a>.</p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
+<div class="textblock"><p>Database connection which automatically creates tables for storing osm objects. </p>
+
+<p>Definition at line <a class="el" href="OsmDatabase_8h_source.html#l00021">21</a> of file <a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a>.</p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="abcdae9d69b7c82842eae75cb5ed8438e"></a><!-- doxytag: member="osmdb::OsmDatabase::OsmDatabase" ref="abcdae9d69b7c82842eae75cb5ed8438e" args="(std::string const &amp;file)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">osmdb::OsmDatabase::OsmDatabase </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>file</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>filename where to store sqlite database </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="OsmDatabase_8cpp_source.html#l00014">14</a> of file <a class="el" href="OsmDatabase_8cpp_source.html">OsmDatabase.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a93945b4dd90755abb7d02c32d00de12a"></a><!-- doxytag: member="osmdb::OsmDatabase::~OsmDatabase" ref="a93945b4dd90755abb7d02c32d00de12a" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual osmdb::OsmDatabase::~OsmDatabase </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="ae2ca98550971cbdb7943c110a9931df2"></a><!-- doxytag: member="osmdb::OsmDatabase::create_indexes" ref="ae2ca98550971cbdb7943c110a9931df2" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void osmdb::OsmDatabase::create_indexes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Creates indexes, this does not happen right away for optimization purposes. </p>
+<p>Call after inserting most of the data. </p>
+
+</div>
+</div>
+<a class="anchor" id="ae7c4db74906ad3dda7ba360c86b5c0f1"></a><!-- doxytag: member="osmdb::OsmDatabase::get_db" ref="ae7c4db74906ad3dda7ba360c86b5c0f1" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classsqlite_1_1Database.html">sqlite::Database</a>&amp; osmdb::OsmDatabase::get_db </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>underlying database connection </dd></dl>
+
+</div>
+</div>
+<hr/><h2>Field Documentation</h2>
+<a class="anchor" id="a965d5c340b74cf894945e9de885e0d2c"></a><!-- doxytag: member="osmdb::OsmDatabase::attributes_table" ref="a965d5c340b74cf894945e9de885e0d2c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string const <a class="el" href="classosmdb_1_1OsmDatabase.html#a965d5c340b74cf894945e9de885e0d2c">osmdb::OsmDatabase::attributes_table</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="OsmDatabase_8h_source.html#l00035">35</a> of file <a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a144b7f46fa356dd974a89bde339662a8"></a><!-- doxytag: member="osmdb::OsmDatabase::edges_table" ref="a144b7f46fa356dd974a89bde339662a8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string const <a class="el" href="classosmdb_1_1OsmDatabase.html#a144b7f46fa356dd974a89bde339662a8">osmdb::OsmDatabase::edges_table</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="OsmDatabase_8h_source.html#l00032">32</a> of file <a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6535fa91eeab1948dbd04ddc0a12b760"></a><!-- doxytag: member="osmdb::OsmDatabase::nodes_table" ref="a6535fa91eeab1948dbd04ddc0a12b760" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string const <a class="el" href="classosmdb_1_1OsmDatabase.html#a6535fa91eeab1948dbd04ddc0a12b760">osmdb::OsmDatabase::nodes_table</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="OsmDatabase_8h_source.html#l00030">30</a> of file <a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af9eff8f203eb6a107276d6c8fff03928"></a><!-- doxytag: member="osmdb::OsmDatabase::relation_contents_table" ref="af9eff8f203eb6a107276d6c8fff03928" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string const <a class="el" href="classosmdb_1_1OsmDatabase.html#af9eff8f203eb6a107276d6c8fff03928">osmdb::OsmDatabase::relation_contents_table</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="OsmDatabase_8h_source.html#l00034">34</a> of file <a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aaa8ce07c5998c833511708c4a311dc70"></a><!-- doxytag: member="osmdb::OsmDatabase::relations_table" ref="aaa8ce07c5998c833511708c4a311dc70" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string const <a class="el" href="classosmdb_1_1OsmDatabase.html#aaa8ce07c5998c833511708c4a311dc70">osmdb::OsmDatabase::relations_table</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="OsmDatabase_8h_source.html#l00033">33</a> of file <a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab665ab78b5e73ff336f20f4cd42fbb97"></a><!-- doxytag: member="osmdb::OsmDatabase::ways_table" ref="ab665ab78b5e73ff336f20f4cd42fbb97" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string const <a class="el" href="classosmdb_1_1OsmDatabase.html#ab665ab78b5e73ff336f20f4cd42fbb97">osmdb::OsmDatabase::ways_table</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="OsmDatabase_8h_source.html#l00031">31</a> of file <a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/martin/workspace/OpenStreetNav/src/osmdb/<a class="el" href="OsmDatabase_8h_source.html">OsmDatabase.h</a></li>
 <li>/home/martin/workspace/OpenStreetNav/src/osmdb/<a class="el" href="OsmDatabase_8cpp_source.html">OsmDatabase.cpp</a></li>
 </ul>
@@ -77,7 +266,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -86,7 +275,7 @@ Public Member Functions</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Nov 6 2011 15:16:05 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Nov 7 2011 00:02:47 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

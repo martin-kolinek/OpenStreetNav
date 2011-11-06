@@ -17,6 +17,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
@@ -40,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 <div class="header">
@@ -47,7 +49,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">/home/martin/workspace/OpenStreetNav/src/osmdb/OsmDatabase.h</div>  </div>
 </div>
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a href="OsmDatabase_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment"> * OsmDatabase.h</span>
 <a name="l00003"></a>00003 <span class="comment"> *</span>
 <a name="l00004"></a>00004 <span class="comment"> *  Created on: Nov 5, 2011</span>
@@ -63,23 +65,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00014"></a>00014 <span class="keyword">namespace </span>osmdb
 <a name="l00015"></a>00015 {
 <a name="l00016"></a>00016 
-<a name="l00017"></a><a class="code" href="classosmdb_1_1OsmDatabase.html">00017</a> <span class="keyword">class </span><a class="code" href="classosmdb_1_1OsmDatabase.html">OsmDatabase</a>
-<a name="l00018"></a>00018 {
-<a name="l00019"></a>00019 <span class="keyword">public</span>:
-<a name="l00020"></a>00020     <a class="code" href="classosmdb_1_1OsmDatabase.html">OsmDatabase</a>(std::string <span class="keyword">const</span>&amp; file);
-<a name="l00021"></a>00021     <span class="keyword">virtual</span> ~<a class="code" href="classosmdb_1_1OsmDatabase.html">OsmDatabase</a>();
-<a name="l00022"></a>00022 <span class="keyword">private</span>:
-<a name="l00023"></a>00023     <a class="code" href="classsqlite_1_1Database.html">sqlite::Database</a> db;
-<a name="l00024"></a>00024     <a class="code" href="classsqlite_1_1Statement.html">sqlite::Statement</a> attr_st;
-<a name="l00025"></a>00025     <a class="code" href="classsqlite_1_1Statement.html">sqlite::Statement</a> node_st;
-<a name="l00026"></a>00026     <a class="code" href="classsqlite_1_1Statement.html">sqlite::Statement</a> edge_st;
-<a name="l00027"></a>00027     <a class="code" href="classsqlite_1_1Statement.html">sqlite::Statement</a> way_st;
-<a name="l00028"></a>00028     <a class="code" href="classsqlite_1_1Statement.html">sqlite::Statement</a> member_st;
-<a name="l00029"></a>00029     <a class="code" href="classsqlite_1_1Statement.html">sqlite::Statement</a>
-<a name="l00030"></a>00030 };
-<a name="l00031"></a>00031 
-<a name="l00032"></a>00032 } <span class="comment">/* namespace osmdb */</span>
-<a name="l00033"></a>00033 <span class="preprocessor">#endif </span><span class="comment">/* OSMDATABASE_H_ */</span>
+<a name="l00021"></a><a class="code" href="classosmdb_1_1OsmDatabase.html">00021</a> <span class="keyword">class </span><a class="code" href="classosmdb_1_1OsmDatabase.html" title="Database connection which automatically creates tables for storing osm objects.">OsmDatabase</a>
+<a name="l00022"></a>00022 {
+<a name="l00023"></a>00023 <span class="keyword">public</span>:
+<a name="l00028"></a>00028     <a class="code" href="classosmdb_1_1OsmDatabase.html#abcdae9d69b7c82842eae75cb5ed8438e">OsmDatabase</a>(std::string <span class="keyword">const</span>&amp; file);
+<a name="l00029"></a>00029     <span class="keyword">virtual</span> <a class="code" href="classosmdb_1_1OsmDatabase.html#a93945b4dd90755abb7d02c32d00de12a">~OsmDatabase</a>();
+<a name="l00030"></a><a class="code" href="classosmdb_1_1OsmDatabase.html#a6535fa91eeab1948dbd04ddc0a12b760">00030</a>     std::string <span class="keyword">const</span> <a class="code" href="classosmdb_1_1OsmDatabase.html#a6535fa91eeab1948dbd04ddc0a12b760">nodes_table</a>;
+<a name="l00031"></a><a class="code" href="classosmdb_1_1OsmDatabase.html#ab665ab78b5e73ff336f20f4cd42fbb97">00031</a>     std::string <span class="keyword">const</span> <a class="code" href="classosmdb_1_1OsmDatabase.html#ab665ab78b5e73ff336f20f4cd42fbb97">ways_table</a>;
+<a name="l00032"></a><a class="code" href="classosmdb_1_1OsmDatabase.html#a144b7f46fa356dd974a89bde339662a8">00032</a>     std::string <span class="keyword">const</span> <a class="code" href="classosmdb_1_1OsmDatabase.html#a144b7f46fa356dd974a89bde339662a8">edges_table</a>;
+<a name="l00033"></a><a class="code" href="classosmdb_1_1OsmDatabase.html#aaa8ce07c5998c833511708c4a311dc70">00033</a>     std::string <span class="keyword">const</span> <a class="code" href="classosmdb_1_1OsmDatabase.html#aaa8ce07c5998c833511708c4a311dc70">relations_table</a>;
+<a name="l00034"></a><a class="code" href="classosmdb_1_1OsmDatabase.html#af9eff8f203eb6a107276d6c8fff03928">00034</a>     std::string <span class="keyword">const</span> <a class="code" href="classosmdb_1_1OsmDatabase.html#af9eff8f203eb6a107276d6c8fff03928">relation_contents_table</a>;
+<a name="l00035"></a><a class="code" href="classosmdb_1_1OsmDatabase.html#a965d5c340b74cf894945e9de885e0d2c">00035</a>     std::string <span class="keyword">const</span> <a class="code" href="classosmdb_1_1OsmDatabase.html#a965d5c340b74cf894945e9de885e0d2c">attributes_table</a>;
+<a name="l00040"></a>00040     <a class="code" href="classsqlite_1_1Database.html" title="Database connection class.">sqlite::Database</a>&amp; <a class="code" href="classosmdb_1_1OsmDatabase.html#ae7c4db74906ad3dda7ba360c86b5c0f1">get_db</a>();
+<a name="l00045"></a>00045     <span class="keywordtype">void</span> <a class="code" href="classosmdb_1_1OsmDatabase.html#ae2ca98550971cbdb7943c110a9931df2" title="Creates indexes, this does not happen right away for optimization purposes.">create_indexes</a>();
+<a name="l00046"></a>00046 <span class="keyword">private</span>:
+<a name="l00047"></a>00047     <a class="code" href="classsqlite_1_1Database.html" title="Database connection class.">sqlite::Database</a> db;
+<a name="l00048"></a>00048     std::string <span class="keyword">const</span> nodes_create;
+<a name="l00049"></a>00049     std::string <span class="keyword">const</span> ways_create;
+<a name="l00050"></a>00050     std::string <span class="keyword">const</span> edges_create;
+<a name="l00051"></a>00051     std::string <span class="keyword">const</span> relations_create;
+<a name="l00052"></a>00052     std::string <span class="keyword">const</span> relation_contents_create;
+<a name="l00053"></a>00053     std::string <span class="keyword">const</span> attributes_create;
+<a name="l00054"></a>00054     std::string <span class="keyword">const</span> attr_index1;
+<a name="l00055"></a>00055     std::string <span class="keyword">const</span> attr_index2;
+<a name="l00056"></a>00056     std::string <span class="keyword">const</span> attr_index3;
+<a name="l00057"></a>00057     std::string <span class="keyword">const</span> edge_index_start;
+<a name="l00058"></a>00058     std::string <span class="keyword">const</span> edge_index_end;
+<a name="l00059"></a>00059     std::string <span class="keyword">const</span> edge_index_way;
+<a name="l00060"></a>00060     std::string <span class="keyword">const</span> node_index_lat;
+<a name="l00061"></a>00061     std::string <span class="keyword">const</span> node_index_lon;
+<a name="l00062"></a>00062     std::string <span class="keyword">const</span> rel_cont_index_obj;
+<a name="l00063"></a>00063     std::string <span class="keyword">const</span> rel_cont_index_rel;
+<a name="l00064"></a>00064     std::string <span class="keyword">const</span> rel_cont_index_role;
+<a name="l00065"></a>00065     std::string <span class="keyword">const</span> nodes_test;
+<a name="l00066"></a>00066     std::string <span class="keyword">const</span> ways_test;
+<a name="l00067"></a>00067     std::string <span class="keyword">const</span> edge_test;
+<a name="l00068"></a>00068     std::string <span class="keyword">const</span> relation_test;
+<a name="l00069"></a>00069     std::string <span class="keyword">const</span> rel_contents_test;
+<a name="l00070"></a>00070     std::string <span class="keyword">const</span> attributes_test;
+<a name="l00071"></a>00071     std::vector&lt;std::string&gt; <span class="keyword">const</span> indexes;
+<a name="l00072"></a>00072     std::vector&lt;std::string&gt; <span class="keyword">const</span> tables;
+<a name="l00073"></a>00073     std::vector&lt;std::string&gt; <span class="keyword">const</span> checks;
+<a name="l00074"></a>00074     <span class="keywordtype">void</span> create_tables();
+<a name="l00075"></a>00075     <span class="keywordtype">void</span> check_tables();
+<a name="l00076"></a>00076 };
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078 } <span class="comment">/* namespace osmdb */</span>
+<a name="l00079"></a>00079 <span class="preprocessor">#endif </span><span class="comment">/* OSMDATABASE_H_ */</span>
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -87,7 +119,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -96,7 +128,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Nov 6 2011 15:16:05 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Nov 7 2011 00:02:47 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

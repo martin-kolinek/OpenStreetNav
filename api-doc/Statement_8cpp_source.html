@@ -17,6 +17,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
@@ -40,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 <div class="header">
@@ -47,54 +49,54 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">/home/martin/workspace/OpenStreetNav/src/sqlite/Statement.cpp</div>  </div>
 </div>
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a href="Statement_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment"> * Statement.cpp</span>
 <a name="l00003"></a>00003 <span class="comment"> *</span>
 <a name="l00004"></a>00004 <span class="comment"> *  Created on: Nov 2, 2011</span>
 <a name="l00005"></a>00005 <span class="comment"> *      Author: martin</span>
 <a name="l00006"></a>00006 <span class="comment"> */</span>
 <a name="l00007"></a>00007 
-<a name="l00008"></a>00008 <span class="preprocessor">#include &quot;Statement.h&quot;</span>
-<a name="l00009"></a>00009 <span class="preprocessor">#include &quot;SqliteException.h&quot;</span>
-<a name="l00010"></a>00010 <span class="preprocessor">#include &quot;InvalidUseException.h&quot;</span>
+<a name="l00008"></a>00008 <span class="preprocessor">#include &quot;<a class="code" href="Statement_8h.html">Statement.h</a>&quot;</span>
+<a name="l00009"></a>00009 <span class="preprocessor">#include &quot;<a class="code" href="SqliteException_8h.html">SqliteException.h</a>&quot;</span>
+<a name="l00010"></a>00010 <span class="preprocessor">#include &quot;<a class="code" href="InvalidUseException_8h.html">InvalidUseException.h</a>&quot;</span>
 <a name="l00011"></a>00011 <span class="preprocessor">#include &lt;utility&gt;</span>
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;tuple&gt;</span>
 <a name="l00013"></a>00013 
 <a name="l00014"></a>00014 <span class="keyword">namespace </span>sqlite
 <a name="l00015"></a>00015 {
 <a name="l00016"></a>00016 
-<a name="l00017"></a><a class="code" href="classsqlite_1_1Statement.html#a0f125162b5543d8b4b3ffd06cfaeb643">00017</a> <a class="code" href="classsqlite_1_1Statement.html#a0f125162b5543d8b4b3ffd06cfaeb643">Statement::Statement</a>(<span class="keyword">const</span> std::string&amp; sql, <a class="code" href="classsqlite_1_1Database.html">Database</a>&amp; db):
+<a name="l00017"></a><a class="code" href="classsqlite_1_1Statement.html#a0f125162b5543d8b4b3ffd06cfaeb643">00017</a> <a class="code" href="classsqlite_1_1Statement.html#a0f125162b5543d8b4b3ffd06cfaeb643" title="Constructs statement.">Statement::Statement</a>(<span class="keyword">const</span> std::string&amp; sql, <a class="code" href="classsqlite_1_1Database.html" title="Database connection class.">Database</a>&amp; db):
 <a name="l00018"></a>00018     stmt(NULL),
 <a name="l00019"></a>00019     db(&amp;db),
 <a name="l00020"></a>00020     hrow(false),
 <a name="l00021"></a>00021     dn(false)
 <a name="l00022"></a>00022 {
 <a name="l00023"></a>00023     <span class="keyword">const</span> <span class="keywordtype">char</span>* a;
-<a name="l00024"></a>00024     throw_sqlite_status(sqlite3_prepare_v2(db.cobj(), sql.c_str(), -1, &amp;stmt, &amp;a), db.cobj());
+<a name="l00024"></a>00024     <a class="code" href="namespacesqlite.html#aca4e505415e118d97b5d30d66b04efa9">throw_sqlite_status</a>(sqlite3_prepare_v2(db.<a class="code" href="classsqlite_1_1Database.html#a5328525efc9c9f9131852952e8b48c4b">cobj</a>(), sql.c_str(), -1, &amp;stmt, &amp;a), db.<a class="code" href="classsqlite_1_1Database.html#a5328525efc9c9f9131852952e8b48c4b">cobj</a>());
 <a name="l00025"></a>00025     cols = sqlite3_column_count(stmt);
-<a name="l00026"></a>00026     db.<a class="code" href="classsqlite_1_1Database.html#a984a42475a25df7053d3dfff4e19112d">register_statement</a>(*<span class="keyword">this</span>);
+<a name="l00026"></a>00026     db.<a class="code" href="classsqlite_1_1Database.html#a984a42475a25df7053d3dfff4e19112d" title="Registers a Statement.">register_statement</a>(*<span class="keyword">this</span>);
 <a name="l00027"></a>00027 }
 <a name="l00028"></a>00028 
-<a name="l00029"></a>00029 Statement::~Statement()
+<a name="l00029"></a><a class="code" href="classsqlite_1_1Statement.html#a7e0e52bdf327fa4bbeb3f349f9bdf403">00029</a> <a class="code" href="classsqlite_1_1Statement.html#a7e0e52bdf327fa4bbeb3f349f9bdf403">Statement::~Statement</a>()
 <a name="l00030"></a>00030 {
-<a name="l00031"></a>00031     <a class="code" href="classsqlite_1_1Statement.html#adb80dc2d94f7054d1d802a7cad3acb18">finalize</a>();
+<a name="l00031"></a>00031     <a class="code" href="classsqlite_1_1Statement.html#adb80dc2d94f7054d1d802a7cad3acb18" title="Finalizes the statement before destruction.">finalize</a>();
 <a name="l00032"></a>00032 }
 <a name="l00033"></a>00033 
-<a name="l00034"></a>00034 Statement&amp; Statement::operator =(Statement &amp;&amp; other)
+<a name="l00034"></a><a class="code" href="classsqlite_1_1Statement.html#a6a0aff56e99a7f58f9217fdd983262e0">00034</a> <a class="code" href="classsqlite_1_1Statement.html" title="Sqlite statement wrapper.">Statement</a>&amp; <a class="code" href="classsqlite_1_1Statement.html#a8937864f520229be540b5c2bdfb52b53">Statement::operator =</a>(<a class="code" href="classsqlite_1_1Statement.html" title="Sqlite statement wrapper.">Statement</a> &amp;&amp; other)
 <a name="l00035"></a>00035 {
-<a name="l00036"></a>00036     <a class="code" href="classsqlite_1_1Statement.html#adb80dc2d94f7054d1d802a7cad3acb18">finalize</a>();
+<a name="l00036"></a>00036     <a class="code" href="classsqlite_1_1Statement.html#adb80dc2d94f7054d1d802a7cad3acb18" title="Finalizes the statement before destruction.">finalize</a>();
 <a name="l00037"></a>00037     stmt = other.stmt;
 <a name="l00038"></a>00038     dn = other.dn;
 <a name="l00039"></a>00039     hrow = other.hrow;
 <a name="l00040"></a>00040     db = other.db;
-<a name="l00041"></a>00041     db-&gt;unregister_statement(other);
+<a name="l00041"></a>00041     db-&gt;<a class="code" href="classsqlite_1_1Database.html#af7ddfa487ec7a9416bd04ee87257784f" title="Unregisters a Statement.">unregister_statement</a>(other);
 <a name="l00042"></a>00042     other.stmt = NULL;
 <a name="l00043"></a>00043     <span class="keywordflow">if</span> (stmt != NULL)
-<a name="l00044"></a>00044         db-&gt;register_statement(*<span class="keyword">this</span>);
+<a name="l00044"></a>00044         db-&gt;<a class="code" href="classsqlite_1_1Database.html#a984a42475a25df7053d3dfff4e19112d" title="Registers a Statement.">register_statement</a>(*<span class="keyword">this</span>);
 <a name="l00045"></a>00045     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
 <a name="l00046"></a>00046 }
 <a name="l00047"></a>00047 
-<a name="l00048"></a>00048 <a class="code" href="classsqlite_1_1Statement.html#a0f125162b5543d8b4b3ffd06cfaeb643">Statement::Statement</a>(Statement &amp;&amp; other)
+<a name="l00048"></a><a class="code" href="classsqlite_1_1Statement.html#af7389c97a21040855d63e3f8ad54877b">00048</a> <a class="code" href="classsqlite_1_1Statement.html#a0f125162b5543d8b4b3ffd06cfaeb643" title="Constructs statement.">Statement::Statement</a>(<a class="code" href="classsqlite_1_1Statement.html" title="Sqlite statement wrapper.">Statement</a> &amp;&amp; other)
 <a name="l00049"></a>00049     : stmt(NULL),
 <a name="l00050"></a>00050       db(NULL)
 <a name="l00051"></a>00051 {
@@ -115,7 +117,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00066"></a>00066     <span class="keywordflow">return</span> hrow;
 <a name="l00067"></a>00067 }
 <a name="l00068"></a>00068 
-<a name="l00069"></a><a class="code" href="classsqlite_1_1Statement.html#ac70f89c6b035f6b762af5eb9c9cfd655">00069</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#ac70f89c6b035f6b762af5eb9c9cfd655">Statement::step</a>()
+<a name="l00069"></a><a class="code" href="classsqlite_1_1Statement.html#ac70f89c6b035f6b762af5eb9c9cfd655">00069</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#ac70f89c6b035f6b762af5eb9c9cfd655" title="Step the statement as in get next row or execute insert, update etc.">Statement::step</a>()
 <a name="l00070"></a>00070 {
 <a name="l00071"></a>00071     <span class="keywordflow">if</span> (stmt == NULL)
 <a name="l00072"></a>00072         <span class="keywordflow">throw</span> <a class="code" href="classsqlite_1_1InvalidUseException.html">InvalidUseException</a>(<span class="stringliteral">&quot;Call for step after finalization&quot;</span>);
@@ -137,19 +139,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00088"></a>00088     }
 <a name="l00089"></a>00089     <span class="keywordflow">if</span> (status == SQLITE_BUSY)
 <a name="l00090"></a>00090     {
-<a name="l00091"></a>00091         std::string msg(sqlite3_errmsg(db-&gt;cobj()));
+<a name="l00091"></a>00091         std::string msg(sqlite3_errmsg(db-&gt;<a class="code" href="classsqlite_1_1Database.html#a5328525efc9c9f9131852952e8b48c4b">cobj</a>()));
 <a name="l00092"></a>00092         reset_nothrow();
 <a name="l00093"></a>00093         <span class="keywordflow">throw</span> <a class="code" href="classsqlite_1_1SqliteException.html">SqliteException</a>(status, msg);
 <a name="l00094"></a>00094     }
 <a name="l00095"></a>00095     <span class="keywordflow">if</span> (status == SQLITE_MISUSE)
 <a name="l00096"></a>00096     {
 <a name="l00097"></a>00097         reset_nothrow();
-<a name="l00098"></a>00098         throw_sqlite_status(status, db-&gt;cobj());
+<a name="l00098"></a>00098         <a class="code" href="namespacesqlite.html#aca4e505415e118d97b5d30d66b04efa9">throw_sqlite_status</a>(status, db-&gt;<a class="code" href="classsqlite_1_1Database.html#a5328525efc9c9f9131852952e8b48c4b">cobj</a>());
 <a name="l00099"></a>00099     }
 <a name="l00100"></a>00100     reset_internal();
 <a name="l00101"></a>00101 }
 <a name="l00102"></a>00102 
-<a name="l00103"></a><a class="code" href="classsqlite_1_1Statement.html#a94ad3cc02d5e023453af9d4faec80704">00103</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a94ad3cc02d5e023453af9d4faec80704">Statement::reset</a>()
+<a name="l00103"></a><a class="code" href="classsqlite_1_1Statement.html#a94ad3cc02d5e023453af9d4faec80704">00103</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a94ad3cc02d5e023453af9d4faec80704" title="Reset the statement.">Statement::reset</a>()
 <a name="l00104"></a>00104 {
 <a name="l00105"></a>00105     <span class="keywordflow">if</span> (stmt == NULL)
 <a name="l00106"></a>00106         <span class="keywordflow">throw</span> <a class="code" href="classsqlite_1_1InvalidUseException.html">InvalidUseException</a>(<span class="stringliteral">&quot;Call for reset after finalization&quot;</span>);
@@ -168,7 +170,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00119"></a>00119 
 <a name="l00120"></a>00120 <span class="keywordtype">void</span> Statement::reset_internal()
 <a name="l00121"></a>00121 {
-<a name="l00122"></a>00122     throw_sqlite_status(sqlite3_reset(stmt), db-&gt;cobj());
+<a name="l00122"></a>00122     <a class="code" href="namespacesqlite.html#aca4e505415e118d97b5d30d66b04efa9">throw_sqlite_status</a>(sqlite3_reset(stmt), db-&gt;<a class="code" href="classsqlite_1_1Database.html#a5328525efc9c9f9131852952e8b48c4b">cobj</a>());
 <a name="l00123"></a>00123 }
 <a name="l00124"></a>00124 
 <a name="l00125"></a>00125 <span class="keywordtype">void</span> Statement::reset_nothrow()
@@ -202,44 +204,44 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00153"></a>00153     <span class="keywordflow">return</span> std::string(cptr);
 <a name="l00154"></a>00154 }
 <a name="l00155"></a>00155 
-<a name="l00156"></a><a class="code" href="classsqlite_1_1Statement.html#a98043bd129d6e0a4c7f531e46b828fbe">00156</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a98043bd129d6e0a4c7f531e46b828fbe">Statement::bind_double</a>(<span class="keywordtype">int</span> param_index, <span class="keywordtype">double</span> value)
+<a name="l00156"></a><a class="code" href="classsqlite_1_1Statement.html#a98043bd129d6e0a4c7f531e46b828fbe">00156</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a98043bd129d6e0a4c7f531e46b828fbe" title="Binds a value to prepared statement parameter.">Statement::bind_double</a>(<span class="keywordtype">int</span> param_index, <span class="keywordtype">double</span> value)
 <a name="l00157"></a>00157 {
-<a name="l00158"></a>00158     throw_sqlite_status(sqlite3_bind_double(stmt, param_index, value), db-&gt;cobj());
+<a name="l00158"></a>00158     <a class="code" href="namespacesqlite.html#aca4e505415e118d97b5d30d66b04efa9">throw_sqlite_status</a>(sqlite3_bind_double(stmt, param_index, value), db-&gt;<a class="code" href="classsqlite_1_1Database.html#a5328525efc9c9f9131852952e8b48c4b">cobj</a>());
 <a name="l00159"></a>00159 }
 <a name="l00160"></a>00160 
-<a name="l00161"></a><a class="code" href="classsqlite_1_1Statement.html#a977d0a052ed2ea162eb67a4c2f504380">00161</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a977d0a052ed2ea162eb67a4c2f504380">Statement::bind_int</a>(<span class="keywordtype">int</span> param_index, <span class="keywordtype">int</span> value)
+<a name="l00161"></a><a class="code" href="classsqlite_1_1Statement.html#a977d0a052ed2ea162eb67a4c2f504380">00161</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a977d0a052ed2ea162eb67a4c2f504380" title="Binds a value to prepared statement parameter.">Statement::bind_int</a>(<span class="keywordtype">int</span> param_index, <span class="keywordtype">int</span> value)
 <a name="l00162"></a>00162 {
-<a name="l00163"></a>00163     throw_sqlite_status(sqlite3_bind_int(stmt, param_index, value), db-&gt;cobj());
+<a name="l00163"></a>00163     <a class="code" href="namespacesqlite.html#aca4e505415e118d97b5d30d66b04efa9">throw_sqlite_status</a>(sqlite3_bind_int(stmt, param_index, value), db-&gt;<a class="code" href="classsqlite_1_1Database.html#a5328525efc9c9f9131852952e8b48c4b">cobj</a>());
 <a name="l00164"></a>00164 }
 <a name="l00165"></a>00165 
-<a name="l00166"></a><a class="code" href="classsqlite_1_1Statement.html#a6b1647166511662615d5d31a9b1a6ae6">00166</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a6b1647166511662615d5d31a9b1a6ae6">Statement::bind_int64</a>(<span class="keywordtype">int</span> param_index, int64_t value)
+<a name="l00166"></a><a class="code" href="classsqlite_1_1Statement.html#a6b1647166511662615d5d31a9b1a6ae6">00166</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a6b1647166511662615d5d31a9b1a6ae6" title="Binds a value to prepared statement parameter.">Statement::bind_int64</a>(<span class="keywordtype">int</span> param_index, int64_t value)
 <a name="l00167"></a>00167 {
-<a name="l00168"></a>00168     throw_sqlite_status(sqlite3_bind_int64(stmt, param_index, value), db-&gt;cobj());
+<a name="l00168"></a>00168     <a class="code" href="namespacesqlite.html#aca4e505415e118d97b5d30d66b04efa9">throw_sqlite_status</a>(sqlite3_bind_int64(stmt, param_index, value), db-&gt;<a class="code" href="classsqlite_1_1Database.html#a5328525efc9c9f9131852952e8b48c4b">cobj</a>());
 <a name="l00169"></a>00169 }
 <a name="l00170"></a>00170 
-<a name="l00171"></a><a class="code" href="classsqlite_1_1Statement.html#a2e726bcdd8e43b36dd3dd9fd462c0ade">00171</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a2e726bcdd8e43b36dd3dd9fd462c0ade">Statement::bind_string</a>(<span class="keywordtype">int</span> param_index, <span class="keyword">const</span> std::string&amp; value)
+<a name="l00171"></a><a class="code" href="classsqlite_1_1Statement.html#a2e726bcdd8e43b36dd3dd9fd462c0ade">00171</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#a2e726bcdd8e43b36dd3dd9fd462c0ade" title="Binds a value to prepared statement parameter.">Statement::bind_string</a>(<span class="keywordtype">int</span> param_index, <span class="keyword">const</span> std::string&amp; value)
 <a name="l00172"></a>00172 {
-<a name="l00173"></a>00173     throw_sqlite_status(sqlite3_bind_text(stmt, param_index, value.c_str(), value.size(), SQLITE_TRANSIENT), db-&gt;cobj());
+<a name="l00173"></a>00173     <a class="code" href="namespacesqlite.html#aca4e505415e118d97b5d30d66b04efa9">throw_sqlite_status</a>(sqlite3_bind_text(stmt, param_index, value.c_str(), value.size(), SQLITE_TRANSIENT), db-&gt;<a class="code" href="classsqlite_1_1Database.html#a5328525efc9c9f9131852952e8b48c4b">cobj</a>());
 <a name="l00174"></a>00174 }
 <a name="l00175"></a>00175 
-<a name="l00176"></a>00176 <a class="code" href="classsqlite_1_1Statement_1_1ColType_3_01double_01_4.html">Statement::ColType&lt;double&gt;</a> coldouble()
+<a name="l00176"></a><a class="code" href="namespacesqlite.html#a157e98ae8dd4d1fab72ff3d13e32f5f2">00176</a> <a class="code" href="classsqlite_1_1Statement_1_1ColType_3_01double_01_4.html">Statement::ColType&lt;double&gt;</a> <a class="code" href="namespacesqlite.html#a157e98ae8dd4d1fab72ff3d13e32f5f2">coldouble</a>()
 <a name="l00177"></a>00177 {
-<a name="l00178"></a>00178     <span class="keywordflow">return</span> Statement::coldouble;
+<a name="l00178"></a>00178     <span class="keywordflow">return</span> <a class="code" href="classsqlite_1_1Statement.html#a6ea933a5fa4811924606ae352519ef0e">Statement::coldouble</a>;
 <a name="l00179"></a>00179 }
 <a name="l00180"></a>00180 
-<a name="l00181"></a>00181 Statement::ColType&lt;int&gt; colint()
+<a name="l00181"></a><a class="code" href="namespacesqlite.html#aa6172ebf6d2beb53ba84c3883bff69b8">00181</a> <a class="code" href="classsqlite_1_1Statement_1_1ColType_3_01int_01_4.html">Statement::ColType&lt;int&gt;</a> <a class="code" href="namespacesqlite.html#aa6172ebf6d2beb53ba84c3883bff69b8">colint</a>()
 <a name="l00182"></a>00182 {
-<a name="l00183"></a>00183     <span class="keywordflow">return</span> Statement::colint;
+<a name="l00183"></a>00183     <span class="keywordflow">return</span> <a class="code" href="classsqlite_1_1Statement.html#aeeed5ed6a4f1cfbba8332e15fb31e2a2">Statement::colint</a>;
 <a name="l00184"></a>00184 }
 <a name="l00185"></a>00185 
-<a name="l00186"></a>00186 Statement::ColType&lt;int64_t&gt; colint64()
+<a name="l00186"></a><a class="code" href="namespacesqlite.html#ab480419fc3164250212dc6fccaae4db4">00186</a> <a class="code" href="classsqlite_1_1Statement_1_1ColType_3_01int64__t_01_4.html">Statement::ColType&lt;int64_t&gt;</a> <a class="code" href="namespacesqlite.html#ab480419fc3164250212dc6fccaae4db4">colint64</a>()
 <a name="l00187"></a>00187 {
-<a name="l00188"></a>00188     <span class="keywordflow">return</span> Statement::colint64;
+<a name="l00188"></a>00188     <span class="keywordflow">return</span> <a class="code" href="classsqlite_1_1Statement.html#a67a8cde6eb45895a70b69291e1375e41">Statement::colint64</a>;
 <a name="l00189"></a>00189 }
 <a name="l00190"></a>00190 
-<a name="l00191"></a>00191 Statement::ColType&lt;std::string&gt; colstr()
+<a name="l00191"></a><a class="code" href="namespacesqlite.html#a4c2ecf1bec6600e220684cbde45d564e">00191</a> <a class="code" href="classsqlite_1_1Statement_1_1ColType_3_01std_1_1string_01_4.html">Statement::ColType&lt;std::string&gt;</a> <a class="code" href="namespacesqlite.html#a4c2ecf1bec6600e220684cbde45d564e">colstr</a>()
 <a name="l00192"></a>00192 {
-<a name="l00193"></a>00193     <span class="keywordflow">return</span> <a class="code" href="classsqlite_1_1Statement.html#abd0eb9cc12206924108726675c116957">Statement::colstring</a>;
+<a name="l00193"></a>00193     <span class="keywordflow">return</span> <a class="code" href="classsqlite_1_1Statement.html#abd0eb9cc12206924108726675c116957" title="Column type string.">Statement::colstring</a>;
 <a name="l00194"></a>00194 }
 <a name="l00195"></a>00195 
 <a name="l00196"></a>00196 <span class="keywordtype">void</span> Statement::check_value_conditions(<span class="keywordtype">int</span> col)
@@ -252,19 +254,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00203"></a>00203         <span class="keywordflow">throw</span> InvalidUseException(<span class="stringliteral">&quot;Column index out of bounds&quot;</span>);
 <a name="l00204"></a>00204 }
 <a name="l00205"></a>00205 
-<a name="l00206"></a><a class="code" href="classsqlite_1_1Statement.html#adb80dc2d94f7054d1d802a7cad3acb18">00206</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#adb80dc2d94f7054d1d802a7cad3acb18">Statement::finalize</a>()
+<a name="l00206"></a><a class="code" href="classsqlite_1_1Statement.html#adb80dc2d94f7054d1d802a7cad3acb18">00206</a> <span class="keywordtype">void</span> <a class="code" href="classsqlite_1_1Statement.html#adb80dc2d94f7054d1d802a7cad3acb18" title="Finalizes the statement before destruction.">Statement::finalize</a>()
 <a name="l00207"></a>00207 {
 <a name="l00208"></a>00208     <span class="keywordflow">if</span> (stmt == NULL)
 <a name="l00209"></a>00209         <span class="keywordflow">return</span>;
 <a name="l00210"></a>00210     sqlite3_finalize(stmt);
-<a name="l00211"></a>00211     db-&gt;<a class="code" href="classsqlite_1_1Database.html#af7ddfa487ec7a9416bd04ee87257784f">unregister_statement</a>(*<span class="keyword">this</span>);
+<a name="l00211"></a>00211     db-&gt;<a class="code" href="classsqlite_1_1Database.html#af7ddfa487ec7a9416bd04ee87257784f" title="Unregisters a Statement.">unregister_statement</a>(*<span class="keyword">this</span>);
 <a name="l00212"></a>00212     stmt = NULL;
 <a name="l00213"></a>00213 }
 <a name="l00214"></a>00214 
-<a name="l00215"></a>00215 <span class="keywordtype">void</span> execute_sql(std::string sql, <a class="code" href="classsqlite_1_1Database.html">Database</a>&amp; db)
+<a name="l00215"></a><a class="code" href="namespacesqlite.html#af052e96b7852d3c68d91e63d7cd94fa8">00215</a> <span class="keywordtype">void</span> <a class="code" href="namespacesqlite.html#af052e96b7852d3c68d91e63d7cd94fa8" title="Executes simple sql statement with no result.">execute_sql</a>(std::string sql, <a class="code" href="classsqlite_1_1Database.html" title="Database connection class.">Database</a>&amp; db)
 <a name="l00216"></a>00216 {
-<a name="l00217"></a>00217     <a class="code" href="classsqlite_1_1Statement.html">Statement</a> st(sql, db);
-<a name="l00218"></a>00218     st.step();
+<a name="l00217"></a>00217     <a class="code" href="classsqlite_1_1Statement.html" title="Sqlite statement wrapper.">Statement</a> st(sql, db);
+<a name="l00218"></a>00218     st.<a class="code" href="classsqlite_1_1Statement.html#ac70f89c6b035f6b762af5eb9c9cfd655" title="Step the statement as in get next row or execute insert, update etc.">step</a>();
 <a name="l00219"></a>00219 }
 <a name="l00220"></a>00220 
 <a name="l00221"></a>00221 }
@@ -280,7 +282,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -289,7 +291,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Nov 6 2011 15:16:05 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Nov 7 2011 00:02:47 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

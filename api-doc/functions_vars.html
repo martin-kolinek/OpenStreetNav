@@ -17,6 +17,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
@@ -49,11 +50,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li class="current"><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_rela.html"><span>Related&#160;Functions</span></a></li>
     </ul>
   </div>
 </div>
 <div class="contents">
 &#160;<ul>
+<li>attributes_table
+: <a class="el" href="classosmdb_1_1OsmDatabase.html#a965d5c340b74cf894945e9de885e0d2c">osmdb::OsmDatabase</a>
+</li>
 <li>coldouble
 : <a class="el" href="classsqlite_1_1Statement.html#aa92b0146b798be7a94c33d769d4d53b5">sqlite::Statement</a>
 </li>
@@ -66,6 +71,59 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>colstring
 : <a class="el" href="classsqlite_1_1Statement.html#abd0eb9cc12206924108726675c116957">sqlite::Statement</a>
 </li>
+<li>db
+: <a class="el" href="classSimpleFixture.html#a7e3ef75e29ed017d88f3e462bf1b289f">SimpleFixture</a>
+</li>
+<li>edges_table
+: <a class="el" href="classosmdb_1_1OsmDatabase.html#a144b7f46fa356dd974a89bde339662a8">osmdb::OsmDatabase</a>
+</li>
+<li>id
+: <a class="el" href="classosm_1_1Node.html#ad185c39bb708987f65fedac24d5ffc7e">osm::Node</a>
+, <a class="el" href="classosm_1_1Way.html#a12bfbeaef3749964a1dea1ba90fe9ef1">osm::Way</a>
+, <a class="el" href="classosm_1_1RelationMapping.html#a2ef49f594fa434e94a7a74267c3f349c">osm::RelationMapping</a>
+, <a class="el" href="classosm_1_1Relation.html#a20b214bb2bfb793e75b1645cfc50d0c3">osm::Relation</a>
+</li>
+<li>key
+: <a class="el" href="classosm_1_1Tag.html#a98aa842f302dfd026c7e28c43e7f013d">osm::Tag</a>
+</li>
+<li>lat
+: <a class="el" href="classosm_1_1Node.html#a11348a4e234a069451c724f33e77729a">osm::Node</a>
+</li>
+<li>lon
+: <a class="el" href="classosm_1_1Node.html#a3af299c036d03bec204b159964537110">osm::Node</a>
+</li>
+<li>members
+: <a class="el" href="classosm_1_1Relation.html#a1d0741640eab7223616d0614b9b9b9af">osm::Relation</a>
+</li>
+<li>nodes
+: <a class="el" href="classosm_1_1Way.html#a01c4dcf6c3884ddbd2725eb16d686094">osm::Way</a>
+</li>
+<li>nodes_table
+: <a class="el" href="classosmdb_1_1OsmDatabase.html#a6535fa91eeab1948dbd04ddc0a12b760">osmdb::OsmDatabase</a>
+</li>
+<li>relation_contents_table
+: <a class="el" href="classosmdb_1_1OsmDatabase.html#af9eff8f203eb6a107276d6c8fff03928">osmdb::OsmDatabase</a>
+</li>
+<li>relations_table
+: <a class="el" href="classosmdb_1_1OsmDatabase.html#aaa8ce07c5998c833511708c4a311dc70">osmdb::OsmDatabase</a>
+</li>
+<li>role
+: <a class="el" href="classosm_1_1RelationMapping.html#a7bbe7b542d0cab3f03dcec7b611228e0">osm::RelationMapping</a>
+</li>
+<li>tags
+: <a class="el" href="classosm_1_1Node.html#acc2fa0f17db668e36085677b45979ba6">osm::Node</a>
+, <a class="el" href="classosm_1_1Relation.html#aa9a8f84cbd5d2142064274c4a7b47a0b">osm::Relation</a>
+, <a class="el" href="classosm_1_1Way.html#a0217bca1ef251fae3d563f253cc30e3c">osm::Way</a>
+</li>
+<li>type
+: <a class="el" href="classosm_1_1RelationMapping.html#a16f45fc71408dac27dd973cc9322bea0">osm::RelationMapping</a>
+</li>
+<li>value
+: <a class="el" href="classosm_1_1Tag.html#a7593938d83efd046af8e68d1c5b96958">osm::Tag</a>
+</li>
+<li>ways_table
+: <a class="el" href="classosmdb_1_1OsmDatabase.html#ab665ab78b5e73ff336f20f4cd42fbb97">osmdb::OsmDatabase</a>
+</li>
 </ul>
 </div>
 <!-- window showing the filter options -->
@@ -73,7 +131,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -82,7 +140,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Nov 6 2011 15:16:05 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Nov 7 2011 00:02:47 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
