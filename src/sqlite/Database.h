@@ -60,10 +60,18 @@ public:
      * @return number of unfinalized statements
      */
     int unfinalized();
+
+    /**
+     *
+     * @return whether file existed before database was created
+     */
+    bool is_new();
+
     sqlite3* const& cobj();
 private:
     sqlite3* conn;
     std::set<Statement*> stmts;
+    bool is_nw;
 };
 }
 #endif /* DATABASE_H_ */

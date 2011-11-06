@@ -8,6 +8,7 @@
 #include "Database.h"
 #include "SqliteException.h"
 #include "InvalidUseException.h"
+#include <boost/filesystem.hpp>
 
 #include "Statement.h"
 
@@ -17,6 +18,7 @@ namespace sqlite
 Database::Database(const std::string& filename)
     : conn(NULL)
 {
+    is_nw = !boost::filesystem::exists(filename);
     throw_sqlite_status(sqlite3_open(filename.c_str(), &conn), conn);
 }
 
@@ -73,6 +75,11 @@ void Database::unregister_statement(Statement& st)
 int Database::unfinalized()
 {
     return stmts.size();
+}
+
+bool Database::is_new()
+{
+    return is_nw;
 }
 
 sqlite3* const& Database::cobj()

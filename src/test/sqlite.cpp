@@ -11,6 +11,7 @@ void cleanup()
 {
     BOOST_CHECK_MESSAGE(boost::filesystem::exists("test.db"), "test.db does not exist");
     remove("test.db");
+    remove("asdf.db");
 }
 
 sqlite::Database get_test_db()
@@ -172,6 +173,18 @@ BOOST_AUTO_TEST_CASE(int64)
     std::vector<std::tuple<int64_t> > v {std::make_tuple(100000000000)};
     std::vector<std::tuple<int64_t> > v2 = sqlite::query_sql("SELECT ID FROM empty", db, sqlite::colint64());
     BOOST_CHECK(v == v2);
+}
+
+BOOST_AUTO_TEST_CASE(db_new)
+{
+    {
+        sqlite::Database db("asdf.db");
+        BOOST_CHECK(db.is_new());
+    }
+    {
+        sqlite::Database db("asdf.db");
+        BOOST_CHECK(!db.is_new());
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
