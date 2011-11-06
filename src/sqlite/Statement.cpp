@@ -9,6 +9,7 @@
 #include "SqliteException.h"
 #include "InvalidUseException.h"
 #include <utility>
+#include <tuple>
 
 namespace sqlite
 {
@@ -172,6 +173,26 @@ void Statement::bind_string(int param_index, const std::string& value)
     throw_sqlite_status(sqlite3_bind_text(stmt, param_index, value.c_str(), value.size(), SQLITE_TRANSIENT), db->cobj());
 }
 
+Statement::ColType<int> Statement::colint()
+{
+    return Statement::ColType<int>();
+}
+
+Statement::ColType<double> Statement::coldouble()
+{
+    return Statement::ColType<double>();
+}
+
+Statement::ColType<int64_t> Statement::colint64()
+{
+    return Statement::ColType<int64_t>();
+}
+
+Statement::ColType<std::string> Statement::colstring()
+{
+    return Statement::ColType<std::string>();
+}
+
 void Statement::check_value_conditions(int col)
 {
     if (stmt == NULL)
@@ -191,7 +212,15 @@ void Statement::finalize()
     stmt = NULL;
 }
 
-
+void execute_sql(std::string sql, Database& db)
+{
+    Statement st(sql, db);
+    st.step();
+}
 
 }
+
+
+
+
 

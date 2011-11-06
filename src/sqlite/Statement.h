@@ -10,10 +10,14 @@
 
 #include <sqlite3.h>
 #include "Database.h"
+#include <vector>
 #include <cstdint>
+#include <tuple>
+#include <cassert>
 
 namespace sqlite
 {
+
 /**
  * \class Statement
  *
@@ -21,6 +25,16 @@ namespace sqlite
  */
 class Statement
 {
+private:
+    template <class T>
+    class ColType
+    {
+    public:
+        T get_data(Statement& st, int col_index)
+        {
+            return T();
+        }
+    };
 public:
     /**
      * Constructs statement. Also registers the constructed statement with the database connection.
@@ -33,6 +47,11 @@ public:
     Statement& operator=(Statement const&) = delete;
     Statement(Statement && other);
     Statement& operator=(Statement && other);
+
+    static ColType<int> colint();
+    static ColType<double> coldouble();
+    static ColType<int64_t> colint64();
+    static ColType<std::string> colstring();
 
     /**
      * @return whether the statement is done, as in all of it has been executed
@@ -111,6 +130,23 @@ public:
      */
     void bind_string(int param_index, std::string const& value);
 
+    template<typename... Args> std::tuple<Args...> get_row(ColType<Args>... types)
+    {
+        return get_row_internal(0, types...);
+    }
+
+    template<typename... Args> std::vector<std::tuple<Args...> > get_remaining_rows(ColType<Args>... types)
+    {
+        std::vector<std::tuple<Args...> > ret;
+        while (!done())
+        {
+            if (has_row())
+                ret.push_back(get_row(types...));
+            step();
+        }
+        return ret;
+    }
+
 private:
     void reset_internal();
     void reset_nothrow();
@@ -121,7 +157,71 @@ private:
     bool hrow;
     bool dn;
 
+    std::tuple<> get_row_internal(int)
+    {
+        return std::tuple<>();
+    }
+    template<typename Head, typename... Tail> std::tuple<Head, Tail...> get_row_internal(int i, ColType<Head> h, ColType<Tail>... t)
+    {
+        std::tuple<Tail...> tail = get_row_internal(i + 1, t...);
+        Head head = h.get_data(*this, i);
+        return std::tuple_cat(std::make_tuple(head), tail);
+    }
 };
+
+/**
+ * Executes simple sql statement with no result
+ * @param sql sql statement
+ * @param db database connection
+ */
+void execute_sql(std::string sql, Database& db);
+
+template<typename... Args> std::vector<std::tuple<Args...> > query_sql(std::string sql, Database& db, Statement::ColType<Args>... types)
+{
+    Statement st(sql, db);
+    return st.get_remaining_rows(types...);
+}
+
+template<>
+class Statement::ColType<int>
+{
+public:
+    int get_data(Statement& st, int col_index)
+    {
+        return st.val_int(col_index);
+    }
+};
+
+template<>
+class Statement::ColType<double>
+{
+public:
+    double get_data(Statement& st, int col_index)
+    {
+        return st.val_double(col_index);
+    }
+};
+
+template<>
+class Statement::ColType<int64_t>
+{
+public:
+    int64_t get_data(Statement& st, int col_index)
+    {
+        return st.val_int64(col_index);
+    }
+};
+
+template<>
+class Statement::ColType<std::string>
+{
+public:
+    std::string get_data(Statement& st, int col_index)
+    {
+        return st.val_string(col_index);
+    }
+};
+
 }
 
 #endif /* STATEMENT_H_ */

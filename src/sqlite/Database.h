@@ -14,6 +14,7 @@
 
 namespace sqlite
 {
+
 class Statement;
 
 /**
