@@ -17,7 +17,9 @@ void cleanup()
 sqlite::Database get_test_db()
 {
     BOOST_REQUIRE_MESSAGE(!boost::filesystem::exists("test.db"), "test.db exists");
+    BOOST_REQUIRE_MESSAGE(!boost::filesystem::exists("asdf.db"), "asdf.db exists");
     return sqlite::Database("test.db");
+
 }
 
 void prepare_test_db(sqlite::Database& db)
