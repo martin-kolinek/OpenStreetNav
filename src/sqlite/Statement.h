@@ -40,6 +40,11 @@ private:
     friend Statement::ColType<int64_t> colint64();
     friend Statement::ColType<std::string> colstr();
 
+    template <class T>
+    class BindWrap
+    {
+    };
+
 public:
     /**
      * Constructs statement. Also registers the constructed statement with the database connection.
@@ -158,6 +163,16 @@ public:
     }
 
     /**
+     * Binds more values to parameters
+     * Starts with index 1
+     * @param values values to bind
+     */
+    template<typename... Args> void bind(Args... values)
+    {
+        bind_internal(1, values...);
+    }
+
+    /**
      * Column type int
      */
     static ColType<int> colint;
@@ -194,6 +209,18 @@ private:
         Head head = h.get_data(*this, i);
         return std::tuple_cat(std::make_tuple(head), tail);
     }
+
+    void bind_internal(int)
+    {
+    }
+
+    template<typename Head, typename... Tail> void bind_internal(int i, Head h, Tail... t)
+    {
+        BindWrap<Head> bw;
+        bw.bind(i, h, *this);
+        bind_internal(i + 1, t...);
+    }
+
 };
 
 /**
@@ -204,7 +231,7 @@ private:
 void execute_sql(std::string sql, Database& db);
 
 /**
- *
+ * Executes sql query
  * @param sql sql query
  * @param db database connection
  * @param types same as in \ref Statement::get_row
@@ -263,6 +290,46 @@ Statement::ColType<int> colint();
 Statement::ColType<int64_t> colint64();
 
 Statement::ColType<std::string> colstr();
+
+template<>
+class Statement::BindWrap<int>
+{
+public:
+    void bind(int index, int val, Statement& st)
+    {
+        st.bind_int(index, val);
+    }
+};
+
+template<>
+class Statement::BindWrap<int64_t>
+{
+public:
+    void bind(int index, int64_t val, Statement& st)
+    {
+        st.bind_int64(index, val);
+    }
+};
+
+template<>
+class Statement::BindWrap<std::string>
+{
+public:
+    void bind(int index, std::string const& val, Statement& st)
+    {
+        st.bind_string(index, val);
+    }
+};
+
+template<>
+class Statement::BindWrap<double>
+{
+public:
+    void bind(int index, double val, Statement& st)
+    {
+        st.bind_double(index, val);
+    }
+};
 
 }
 

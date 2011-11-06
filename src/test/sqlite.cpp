@@ -153,10 +153,25 @@ BOOST_AUTO_TEST_CASE(exec)
     sqlite::execute_sql("CREATE TABLE empty3 (A INTEGER, B INTEGER, C INTEGER)", db);
     sqlite::execute_sql("INSERT INTO empty3 (A, B, C) VALUES(1, 2, 3)", db);
     sqlite::execute_sql("INSERT INTO empty3 (A, B, C) VALUES(4, 5, 6)", db);
-    std::vector<std::tuple<int, int, int> > exp {std::make_tuple(1, 2, 3), std::make_tuple(4, 5, 6)};
+    sqlite::Statement st("INSERT INTO empty3 (A, B, C) VALUES(?, ?, ?)", db);
+    st.bind(7, 8, 9);
+    st.step();
+    st.bind(10, 11, 12);
+    st.step();
+    std::vector<std::tuple<int, int, int> > exp {std::make_tuple(1, 2, 3), std::make_tuple(4, 5, 6), std::make_tuple(7, 8, 9), std::make_tuple(10, 11, 12)};
     std::vector<std::tuple<int, int, int> > ret = sqlite::query_sql(std::string("SELECT A, B, C FROM empty3"), db, sqlite::colint(), sqlite::colint(), sqlite::colint());
     std::sort(ret.begin(), ret.end());
     BOOST_CHECK(ret == exp);
+}
+
+BOOST_AUTO_TEST_CASE(int64)
+{
+    sqlite::Statement st("INSERT INTO empty (ID) VALUES (?)", db);
+    st.bind(100000000000);
+    st.step();
+    std::vector<std::tuple<int64_t> > v {std::make_tuple(100000000000)};
+    std::vector<std::tuple<int64_t> > v2 = sqlite::query_sql("SELECT ID FROM empty", db, sqlite::colint64());
+    BOOST_CHECK(v == v2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
