@@ -9,3 +9,5 @@ add_subdirectory(sqlite)
 add_subdirectory(test)
 
 add_subdirectory(elements)
+
+add_subdirectory(osmdb)
