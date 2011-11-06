@@ -21,6 +21,8 @@ public:
     Node(int64_t id);
     virtual ~Node();
     int64_t id;
+    double lat;
+    double lon;
     std::vector<Tag> tags;
 };
 
