@@ -12,7 +12,8 @@ namespace osmxml
 {
 
 XmlParser::XmlParser():
-    done(false)
+    done(false),
+    cur_piece(NULL)
 {
 }
 
