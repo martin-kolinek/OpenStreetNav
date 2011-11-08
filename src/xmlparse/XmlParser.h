@@ -25,6 +25,7 @@ public:
     boost::signal<void (osm::Way const&)>& way_signal();
     boost::signal<void (osm::Relation const&)>& relation_signal();
     boost::signal<void (const Glib::ustring&)>& warn_signal();
+    boost::signal<void ()>& progress_signal();
 protected:
     void on_start_element(const Glib::ustring& name, const AttributeList& attributes);
     void on_end_element(const Glib::ustring& name);
@@ -36,6 +37,7 @@ private:
     boost::signal<void (osm::Way const&)> way_sig;
     boost::signal<void (osm::Relation const&)> relation_sig;
     boost::signal<void (const Glib::ustring&)> warn_sig;
+    boost::signal<void ()> progress_sig;
     bool done;
     ParserPiece* cur_piece;
 };

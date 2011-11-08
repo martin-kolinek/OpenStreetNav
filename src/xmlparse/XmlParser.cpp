@@ -43,6 +43,11 @@ boost::signal<void(const Glib::ustring& )> & XmlParser::warn_signal()
     return warn_sig;
 }
 
+boost::signal<void()> & XmlParser::progress_signal()
+{
+    return progress_sig;
+}
+
 void XmlParser::on_warning(const Glib::ustring& msg)
 {
     warn_sig(msg);
@@ -60,6 +65,10 @@ void XmlParser::on_fatal_error(const Glib::ustring& msg)
 
 void XmlParser::on_start_element(const Glib::ustring& name, const AttributeList& attributes)
 {
+    if (done)
+        throw std::exception(); //TODO
+
+    progress_sig();
     if (!done && !cur_piece)
     {
         cur_piece = new OsmPiece(*this, name);
@@ -67,6 +76,8 @@ void XmlParser::on_start_element(const Glib::ustring& name, const AttributeList&
     else
     {
         cur_piece = cur_piece->handle_start_element(name, attributes);
+        if (cur_piece == NULL)
+            done = true;
     }
 
 }
