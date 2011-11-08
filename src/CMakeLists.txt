@@ -1,4 +1,4 @@
-find_package(Boost COMPONENTS test_exec_monitor thread system filesystem signals)
+find_package(Boost COMPONENTS test_exec_monitor thread system filesystem signals program_options)
 
 link_directories(${Boost_LIBRARY_DIRS})
 
@@ -25,5 +25,7 @@ add_subdirectory(elements)
 add_subdirectory(osmdb)
 
 add_subdirectory(xmlparse)
+
+add_subdirectory(importer)
 
 add_subdirectory(test)
