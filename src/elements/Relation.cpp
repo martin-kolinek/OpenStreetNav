@@ -21,12 +21,12 @@ Relation::~Relation()
 
 bool Relation::operator==(Relation const& other) const
 {
-    return id==other.id && members==other.members && tags==other.tags;
+    return id == other.id && members == other.members && tags == other.tags;
 }
- 
+
 bool Relation::operator!=(Relation const& other) const
 {
-    return !(*this==other);
+    return !(*this == other);
 }
-    
+
 }

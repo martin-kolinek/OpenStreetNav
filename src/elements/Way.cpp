@@ -18,15 +18,15 @@ Way::Way(int64_t id):
 Way::~Way()
 {
 }
-    
-bool Way::operator==(Way const& other) const    
+
+bool Way::operator==(Way const& other) const
 {
-    return id==other.id && nodes==other.nodes && tags == other.tags;
+    return id == other.id && nodes == other.nodes && tags == other.tags;
 }
-    
+
 bool Way::operator!=(Way const& other) const
 {
-    return !(*this==other);
+    return !(*this == other);
 }
 
 }

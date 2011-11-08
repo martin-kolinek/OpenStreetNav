@@ -20,15 +20,15 @@ Node::Node(int64_t id, double lat, double lon):
 Node::~Node()
 {
 }
-    
+
 bool Node::operator==(Node const& other) const
 {
-    return id==other.id && lat==other.lat && lon==other.lon && tags==other.tags;
+    return id == other.id && lat == other.lat && lon == other.lon && tags == other.tags;
 }
 
 bool Node::operator!=(Node const& other) const
 {
-    return !(*this==other);
+    return !(*this == other);
 }
-    
+
 }

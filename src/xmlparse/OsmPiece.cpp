@@ -7,6 +7,8 @@
 
 #include "OsmPiece.h"
 #include "NodePiece.h"
+#include "WayPiece.h"
+#include "RelationPiece.h"
 #include "UnknownPiece.h"
 
 namespace osmxml
@@ -42,6 +44,14 @@ ParserPiece* OsmPiece::handle_start_element(const Glib::ustring& name, const xml
     if (name == "node")
     {
         return new NodePiece(this, name, attrs);
+    }
+    else if (name == "way")
+    {
+        return new WayPiece(this, name, attrs);
+    }
+    else if (name == "relation")
+    {
+        return new RelationPiece(this, name, attrs);
     }
     else
     {

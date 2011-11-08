@@ -22,12 +22,12 @@ Tag::~Tag()
 
 bool Tag::operator==(Tag const& other) const
 {
-    return key==other.key && value==other.value;
+    return key == other.key && value == other.value;
 }
 
 bool Tag::operator!=(Tag const& other) const
 {
-    return !(*this==other);
+    return !(*this == other);
 }
 
 }

@@ -23,12 +23,12 @@ RelationMapping::~RelationMapping()
 
 bool RelationMapping::operator==(RelationMapping const& other) const
 {
-    return role==other.role && id==other.id && type==other.type;
+    return role == other.role && id == other.id && type == other.type;
 }
-    
+
 bool RelationMapping::operator!=(RelationMapping const& other) const
 {
     return !(*this == other);
 }
-    
+
 } /* namespace osm */
