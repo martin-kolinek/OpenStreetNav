@@ -23,6 +23,8 @@ public:
     int64_t id;
     std::vector<RelationMapping> members;
     std::vector<Tag> tags;
+    bool operator==(Relation const& other) const;
+    bool operator!=(Relation const& other) const;
 };
 
 }

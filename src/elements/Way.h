@@ -23,6 +23,8 @@ public:
     int64_t id;
     std::vector<int64_t> nodes;
     std::vector<Tag> tags;
+    bool operator==(Way const& other) const;
+    bool operator!=(Way const& other) const;
 };
 
 }

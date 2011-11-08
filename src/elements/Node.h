@@ -24,6 +24,8 @@ public:
     double lat;
     double lon;
     std::vector<Tag> tags;
+    bool operator==(Node const& other) const;
+    bool operator!=(Node const& other) const;
 };
 
 }

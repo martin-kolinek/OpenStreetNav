@@ -20,6 +20,8 @@ public:
     virtual ~Tag();
     std::string key;
     std::string value;
+    bool operator==(Tag const& other) const;
+    bool operator!=(Tag const& other) const;
 };
 
 } /* namespace osm */

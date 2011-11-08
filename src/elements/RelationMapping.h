@@ -23,6 +23,8 @@ public:
     std::string role;
     ObjectType type;
     int64_t id;
+    bool operator==(RelationMapping const& other) const;
+    bool operator!=(RelationMapping const& other) const;
 };
 
 }
