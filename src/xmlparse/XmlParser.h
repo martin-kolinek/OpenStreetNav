@@ -11,7 +11,8 @@
 #include <libxml++/libxml++.h>
 #include <boost/signals.hpp>
 #include "../elements/osmelements.h"
-#include "ParserPiece.h"
+#include "SubParser.h"
+#include "UnknownParser.h"
 
 namespace osmxml
 {
@@ -38,8 +39,15 @@ private:
     boost::signal<void (osm::Relation const&)> relation_sig;
     boost::signal<void (const Glib::ustring&)> warn_sig;
     boost::signal<void ()> progress_sig;
-    bool done;
-    ParserPiece* cur_piece;
+    bool done, started;
+    UnknownParser unk;
+    SubParser<osm::Tag> tagpars;
+    SubParser<osm::RelationMapping> memberpars;
+    SubParser<int64_t> ndpars;
+    SubParser<osm::Node, osm::Tag> nodepars;
+    SubParser<osm::Way, osm::Tag, int64_t> waypars;
+    SubParser<osm::Relation, osm::Tag, osm::RelationMapping> relpars;
+    SubParser<int, osm::Node, osm::Way, osm::Relation, int> pars;
 };
 
 } /* namespace osmxml */

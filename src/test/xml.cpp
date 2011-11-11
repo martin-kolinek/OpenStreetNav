@@ -6,7 +6,7 @@ BOOST_AUTO_TEST_SUITE(xml)
 
 BOOST_AUTO_TEST_CASE(basic)
 {
-    std::string input(" <osm> <node id=\"1234556\" lat=\"34.252\" lon=\"21.512\"> <tag k=\"key\" v=\"val\" /> </node>");
+    std::string input(" <osm> <asdf><aaa></aaa><bbb></bbb></asdf> <node id=\"1234556\" lat=\"34.252\" lon=\"21.512\"> <tag k=\"key\" v=\"val\" /> </node>");
     input += "<way id=\"5432\"><nd ref=\"555\" /><tag k=\"wkey\" v=\"wval\" /> </way>";
     input += "<relation id=\"1253\"> <member ref=\"2521\" role=\"role\" type=\"node\" />";
     input += "<member ref=\"2522\" role=\"role\" type=\"way\" />";
