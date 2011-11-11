@@ -18,7 +18,7 @@ namespace osm
 class RelationMapping
 {
 public:
-	RelationMapping();
+    RelationMapping();
     RelationMapping(std::string const& role, ObjectType type, int64_t id);
     virtual ~RelationMapping();
     std::string role;

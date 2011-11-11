@@ -18,7 +18,7 @@ namespace osm
 class Relation
 {
 public:
-	Relation();
+    Relation();
     Relation(int64_t id);
     virtual ~Relation();
     int64_t id;

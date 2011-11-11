@@ -18,7 +18,7 @@ namespace osm
 class Node
 {
 public:
-	Node();
+    Node();
     Node(int64_t id, double lat, double lon);
     virtual ~Node();
     int64_t id;

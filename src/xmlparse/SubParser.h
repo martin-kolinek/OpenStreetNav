@@ -36,7 +36,7 @@ public:
 template<typename Ret, typename Arg>
 ParserArg<Ret, Arg> pa(std::string const& name, SubParser<Arg>& pars, std::function<void (Ret&, Arg const&)> func)
 {
-	return ParserArg<Ret, Arg>(name, pars, func);
+    return ParserArg<Ret, Arg>(name, pars, func);
 }
 
 template<typename Ret>
@@ -52,8 +52,8 @@ protected:
     }
 public:
     SubParser(std::function<void (Ret&, xmlpp::SaxParser::AttributeList const&)> creat):
-    	inchld(false),
-    	creat(creat)
+        inchld(false),
+        creat(creat)
     {}
     virtual ~SubParser()
     {}
@@ -71,7 +71,7 @@ public:
     }
     virtual void reset(xmlpp::SaxParser::AttributeList const& attrs)
     {
-    	creat(ret, attrs);
+        creat(ret, attrs);
     }
 };
 
@@ -94,29 +94,29 @@ protected:
     }
 public:
     SubParser(std::function<void (Ret&, xmlpp::SaxParser::AttributeList const&)> create, ParserArg<Ret, Head> arg, ParserArg<Ret, Tail>... rest):
-    	SubParser<Ret, Tail...>(create, rest...),
-    	chldname(arg.name),
-    	this_chld(false),
-    	mod(arg.func),
+        SubParser<Ret, Tail...>(create, rest...),
+        chldname(arg.name),
+        this_chld(false),
+        mod(arg.func),
         chld(arg.pars)
     {
     }
 
     void start(std::string const& name, xmlpp::SaxParser::AttributeList const& attrs)
     {
-        if(inchild())
+        if (inchild())
         {
-            if(this_chld)
+            if (this_chld)
                 chld.start(name, attrs);
             else
                 inherited::start(name, attrs);
         }
         else
         {
-            if(name==chldname || chldname=="")
+            if (name == chldname || chldname == "")
             {
-                this_chld=true;
-                inchild()=true;
+                this_chld = true;
+                inchild() = true;
                 chld.reset(attrs);
             }
             else
@@ -129,15 +129,15 @@ public:
 
     bool end(std::string const& name)
     {
-        if(!inchild())
+        if (!inchild())
             return true;
-        if(this_chld)
+        if (this_chld)
         {
-            if(chld.end(name))
+            if (chld.end(name))
             {
                 mod(returned(), chld.returned());
-                this_chld=false;
-                inchild()=false;
+                this_chld = false;
+                inchild() = false;
             }
             return false;
         }
@@ -147,7 +147,7 @@ public:
 
     void reset(xmlpp::SaxParser::AttributeList const& attrs)
     {
-    	inherited::reset(attrs);
+        inherited::reset(attrs);
     }
 
 };
@@ -155,7 +155,7 @@ public:
 template<typename Ret>
 SubParser<Ret> empty_parser()
 {
-	return SubParser<Ret>([](Ret&, xmlpp::SaxParser::AttributeList const&){});
+    return SubParser<Ret>([](Ret&, xmlpp::SaxParser::AttributeList const&) {});
 }
 
 } /* namespace osmxml */

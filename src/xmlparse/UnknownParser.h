@@ -16,13 +16,13 @@ namespace osmxml
 class UnknownParser : public SubParser<int>
 {
 public:
-	UnknownParser();
-	virtual ~UnknownParser();
-	void start(std::string const& name, xmlpp::SaxParser::AttributeList const& attrs);
-	bool end(std::string const& name);
-	void reset(xmlpp::SaxParser::AttributeList const& attrs);
+    UnknownParser();
+    virtual ~UnknownParser();
+    void start(std::string const& name, xmlpp::SaxParser::AttributeList const& attrs);
+    bool end(std::string const& name);
+    void reset(xmlpp::SaxParser::AttributeList const& attrs);
 private:
-	int depth;
+    int depth;
 };
 
 } /* namespace osmxml */

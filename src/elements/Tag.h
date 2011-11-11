@@ -16,7 +16,7 @@ namespace osm
 class Tag
 {
 public:
-	Tag();
+    Tag();
     Tag(std::string const& key, std::string const& value);
     virtual ~Tag();
     std::string key;

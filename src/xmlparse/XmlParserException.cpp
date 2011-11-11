@@ -10,8 +10,8 @@
 namespace osmxml
 {
 
-XmlParserException::XmlParserException(const std::string & msg)
-:msg("Xml parser error: "+msg)
+XmlParserException::XmlParserException(const std::string& msg)
+    : msg("Xml parser error: " + msg)
 {
 
 }
@@ -22,7 +22,7 @@ XmlParserException::~XmlParserException() throw()
 
 const char* XmlParserException::what() const throw()
 {
-	return msg.c_str();
+    return msg.c_str();
 }
 
 } /* namespace osmxml */

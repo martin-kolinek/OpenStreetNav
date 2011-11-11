@@ -11,8 +11,8 @@ namespace osmxml
 {
 
 UnknownParser::UnknownParser():
-		SubParser<int>([](int&, const xmlpp::SaxParser::AttributeList& ) {}),
-		depth(0)
+    SubParser<int>([](int&, const xmlpp::SaxParser::AttributeList& ) {}),
+          depth(0)
 {
 }
 
@@ -20,22 +20,22 @@ UnknownParser::~UnknownParser()
 {
 }
 
-void UnknownParser::start(const std::string &, const xmlpp::SaxParser::AttributeList &)
+void UnknownParser::start(const std::string&, const xmlpp::SaxParser::AttributeList&)
 {
-	depth++;
+    depth++;
 }
 
-bool UnknownParser::end(const std::string &)
+bool UnknownParser::end(const std::string&)
 {
-	if(--depth==0)
-		return true;
-	else
-		return false;
+    if (--depth == 0)
+        return true;
+    else
+        return false;
 }
 
-void UnknownParser::reset(const xmlpp::SaxParser::AttributeList &)
+void UnknownParser::reset(const xmlpp::SaxParser::AttributeList&)
 {
-	depth=1;
+    depth = 1;
 }
 
 } /* namespace osmxml */

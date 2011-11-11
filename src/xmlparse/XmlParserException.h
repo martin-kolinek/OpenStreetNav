@@ -17,11 +17,11 @@ namespace osmxml
 class XmlParserException : public std::exception
 {
 public:
-	XmlParserException(std::string const& msg);
-	virtual ~XmlParserException() throw();
-	virtual const char* what() const throw();
+    XmlParserException(std::string const& msg);
+    virtual ~XmlParserException() throw();
+    virtual const char* what() const throw();
 private:
-	std::string msg;
+    std::string msg;
 };
 
 } /* namespace osmxml */
