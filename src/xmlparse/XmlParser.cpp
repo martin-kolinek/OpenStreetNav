@@ -53,6 +53,7 @@ void parse_tag_attrs(osm::Tag& tg, xmlpp::SaxParser::AttributeList const& list)
 void parse_node_attrs(osm::Node& nd, xmlpp::SaxParser::AttributeList const& list)
 {
     auto vals = get_strings( {"id", "lat", "lon"}, list);
+    nd.tags.clear();
     nd.id = parse<int64_t>(vals[0]);
     nd.lat = parse<double>(vals[1]);
     nd.lon = parse<double>(vals[2]);
@@ -80,16 +81,40 @@ void parse_nd_attrs(int64_t& id, xmlpp::SaxParser::AttributeList const& list)
 void parse_way_attrs(osm::Way& w, xmlpp::SaxParser::AttributeList const& list)
 {
     auto vals = get_strings( {"id"}, list);
+    w.tags.clear();
+    w.nodes.clear();
     w.id = parse<int64_t>(vals[0]);
 }
 
 void parse_rel_attrs(osm::Relation& r, xmlpp::SaxParser::AttributeList const& list)
 {
     auto vals = get_strings( {"id"}, list);
+    r.tags.clear();
+    r.members.clear();
     r.id = parse<int64_t>(vals[0]);
 }
 
+void empty_nd_hndl(osm::Node const&)
+{}
+
+void empty_r_hndl(osm::Relation const&)
+{}
+
+void empty_w_hndl(osm::Way const&)
+{}
+
+void empty_prog_hndl()
+{}
+
+void empty_msg_hndl(std::string const&)
+{}
+
 XmlParser::XmlParser():
+    node_handler(empty_nd_hndl),
+    way_handler(empty_w_hndl),
+    relation_handler(empty_r_hndl),
+    warn_handler(empty_msg_hndl),
+    progress_handler(empty_prog_hndl),
     done(false),
     started(false),
     tagpars(
@@ -149,15 +174,15 @@ pars(
 [](int&, xmlpp::SaxParser::AttributeList const&) {},
 pa<int, osm::Node>("node", nodepars, [&](int&, osm::Node const& nd)
 {
-    node_sig(nd);
+    node_handler(nd);
 }),
 pa<int, osm::Way>("way", waypars, [&](int&, osm::Way const& w)
 {
-    way_sig(w);
+    way_handler(w);
 }),
 pa<int, osm::Relation>("relation", relpars, [&](int&, osm::Relation const& r)
 {
-    relation_sig(r);
+    relation_handler(r);
 }),
 pa<int, int>("", unk, [](int&, int const&) {})
 )
@@ -168,34 +193,9 @@ XmlParser::~XmlParser()
 {
 }
 
-boost::signal<void(const osm::Node& )> & XmlParser::node_signal()
-{
-    return node_sig;
-}
-
-boost::signal<void(const osm::Way& )> & XmlParser::way_signal()
-{
-    return way_sig;
-}
-
-boost::signal<void(const osm::Relation& )> & XmlParser::relation_signal()
-{
-    return relation_sig;
-}
-
-boost::signal<void(const Glib::ustring& )> & XmlParser::warn_signal()
-{
-    return warn_sig;
-}
-
-boost::signal<void()> & XmlParser::progress_signal()
-{
-    return progress_sig;
-}
-
 void XmlParser::on_warning(const Glib::ustring& msg)
 {
-    warn_sig(msg);
+    warn_handler(msg);
 }
 
 void XmlParser::on_error(const Glib::ustring& msg)
@@ -212,6 +212,7 @@ void XmlParser::on_start_element(const Glib::ustring& name, const AttributeList&
 {
     if (done)
         throw XmlParserException("start element after being done");
+    progress_handler();
     if (!started)
     {
         if (name != "osm")

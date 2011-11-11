@@ -25,11 +25,11 @@ void import(std::string const& inp, std::string const& outp, bool with_indexes)
 	osmdb::ElementInsertion ins(db);
 	osmxml::XmlParser pars;
 	int done=0;
-	pars.node_signal().connect([&ins](osm::Node const& n){ins.insert_node(n);});
-	pars.way_signal().connect([&ins](osm::Way const& w){ins.insert_way(w);});
-	pars.relation_signal().connect([&ins](osm::Relation const& r){ins.insert_relation(r);});
-	pars.warn_signal().connect([](std::string const& str){std::cout<<"XML warning "<<str<<std::endl;});
-	pars.progress_signal().connect([&done](){progress(done);});
+	pars.node_handler=[&ins](osm::Node const& n){ins.insert_node(n);};
+	pars.way_handler=[&ins](osm::Way const& w){ins.insert_way(w);};
+	pars.relation_handler=[&ins](osm::Relation const& r){ins.insert_relation(r);};
+	pars.warn_handler=[](std::string const& str){std::cout<<"XML warning "<<str<<std::endl;};
+	pars.progress_handler=[&done](){progress(done);};
 	std::cout<<"Starting import"<<std::endl;
 	pars.parse_file(inp);
 	std::cout<<"Done importing"<<std::endl;

@@ -7,6 +7,7 @@ BOOST_AUTO_TEST_SUITE(xml)
 BOOST_AUTO_TEST_CASE(basic)
 {
     std::string input(" <osm> <asdf><aaa></aaa><bbb></bbb></asdf> <node id=\"1234556\" lat=\"34.252\" lon=\"21.512\"> <tag k=\"key\" v=\"val\" /> </node>");
+    input += "<node id=\"35312\" lat=\"234\" lon=\"23\" />";
     input += "<way id=\"5432\"><nd ref=\"555\" /><tag k=\"wkey\" v=\"wval\" /> </way>";
     input += "<relation id=\"1253\"> <member ref=\"2521\" role=\"role\" type=\"node\" />";
     input += "<member ref=\"2522\" role=\"role\" type=\"way\" />";
@@ -15,6 +16,8 @@ BOOST_AUTO_TEST_CASE(basic)
     std::vector<osm::Node> correctn;
     osm::Node n1(1234556, 34.252, 21.512);
     n1.tags.push_back(osm::Tag("key", "val"));
+    correctn.push_back(n1);
+    n1 = osm::Node(35312, 234, 23);
     correctn.push_back(n1);
     std::vector<osm::Way> correctw;
     osm::Way w1(5432);
@@ -31,18 +34,18 @@ BOOST_AUTO_TEST_CASE(basic)
     std::vector<osm::Node> nodes;
     std::vector<osm::Way> ways;
     std::vector<osm::Relation> rels;
-    p.node_signal().connect([&nodes](osm::Node const & nd)
+    p.node_handler = [&nodes](osm::Node const & nd)
     {
         nodes.push_back(nd);
-    });
-    p.way_signal().connect([&ways](osm::Way const & w)
+    };
+    p.way_handler = [&ways](osm::Way const & w)
     {
         ways.push_back(w);
-    });
-    p.relation_signal().connect([&rels](osm::Relation const & w)
+    };
+    p.relation_handler = [&rels](osm::Relation const & w)
     {
         rels.push_back(w);
-    });
+    };
     p.parse_memory(input);
     BOOST_CHECK(correctn == nodes);
     BOOST_CHECK(correctw == ways);

@@ -86,11 +86,11 @@ class SubParser<Ret, Head, Tail...> : public SubParser<Ret, Tail...>
 protected:
     bool& inchild()
     {
-        return inherited::inchild();
+        return SubParser<Ret>::inchild();
     }
     Ret& returned()
     {
-        return inherited::returned();
+        return SubParser<Ret>::returned();
     }
 public:
     SubParser(std::function<void (Ret&, xmlpp::SaxParser::AttributeList const&)> create, ParserArg<Ret, Head> arg, ParserArg<Ret, Tail>... rest):

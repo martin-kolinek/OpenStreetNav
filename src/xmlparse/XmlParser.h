@@ -22,11 +22,11 @@ class XmlParser : public xmlpp::SaxParser
 public:
     XmlParser();
     virtual ~XmlParser();
-    boost::signal<void (osm::Node const&)>& node_signal();
-    boost::signal<void (osm::Way const&)>& way_signal();
-    boost::signal<void (osm::Relation const&)>& relation_signal();
-    boost::signal<void (const Glib::ustring&)>& warn_signal();
-    boost::signal<void ()>& progress_signal();
+    std::function<void (osm::Node const&)> node_handler;
+    std::function<void (osm::Way const&)> way_handler;
+    std::function<void (osm::Relation const&)> relation_handler;
+    std::function<void (const Glib::ustring&)> warn_handler;
+    std::function<void ()> progress_handler;
 protected:
     void on_start_element(const Glib::ustring& name, const AttributeList& attributes);
     void on_end_element(const Glib::ustring& name);
@@ -34,11 +34,6 @@ protected:
     void on_error(const Glib::ustring& msg);
     void on_fatal_error(const Glib::ustring& msg);
 private:
-    boost::signal<void (osm::Node const&)> node_sig;
-    boost::signal<void (osm::Way const&)> way_sig;
-    boost::signal<void (osm::Relation const&)> relation_sig;
-    boost::signal<void (const Glib::ustring&)> warn_sig;
-    boost::signal<void ()> progress_sig;
     bool done, started;
     UnknownParser unk;
     SubParser<osm::Tag> tagpars;
