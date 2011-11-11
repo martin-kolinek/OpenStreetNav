@@ -10,6 +10,10 @@
 namespace osm
 {
 
+RelationMapping::RelationMapping()
+{
+}
+
 RelationMapping::RelationMapping(std::string const& role, ObjectType type, int64_t id):
     role(role),
     type(type),

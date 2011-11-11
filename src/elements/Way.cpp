@@ -10,6 +10,10 @@
 namespace osm
 {
 
+Way::Way()
+{
+}
+
 Way::Way(int64_t id):
     id(id)
 {

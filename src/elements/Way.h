@@ -18,6 +18,7 @@ namespace osm
 class Way
 {
 public:
+	Way();
     Way(int64_t id);
     virtual ~Way();
     int64_t id;

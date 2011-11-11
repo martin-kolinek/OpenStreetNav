@@ -10,6 +10,10 @@
 namespace osm
 {
 
+Node::Node()
+{
+}
+
 Node::Node(int64_t id, double lat, double lon):
     id(id),
     lat(lat),

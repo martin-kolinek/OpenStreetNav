@@ -10,6 +10,10 @@
 namespace osm
 {
 
+Relation::Relation()
+{
+}
+
 Relation::Relation(int64_t id):
     id(id)
 {

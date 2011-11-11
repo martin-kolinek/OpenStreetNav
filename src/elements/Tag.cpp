@@ -10,6 +10,10 @@
 namespace osm
 {
 
+Tag::Tag()
+{
+}
+
 Tag::Tag(std::string const& key, std::string const& value):
     key(key),
     value(value)
