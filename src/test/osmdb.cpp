@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(create)
 
 BOOST_AUTO_TEST_CASE(indexes)
 {
-    osmdb::OsmDatabase db("test.db");
+    osmdb::OsmDatabase db(":memory:");
     db.create_indexes();
 }
 
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(error)
 
 BOOST_AUTO_TEST_CASE(insert)
 {
-    osmdb::OsmDatabase db("test.db");
+    osmdb::OsmDatabase db(":memory:");
     osmdb::ElementInsertion ins(db);
     osm::Node n(123, 1, 2);
     n.tags.push_back(osm::Tag("nkey", "nval"));
