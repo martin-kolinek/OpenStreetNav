@@ -18,6 +18,12 @@ link_directories(${SQLITE3_LIBRARY_DIRS} )
 
 include_directories(${SQLITE3_INCLUDE_DIRS})
 
+pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
+
+link_directories(${GTKMM_LIBRARY_DIRS})
+
+include_directories(${GTKMM_INCLUDE_DIRS})
+
 add_subdirectory(sqlite)
 
 add_subdirectory(elements)
@@ -27,5 +33,9 @@ add_subdirectory(osmdb)
 add_subdirectory(xmlparse)
 
 add_subdirectory(importer)
+
+add_subdirectory(projection)
+
+add_subdirectory(geoelements)
 
 add_subdirectory(test)
