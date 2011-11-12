@@ -14,6 +14,15 @@
 namespace sqlite
 {
 
+Statement::Statement():
+    stmt(NULL),
+    db(NULL),
+    cols(0),
+    hrow(false),
+    dn(false)
+{
+}
+
 Statement::Statement(const std::string& sql, Database& db):
     stmt(NULL),
     db(&db),
@@ -22,8 +31,15 @@ Statement::Statement(const std::string& sql, Database& db):
 {
     const char* a;
     throw_sqlite_status(sqlite3_prepare_v2(db.cobj(), sql.c_str(), -1, &stmt, &a), db.cobj());
-    cols = sqlite3_column_count(stmt);
-    db.register_statement(*this);
+    if (stmt == NULL)
+    {
+        cols = 0;
+    }
+    else
+    {
+        cols = sqlite3_column_count(stmt);
+        db.register_statement(*this);
+    }
 }
 
 Statement::~Statement()

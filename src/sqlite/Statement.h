@@ -47,6 +47,10 @@ private:
 
 public:
     /**
+     * Constructs empty statement calling anything on it will cause InvalidUseException
+     */
+    Statement();
+    /**
      * Constructs statement. Also registers the constructed statement with the database connection.
      * @param sql sql statement
      * @param db database connection

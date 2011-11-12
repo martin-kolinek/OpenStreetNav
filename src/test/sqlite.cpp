@@ -74,6 +74,8 @@ BOOST_AUTO_TEST_CASE(fixture)
 BOOST_AUTO_TEST_CASE(basic_usage)
 {
     sqlite::Statement st("SELECT ID FROM test ORDER BY ID", db);
+    sqlite::Statement st3;
+    sqlite::Statement st2(" ", db);
     st.step();
     BOOST_REQUIRE_MESSAGE(st.has_row(), "not has row");
     BOOST_REQUIRE_MESSAGE(!st.done(), "is done");
