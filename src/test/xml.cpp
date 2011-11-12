@@ -6,12 +6,12 @@ BOOST_AUTO_TEST_SUITE(xml)
 
 BOOST_AUTO_TEST_CASE(basic)
 {
-    std::string input(" <osm> <asdf><aaa></aaa><bbb></bbb></asdf> <node id=\"1234556\" lat=\"34.252\" lon=\"21.512\"> <tag k=\"key\" v=\"val\" /> </node>");
+    std::string input(" <osm version=\"adsf\"> <asdf><aaa></aaa><bbb></bbb></asdf> <node id=\"1234556\" lat=\"34.252\" lon=\"21.512\"> <tag k=\"key\" v=\"val\" /> </node>");
     input += "<node id=\"35312\" lat=\"234\" lon=\"23\" />";
     input += "<way id=\"5432\"><nd ref=\"555\" /><tag k=\"wkey\" v=\"wval\" /> </way>";
-    input += "<relation id=\"1253\"> <member ref=\"2521\" role=\"role\" type=\"node\" />";
-    input += "<member ref=\"2522\" role=\"role\" type=\"way\" />";
-    input += "<member ref=\"2523\" role=\"role\" type=\"relation\" /> <tag k=\"rkey\" v=\"rval\" /> </relation></osm>";
+    input += "<relation id=\"1253\"> <member type=\"node\" ref=\"2521\" role=\"role\" />";
+    input += "<member type=\"way\" ref=\"2522\" role=\"role\" />";
+    input += "<member type=\"relation\" ref=\"2523\" role=\"role\" /> <tag k=\"rkey\" v=\"rval\" /> </relation></osm>";
     osmxml::XmlParser p;
     std::vector<osm::Node> correctn;
     osm::Node n1(1234556, 34.252, 21.512);
@@ -50,6 +50,13 @@ BOOST_AUTO_TEST_CASE(basic)
     BOOST_CHECK(correctn == nodes);
     BOOST_CHECK(correctw == ways);
     BOOST_CHECK(correctr == rels);
+}
+
+BOOST_AUTO_TEST_CASE(isthrowing)
+{
+    osmxml::XmlParser p;
+    BOOST_CHECK_THROW(p.parse_memory("<assdf></asdf>"), osmxml::XmlParserException);
+    BOOST_CHECK_THROW(p.parse_memory("<asdf></asdf>"), osmxml::XmlParserException);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

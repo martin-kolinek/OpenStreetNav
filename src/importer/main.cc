@@ -14,7 +14,7 @@
 void progress(int& i)
 {
 	i++;
-	if(i%10000==0)
+	if(i%100000==0)
 		std::cout<<"Processed approximately "<<i<<" xml elements"<<std::endl;
 }
 

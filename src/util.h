@@ -12,7 +12,7 @@
 #include <sstream>
 
 template<typename T>
-T parse(std::string str)
+T parse(std::string const& str)
 {
     T ret;
     std::istringstream ss(str);
@@ -20,6 +20,18 @@ T parse(std::string str)
     if (!ss.eof())
         throw std::exception();//TODO
     return ret;
+}
+
+template<>
+double parse<double>(std::string const& str)
+{
+    return atof(str.c_str());
+}
+
+template<>
+int64_t parse<int64_t>(std::string const& str)
+{
+    return atol(str.c_str());
 }
 
 #endif /* UTIL_H_ */
