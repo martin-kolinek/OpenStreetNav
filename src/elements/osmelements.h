@@ -14,5 +14,6 @@
 #include "Relation.h"
 #include "RelationMapping.h"
 #include "Tag.h"
+#include "Edge.h"
 
 #endif /* OSMELEMENTS_H_ */

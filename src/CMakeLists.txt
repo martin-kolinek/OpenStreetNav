@@ -38,4 +38,8 @@ add_subdirectory(projection)
 
 add_subdirectory(geoelements)
 
+add_subdirectory(sqlitetest)
+
+add_subdirectory(displayer)
+
 add_subdirectory(test)

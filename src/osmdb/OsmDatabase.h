@@ -33,6 +33,7 @@ public:
     std::string const relations_table;
     std::string const relation_contents_table;
     std::string const attributes_table;
+    std::string const to_show_table;
     /**
      *
      * @return underlying database connection
@@ -50,6 +51,7 @@ public:
     std::string get_relations_create(std::string const& relations_table);
     std::string get_relation_contents_create(std::string const& relation_contents_table);
     std::string get_attributes_create(std::string const& attributes_table);
+    std::string get_to_show_create(std::string const& table);
 
     std::string get_attr_index1(std::string const& attributes_table);
     std::string get_attr_index2(std::string const& attributes_table);
@@ -70,6 +72,7 @@ private:
     std::string const relations_create;
     std::string const relation_contents_create;
     std::string const attributes_create;
+    std::string const to_show_create;
     std::string const attr_index1;
     std::string const attr_index2;
     std::string const attr_index3;

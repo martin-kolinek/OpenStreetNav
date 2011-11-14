@@ -18,6 +18,7 @@ OsmDatabase::OsmDatabase(const std::string& file)
       relations_table("Relations"),
       relation_contents_table("RelationContents"),
       attributes_table("Attributes"),
+      to_show_table("ToShow"),
       db(file),
       nodes_create(get_nodes_create(nodes_table)),
       ways_create(get_ways_create(ways_table)),
@@ -25,6 +26,7 @@ OsmDatabase::OsmDatabase(const std::string& file)
       relations_create(get_relations_create(relations_table)),
       relation_contents_create(get_relation_contents_create(relation_contents_table)),
       attributes_create(get_attributes_create(attributes_table)),
+      to_show_create(get_to_show_create(to_show_table)),
       attr_index1(get_attr_index1(attributes_table)),
       attr_index2(get_attr_index2(attributes_table)),
       attr_index3(get_attr_index3(attributes_table)),
@@ -111,6 +113,11 @@ std::string OsmDatabase::get_relation_contents_create(const std::string& relatio
 std::string OsmDatabase::get_attributes_create(const std::string& attributes_table)
 {
     return "CREATE TABLE " + attributes_table + " (ID INTEGER NOT NULL PRIMARY KEY, ObjectID INTEGER NOT NULL, ObjectType INTEGER NOT NULL, Key TEXT, Value TEXT)";
+}
+
+std::string OsmDatabase::get_to_show_create(std::string const& table)
+{
+    return "CREATE TABLE " + table + "(Key TEXT NOT NULL, Value TEST NOT NULL, MinZoom INTEGER NOT NULL, MaxZoom NOT NULL)";
 }
 
 std::string OsmDatabase::get_attr_index1(const std::string& attributes_table)
