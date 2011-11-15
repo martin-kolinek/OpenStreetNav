@@ -90,6 +90,7 @@ private:
     std::string const relation_test;
     std::string const rel_contents_test;
     std::string const attributes_test;
+    std::string const to_show_test;
     std::vector<std::string> const indexes;
     std::vector<std::string> const tables;
     std::vector<std::string> const checks;

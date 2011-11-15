@@ -16,9 +16,9 @@ MapDrawingArea::MapDrawingArea(BaseObjectType* cobject, const Glib::RefPtr<Gtk::
 {
 }
 
-void MapDrawingArea::assign_db(std::shared_ptr<DisplayDB> db)
+void MapDrawingArea::assign_db(std::shared_ptr<osmdb::DisplayDB> db)
 {
-    this->db = std::move(db);
+    this->db = db;
 }
 
 MapDrawingArea::~MapDrawingArea()

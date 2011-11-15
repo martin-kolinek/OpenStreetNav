@@ -10,7 +10,7 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/window.h>
 #include "MapDrawingArea.h"
-#include "DisplayDB.h"
+#include "../osmdb/osmdb.h"
 #include <memory>
 
 int main(int argc, char** argv)
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	bldr->get_widget("window1", wnd);
 	display::MapDrawingArea* area=0;
 	bldr->get_widget_derived("drawingarea", area);
-	area->assign_db(std::shared_ptr<display::DisplayDB>(new display::DisplayDB(argv[0])));
+	area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(argv[0])));
 	kit.run(*wnd);
 }
 

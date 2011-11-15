@@ -9,6 +9,7 @@
 #define OSMDB_H_
 
 #include "OsmDatabase.h"
+#include "DisplayDB.h"
 #include "ElementInsertion.h"
 #include "WrongDBException.h"
 

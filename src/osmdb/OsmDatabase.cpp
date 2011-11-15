@@ -44,9 +44,10 @@ OsmDatabase::OsmDatabase(const std::string& file)
       relation_test("SELECT ID FROM " + relations_table + " LIMIT 1"),
       rel_contents_test("SELECT RelationID, Role, ObjectID, ObjectType FROM " + relation_contents_table + " LIMIT 1"),
       attributes_test("SELECT ObjectID, ObjectType, Key, Value FROM " + attributes_table + " LIMIT 1"),
+      to_show_test("SELECT Key, Value, MinZoom, MaxZoom FROM " + to_show_table + " LIMIT 1"),
       indexes {attr_index1, attr_index2, attr_index3, edge_index_start, edge_index_end, edge_index_way, node_index_lat, node_index_lon, rel_cont_index_obj, rel_cont_index_rel, rel_cont_index_role},
-          tables {nodes_create, ways_create, edges_create, relations_create, relation_contents_create, attributes_create},
-checks {nodes_test, ways_test, edge_test, relation_test, rel_contents_test, attributes_test}
+          tables {nodes_create, ways_create, edges_create, relations_create, relation_contents_create, attributes_create, to_show_create},
+checks {nodes_test, ways_test, edge_test, relation_test, rel_contents_test, attributes_test, to_show_test}
 {
     if (db.is_new())
         create_tables();

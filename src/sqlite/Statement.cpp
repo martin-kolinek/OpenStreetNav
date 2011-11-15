@@ -10,6 +10,7 @@
 #include "InvalidUseException.h"
 #include <utility>
 #include <tuple>
+#include <iostream>
 
 namespace sqlite
 {
@@ -33,6 +34,7 @@ Statement::Statement(const std::string& sql, Database& db):
     throw_sqlite_status(sqlite3_prepare_v2(db.cobj(), sql.c_str(), -1, &stmt, &a), db.cobj());
     if (stmt == NULL)
     {
+        std::cout<<"stmt==NULL after init "<<sql<<std::endl;
         cols = 0;
     }
     else
@@ -217,7 +219,10 @@ void Statement::check_value_conditions(int col)
     if (!hrow)
         throw InvalidUseException("Asking for row data with no row available");
     if (col < 0 || col >= cols)
+    {
+        std::cout<<"cols: "<<cols<<" col: "<<col<<std::endl;
         throw InvalidUseException("Column index out of bounds");
+    }
 }
 
 void Statement::finalize()

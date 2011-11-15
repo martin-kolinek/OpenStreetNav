@@ -11,7 +11,7 @@
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/builder.h>
 #include <memory>
-#include "DisplayDB.h"
+#include "../osmdb/osmdb.h"
 #include "../projection/projection.h"
 
 namespace display
@@ -21,7 +21,7 @@ class MapDrawingArea : public Gtk::DrawingArea
 {
 public:
     MapDrawingArea(BaseObjectType* cobject, Glib::RefPtr<Gtk::Builder> const&);
-    void assign_db(std::shared_ptr<DisplayDB> db);
+    void assign_db(std::shared_ptr<osmdb::DisplayDB> db);
     virtual ~MapDrawingArea();
 protected:
     virtual bool on_draw(Cairo::RefPtr<Cairo::Context> const& cr);
@@ -33,7 +33,7 @@ protected:
     virtual bool on_scroll_event(GdkEventScroll* event);
     virtual void on_size_allocate(Gtk::Allocation& alloc);
 private:
-    std::shared_ptr<DisplayDB> db;
+    std::shared_ptr<osmdb::DisplayDB> db;
     bool pressed;
     double press_x;
     double press_y;

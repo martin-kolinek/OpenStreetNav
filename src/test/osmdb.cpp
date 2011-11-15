@@ -7,7 +7,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
-#include "../osmdb/OsmDatabase.h"
 #include "../osmdb/osmdb.h"
 
 class OsmDBFixture
@@ -96,6 +95,42 @@ BOOST_AUTO_TEST_CASE(insert)
     BOOST_CHECK(rels == rels2);
     BOOST_CHECK(rel_cont == rel_cont2);
     BOOST_CHECK(attrs == attrs2);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(displaydb)
+
+BOOST_AUTO_TEST_CASE(empty)
+{
+    osmdb::DisplayDB db(":memory:");
+    db.set_bounds(geo::Point(0, 0), geo::Point(1, 1), 1);
+}
+
+BOOST_AUTO_TEST_CASE(simple)
+{
+    osmdb::DisplayDB db(":memory:");
+    osmdb::ElementInsertion ins(db.get_db());
+    osm::Node nd(1, 0.5, 0.5);
+    nd.tags.push_back(osm::Tag("disp", "disp"));
+    ins.insert_node(nd);
+    ins.insert_node(osm::Node(2, 0.4, 0.4));
+    ins.insert_node(osm::Node(3, 0.4, 0.8));
+    osm::Way w(1);
+    w.nodes.push_back(2);
+    w.nodes.push_back(3);
+    w.tags.push_back(osm::Tag("disp", "disp"));
+    ins.insert_way(w);
+    nd.id = 4;
+    nd.lat = 1.5;
+    nd.lon = 0.5;
+    ins.insert_node(nd);
+    ins.insert_node(osm::Node(5, 0.6, 0.4));
+    db.set_to_show("disp", "disp", 0, 15);
+    db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
+    BOOST_CHECK(db.get_nodes().size() == 3);
+    BOOST_CHECK(db.get_free_nodes().size() == 1);
+    BOOST_CHECK(db.get_edges().size() == 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
