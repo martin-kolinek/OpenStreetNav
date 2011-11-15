@@ -54,6 +54,7 @@ Statement& Statement::operator =(Statement && other)
     dn = other.dn;
     hrow = other.hrow;
     db = other.db;
+    cols = other.cols;
     db->unregister_statement(other);
     other.stmt = NULL;
     if (stmt != NULL)
