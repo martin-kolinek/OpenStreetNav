@@ -24,7 +24,7 @@ public:
     DisplayDB(std::string const& filename);
     virtual ~DisplayDB();
     std::vector<osm::Edge> const& get_edges();
-    std::unordered_map<int64_t, osm::Node> get_nodes();
+    std::unordered_map<int64_t, osm::Node> const& get_nodes();
     std::unordered_set<int64_t> const& get_free_nodes();
     OsmDatabase& get_db();
     void set_to_show(std::string const& key, std::string const& val, int minzoom, int maxzoom);

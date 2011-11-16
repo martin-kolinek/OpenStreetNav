@@ -29,17 +29,16 @@ DisplayDB::DisplayDB(const std::string& filename)
                                    "INNER JOIN " + db.edges_table + " e ON e.StartNodeID = n.ID " +
                                    "INNER JOIN " + db.attributes_table + " a ON a.ObjectType=?2 AND a.ObjectID=e.WayID " +
                                    "INNER JOIN " + db.to_show_table + " t ON t.Key=a.Key AND t.Value=a.Value " +
-                                   "WHERE t.MinZoom<=?3 AND t.MaxZoom>=?3 " +
-                                   "UNION SELECT n.ID, n.Latitude, n.Longitude FROM Nodes n " +
+                                   "WHERE t.MinZoom<=?3 AND t.MaxZoom>=?3 AND n.Latitude >= ?4 AND n.Latitude <= ?5 AND n.Longitude >=?6 AND n.Longitude<=?7 " +
+                                   "UNION SELECT n.ID, n.Latitude, n.Longitude FROM " + db.nodes_table + " n " +
                                    "INNER JOIN " + db.edges_table + " e ON e.EndNodeID = n.ID " +
                                    "INNER JOIN " + db.attributes_table + " a ON a.ObjectType=?2 AND a.ObjectID=e.WayID " +
                                    "INNER JOIN " + db.to_show_table + " t ON t.Key=a.Key AND t.Value=a.Value " +
-                                   "WHERE t.MinZoom<=?3 AND t.MaxZoom>=?3" , db.get_db());
+                                   "WHERE t.MinZoom<=?3 AND t.MaxZoom>=?3 AND n.Latitude >= ?4 AND n.Latitude <= ?5 AND n.Longitude >=?6 AND n.Longitude<=?7" , db.get_db());
     copy_stmt2 = sqlite::Statement("INSERT INTO small." + db.edges_table + " (WayID, StartNodeID, EndNodeID) " +
                                    "SELECT e.WayID, e.StartNodeID, e.EndNodeID FROM " + db.edges_table + " e " +
                                    "INNER JOIN small." + db.nodes_table + " n ON n.ID = e.StartNodeID " +
-                                   "UNION SELECT e.WayID, e.StartNodeID, e.EndNodeID FROM " + db.edges_table + " e " +
-                                   "INNER JOIN small." + db.nodes_table + " n ON n.ID = e.EndNodeID", db.get_db());
+                                   "INNER JOIN small." + db.nodes_table + " n2 ON n2.ID = e.EndNodeID", db.get_db());
     clear_stmt1 = sqlite::Statement("DELETE FROM small." + db.nodes_table, db.get_db());
     clear_stmt2 = sqlite::Statement("DELETE FROM small." + db.edges_table, db.get_db());
     select_stmt1 = sqlite::Statement("SELECT ID, Latitude, Longitude FROM small." + db.nodes_table, db.get_db());
@@ -55,7 +54,7 @@ const std::vector<osm::Edge> & DisplayDB::get_edges()
     return edges;
 }
 
-std::unordered_map<int64_t, osm::Node> DisplayDB::get_nodes()
+std::unordered_map<int64_t, osm::Node> const& DisplayDB::get_nodes()
 {
     return nodes;
 }

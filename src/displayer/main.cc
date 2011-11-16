@@ -12,6 +12,7 @@
 #include "MapDrawingArea.h"
 #include "../osmdb/osmdb.h"
 #include <memory>
+#include <gtkmm/drawingarea.h>
 
 int main(int argc, char** argv)
 {
@@ -25,8 +26,11 @@ int main(int argc, char** argv)
 	Gtk::Window* wnd=0;
 	bldr->get_widget("window1", wnd);
 	display::MapDrawingArea* area=0;
-	bldr->get_widget_derived("drawingarea", area);
-	area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(argv[0])));
+	bldr->get_widget_derived("drawingarea1", area);
+	area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(argv[1])));
+	area->center(48.5, 19);
+	area->show();
+
 	kit.run(*wnd);
 }
 
