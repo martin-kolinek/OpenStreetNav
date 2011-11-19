@@ -53,6 +53,7 @@ private:
     void setup_bounds();
     proj::FlatPoint topleft;
     proj::FlatPoint bottomright;
+    void report_pos();
 };
 
 } /* namespace display */

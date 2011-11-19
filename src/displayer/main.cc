@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 	display::MapDrawingArea* area=0;
 	bldr->get_widget_derived("drawingarea1", area);
 	area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(argv[1])));
-	area->center(48.5, 19);
+	area->center(48.143, 17.109);
 	area->show();
 
 	kit.run(*wnd);

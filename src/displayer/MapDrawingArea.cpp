@@ -7,6 +7,7 @@
 
 #include "MapDrawingArea.h"
 #include <cmath>
+#include <iostream>
 
 namespace display
 {
@@ -58,6 +59,7 @@ bool MapDrawingArea::on_button_release_event(GdkEventButton* event)
         setup_bounds();
         setup_db();
         complete_redraw();
+        report_pos();
     }
     return true;
 }
@@ -105,6 +107,7 @@ bool MapDrawingArea::on_scroll_event(GdkEventScroll* event)
         setup_bounds();
         setup_db();
         complete_redraw();
+        report_pos();
     }
     return true;
 }
@@ -116,6 +119,7 @@ void MapDrawingArea::on_size_allocate(Gtk::Allocation& alloc)
     setup_bounds();
     setup_surfaces();
     complete_redraw();
+    report_pos();
 }
 
 void MapDrawingArea::setup_bounds()
@@ -219,6 +223,14 @@ void MapDrawingArea::center(double lat, double lon)
     setup_db();
     complete_redraw();
     invalidate();
+    report_pos();
 }
 
+void MapDrawingArea::report_pos()
+{
+    auto tl = proj->unproject(topleft);
+    auto br = proj->unproject(bottomright);
+    std::cout<<"LAT: "<<br.lat<<" - "<<tl.lat<<" LON: "<<tl.lon<<" - "<<br.lon<<" ZOOM: "<<zoom<<std::endl;
+}
+    
 } /* namespace display */
