@@ -23,15 +23,30 @@ T parse(std::string const& str)
 }
 
 template<>
-double parse<double>(std::string const& str)
-{
-    return atof(str.c_str());
-}
+double parse<double>(std::string const& str);
 
 template<>
-int64_t parse<int64_t>(std::string const& str)
+int64_t parse<int64_t>(std::string const& str);
+
+template<typename Sep, typename... Args>
+std::string concatenate(Sep sep, Args... args)
 {
-    return atol(str.c_str());
+    std::ostringstream ss;
+    concat_impl(ss, sep, args...);
+    return ss.str();
 }
 
+template<typename Sep, typename Tail>
+void concat_impl(std::ostringstream& ss, Sep, Tail t)
+{
+    ss<<t;
+}
+
+template<typename Sep, typename Head, typename... Tail>
+void concat_impl(std::ostringstream& os, Sep sep, Head h, Tail... t)
+{
+    os<<h<<sep;
+    concat_impl(os, sep, t...);
+}
+                   
 #endif /* UTIL_H_ */

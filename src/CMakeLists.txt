@@ -35,6 +35,8 @@ else()
   message(FATAL_ERROR "PostgreSQL not found")
 endif()
 
+add_library(util util.cpp)
+
 add_subdirectory(sqlite)
 
 add_subdirectory(elements)
