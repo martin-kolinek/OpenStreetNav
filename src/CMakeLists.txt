@@ -1,8 +1,11 @@
 find_package(Boost COMPONENTS test_exec_monitor thread system filesystem signals program_options)
 
-link_directories(${Boost_LIBRARY_DIRS})
-
-include_directories(${Boost_INCLUDE_DIRS})
+if(Boost_FOUND)
+  link_directories(${Boost_LIBRARY_DIRS})
+  include_directories(${Boost_INCLUDE_DIRS})
+else()
+  message(FATAL_ERROR "Boost not found")
+endif()
 
 find_package(PkgConfig)
 
@@ -23,6 +26,14 @@ pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 link_directories(${GTKMM_LIBRARY_DIRS})
 
 include_directories(${GTKMM_INCLUDE_DIRS})
+
+find_package(PostgreSQL)
+if(PostgreSQL_FOUND)
+  include_directories(${PostgreSQL_INCLUDE_DIRS})
+  link_directories(${PostgreSQL_LIBRARY_DIRS})
+else()
+  message(FATAL_ERROR "PostgreSQL not found")
+endif()
 
 add_subdirectory(sqlite)
 
