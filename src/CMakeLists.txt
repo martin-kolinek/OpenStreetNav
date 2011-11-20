@@ -39,6 +39,8 @@ add_library(util util.cpp)
 
 add_subdirectory(sqlite)
 
+add_subdirectory(psql)
+
 add_subdirectory(elements)
 
 add_subdirectory(osmdb)
