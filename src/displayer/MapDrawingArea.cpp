@@ -230,7 +230,7 @@ void MapDrawingArea::report_pos()
 {
     auto tl = proj->unproject(topleft);
     auto br = proj->unproject(bottomright);
-    std::cout<<"LAT: "<<br.lat<<" - "<<tl.lat<<" LON: "<<tl.lon<<" - "<<br.lon<<" ZOOM: "<<zoom<<std::endl;
+    std::cout << "LAT: " << br.lat << " - " << tl.lat << " LON: " << tl.lon << " - " << br.lon << " ZOOM: " << zoom << std::endl;
 }
-    
+
 } /* namespace display */

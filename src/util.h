@@ -39,14 +39,14 @@ std::string concatenate(Sep sep, Args... args)
 template<typename Sep, typename Tail>
 void concat_impl(std::ostringstream& ss, Sep, Tail t)
 {
-    ss<<t;
+    ss << t;
 }
 
 template<typename Sep, typename Head, typename... Tail>
 void concat_impl(std::ostringstream& os, Sep sep, Head h, Tail... t)
 {
-    os<<h<<sep;
+    os << h << sep;
     concat_impl(os, sep, t...);
 }
-                   
+
 #endif /* UTIL_H_ */
