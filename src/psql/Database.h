@@ -3,6 +3,8 @@
 
 #include <libpq-fe.h>
 #include <string>
+#include <vector>
+#include <unordered_map>
 
 namespace psql
 {
@@ -23,6 +25,8 @@ public:
 private:
     PGconn* conn;
     bool async;
+    std::unordered_map<std::string, IStatement*> stmts;
+    std::vector<std::string> to_dealloc;
 };
 
 }
