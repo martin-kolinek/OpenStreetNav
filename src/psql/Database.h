@@ -6,6 +6,7 @@
 
 namespace psql
 {
+class IStatement;
 
 class Database
 {
@@ -15,6 +16,8 @@ public:
     Database(Database && other);
     Database& operator=(Database && other);
     Database(std::string const& conninfo, bool synchr = false);
+    void regist(std::string const& name, std::string const& sql, IStatement* st);
+    void unregist(std::string const& name, IStatement* st);
     PGconn* get_db();
     virtual ~Database();
 private:
