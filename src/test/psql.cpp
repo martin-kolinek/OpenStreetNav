@@ -23,12 +23,12 @@ BOOST_AUTO_TEST_CASE(dbfail)
 
 BOOST_AUTO_TEST_CASE(dbfail2)
 {
-    BOOST_CHECK_THROW(psql::Database("user=postgres", true), psql::PgSqlException);
+    BOOST_CHECK_THROW(psql::Database("user=asdfgasdafgasdghafasasa", true), psql::PgSqlException);
 }
 
 BOOST_AUTO_TEST_CASE(dbfailasync2)
 {
-    psql::Database db("user=postgres", false);
+    psql::Database db("user=asdfgasdafgasdghafasasa", false);
     BOOST_CHECK_THROW(db.get_db(), psql::PgSqlException);
 }
 
