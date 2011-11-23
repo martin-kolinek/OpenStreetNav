@@ -1,4 +1,4 @@
-#ifndef PGSQLEXECPTION_H_
+#ifndef PGSQLEXCEPTION_H_
 #define PGSQLEXCEPTION_H_
 
 #include <exception>

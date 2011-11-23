@@ -41,6 +41,8 @@ add_subdirectory(sqlite)
 
 add_subdirectory(psql)
 
+add_subdirectory(sqllib)
+
 add_subdirectory(elements)
 
 add_subdirectory(osmdb)

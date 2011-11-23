@@ -25,16 +25,16 @@ class RetTypes<Head, Tail...> : private RetTypes<Tail...>
 private:
     PqTypeWrap<Head> tw;
 protected:
-    std::tuple<Head, Tail...> get_values(PGresult* res, int row, int col)
+    std::tuple<Head, Tail...> get_values_prot(PGresult* res, int row, int col)
     {
-        return std::tuple_cat(tw.get(res, row, col), RetTypes<Tail...>::get_values(res, row, col + 1));
+        return std::tuple_cat(std::make_tuple(tw.get(res, row, col)), RetTypes<Tail...>::get_values_prot(res, row, col + 1));
     }
 public:
     typedef std::tuple<Head, Tail...> RowType;
 
     RowType get_values(PGresult* res, int row)
     {
-        return get_values(res, row, 0);
+        return get_values_prot(res, row, 0);
     }
 };
 
@@ -42,7 +42,7 @@ template<>
 class RetTypes<>
 {
 protected:
-    std::tuple<> get_value(PGresult*, int, int)
+    std::tuple<> get_values_prot(PGresult*, int, int)
     {
         return std::tuple<>();
     }

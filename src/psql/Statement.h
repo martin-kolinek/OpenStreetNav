@@ -17,6 +17,12 @@ class IStatement
 template<typename BindTypes, typename RetTypes>
 class Statement : IStatement
 {
+private:
+    void check_param()
+    {
+        if (param == NULL)
+            throw PgSqlException("Error creating PGparam object: " + std::string(PQgeterror()));
+    }
 public:
     Statement():
         db(NULL),
@@ -27,11 +33,12 @@ public:
 
     Statement(std::string const& sql, Database& db):
         db(&db),
-        prep(false),
         sql(sql),
+        prep(false),
         param(PQparamCreate(db.get_db())),
         res(NULL)
     {
+        check_param();
     }
     Statement(std::string const& name, std::string const& sql, Database& db):
         db(&db),
@@ -41,6 +48,7 @@ public:
         res(NULL)
     {
         db.regist(name, sql, this);
+        check_param();
     }
     ~Statement()
     {
@@ -91,7 +99,7 @@ public:
         else
             res = PQparamExec(db->get_db(), param, sql.c_str(), 1);
         if (res == NULL)
-            throw PgSqlException("Error retrieving statement result" + std::string(PQgeterror()));
+            throw PgSqlException("Error retrieving statement result: " + std::string(PQgeterror()));
     }
 
     typename RetTypes::RowType get_row(int row)

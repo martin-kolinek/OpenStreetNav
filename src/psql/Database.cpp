@@ -1,6 +1,7 @@
 #include "Database.h"
 
 #include <poll.h>
+#include <libpqtypes.h>
 #include "PgSqlException.h"
 
 namespace psql
@@ -21,6 +22,9 @@ Database::Database(std::string const& conninfo, bool synchr):
     async = !synchr;
     if (PQstatus(conn) == CONNECTION_BAD)
         throw PgSqlException("Unable to connect to postgresql server: " + std::string(PQerrorMessage(conn)));
+    if (!async && PQinitTypes(conn) == 0)
+        throw PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
+
 }
 
 PGconn* Database::get_db()
@@ -40,6 +44,8 @@ PGconn* Database::get_db()
         if (PQstatus(conn) == CONNECTION_BAD)
             throw PgSqlException("Unable to connect to postgresql server: " + std::string(PQerrorMessage(conn)));
         async = false;
+        if (PQinitTypes(conn) == 0)
+            PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
     }
     else
     {
@@ -57,13 +63,13 @@ PGconn* Database::get_db()
         auto res = PQexec(conn, ("DEALLOCATE " + name).c_str());
         if (res == NULL)
         {
-            throw PgSqlException("Error deallocating prepared statement which had to be deallocated" + std::string(PQerrorMessage(conn)));
+            throw PgSqlException("Error deallocating prepared statement which had to be deallocated " + std::string(PQerrorMessage(conn)));
         }
         if (PQresultStatus(res) != PGRES_COMMAND_OK)
         {
             std::string str(PQresultErrorMessage(res));
             PQclear(res);
-            throw PgSqlException("Error deallocating prepared statement which had to be deallocated" + str);
+            throw PgSqlException("Error deallocating prepared statement which had to be deallocated " + str);
         }
         PQclear(res);
     }

@@ -3,5 +3,8 @@
 
 #include "Database.h"
 #include "PgSqlException.h"
+#include "Statement.h"
+#include "RetTypes.h"
+#include "BindTypes.h"
 
 #endif

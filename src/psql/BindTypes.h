@@ -32,7 +32,7 @@ protected:
 public:
     void put(PGparam* param, Head h, Tail... t)
     {
-        PQparamClear(param);
+        PQparamReset(param);
         put_prot(param, h, t...);
     }
 };
@@ -47,7 +47,7 @@ protected:
 public:
     void put(PGparam* param)
     {
-        PQparamClear(param);
+        PQparamReset(param);
     }
 };
 
