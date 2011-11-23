@@ -16,6 +16,9 @@
 namespace psql
 {
 
+void zero_get_check(int);
+void zero_put_check(int);
+
 template<typename T>
 class PqTypeWrap
 {
@@ -28,13 +31,13 @@ public:
     double get(PGresult* res, int row, int col)
     {
         PGfloat8 d;
-        PQgetf(res, row, "%float8", col, &d);
+        zero_get_check(PQgetf(res, row, "%float8", col, &d));
         return d;
     }
 
     void put(PGparam* param, double val)
     {
-        PQputf(param, "%float8", val);
+        zero_put_check(PQputf(param, "%float8", val));
     }
 };
 
@@ -45,12 +48,12 @@ public:
     int get(PGresult* res, int row, int col)
     {
         PGint4 i;
-        PQgetf(res, row, "%int4", col, &i);
+        zero_get_check(PQgetf(res, row, "%int4", col, &i));
         return i;
     }
     void put(PGparam* param, int val)
     {
-        PQputf(param, "%int4", val);
+        zero_put_check(PQputf(param, "%int4", val));
     }
 };
 
@@ -61,12 +64,12 @@ public:
     int64_t get(PGresult* res, int row, int col)
     {
         PGint8 i;
-        PQgetf(res, row, "%int8", col, &i);
+        zero_get_check(PQgetf(res, row, "%int8", col, &i));
         return i;
     }
     void put(PGparam* param, int64_t val)
     {
-        PQputf(param, "%int8", val);
+        zero_put_check(PQputf(param, "%int8", val));
     }
 };
 
@@ -77,7 +80,7 @@ public:
     std::vector<char> get(PGresult* res, int row, int col)
     {
         PGbytea ret;
-        PQgetf(res, row, "%bytea", col, &ret);
+        zero_get_check(PQgetf(res, row, "%bytea", col, &ret));
         std::vector<char> v(ret.len);
         for (int i = 0; i < ret.len; ++i)
         {
@@ -90,7 +93,7 @@ public:
         PGbytea bytea;
         bytea.len = vect.size();
         bytea.data = &vect[0];
-        PQputf(param, "%bytea", &bytea);
+        zero_put_check(PQputf(param, "%bytea", &bytea));
     }
 };
 
@@ -101,8 +104,12 @@ public:
     std::string get(PGresult* res, int row, int col)
     {
         PGtext txt;
-        PQgetf(res, row, "%text", col, &txt);
+        zero_get_check(PQgetf(res, row, "%text", col, &txt));
         return std::string(txt);
+    }
+    void put(PGparam* param, std::string& str)
+    {
+        zero_put_check(PQputf(param, "%text", str.c_str()));
     }
 };
 

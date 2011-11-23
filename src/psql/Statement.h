@@ -83,6 +83,7 @@ public:
     {
         if (res != NULL)
             PQclear(res);
+        res = NULL;
 
         bt.put(param, args...);
         if (prep)
@@ -98,6 +99,15 @@ public:
         if (res == NULL)
             throw PgSqlException("get_values called with no result");
         return rt.get_values(res, row);
+    }
+
+    int row_count()
+    {
+        if (res == NULL)
+            return 0;
+        if (PQresultStatus(res) == PGRES_TUPLES_OK)
+            return PQntuples(res);
+        return 0;
     }
 
 private:
