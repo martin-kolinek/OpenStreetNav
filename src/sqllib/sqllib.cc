@@ -12,29 +12,29 @@ namespace sqllib
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_test_table(psql::Database& db, bool named, std::string const& name)
 {
-std::string str("\
+    std::string str("\
 CREATE TABLE TestTable (A int primary key, B text, C bigint)\n\
 ");
-if(named)
-    return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
-else
-    return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
 
 psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>> get_insert_test_table(psql::Database& db, bool named, std::string const& name)
 {
-std::string str("\
+    std::string str("\
 INSERT INTO TestTable (A, B, C) VALUES ($1, $2, $3)\n\
 ");
-if(named)
-    return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, name, db);
-else
-    return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, db);
+    if (named)
+        return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, db);
 }
 
 psql::Statement<psql::BindTypes<int>, psql::RetTypes<int>> get_test_select(psql::Database& db, bool named, std::string const& name)
 {
-std::string str("\
+    std::string str("\
 \n\
 SELECT * FROM TestTable\n\
 WHERE\n\
@@ -42,10 +42,10 @@ WHERE\n\
 A = $1;\n\
 \n\
 ");
-if(named)
-    return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int>>(str, name, db);
-else
-    return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int>>(str, db);
+    if (named)
+        return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int>>(str, db);
 }
 
 
