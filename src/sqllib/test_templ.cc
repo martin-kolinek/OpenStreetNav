@@ -18,7 +18,7 @@ public:
     {
         psql::Statement<psql::BindTypes<>, psql::RetTypes<> > st("CREATE SCHEMA testing", db);
         st.execute();
-        st = psql::Statement<psql::BindTypes<>, psql::RetTypes<> >("SET search_path TO testing", db);
+        st = psql::Statement<psql::BindTypes<>, psql::RetTypes<> >("SET search_path TO testing, public", db);
         st.execute();
     }
     ~SqlLibFixture()
