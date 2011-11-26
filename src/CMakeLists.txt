@@ -35,6 +35,13 @@ else()
   message(FATAL_ERROR "PostgreSQL not found")
 endif()
 
+find_package(GEOS)
+if(GEOS_FOUND)
+  include_directories(${GEOS_INCLUDE_DIRS})
+else()
+  message(FATAL_ERROR "GEOS not found")
+endif()
+
 add_library(util util.cpp)
 
 add_subdirectory(sqlite)
@@ -44,6 +51,8 @@ add_subdirectory(psql)
 add_subdirectory(sqllib)
 
 add_subdirectory(elements)
+
+add_subdirectory(wkb)
 
 add_subdirectory(osmdb)
 

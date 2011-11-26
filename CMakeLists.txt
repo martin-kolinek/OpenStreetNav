@@ -1,6 +1,8 @@
 project(CMakeTest)
 cmake_minimum_required(VERSION 2.6)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
 IF(CMAKE_COMPILER_IS_GNUCC)
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -fmessage-length=0 -g -O0 -fno-inline -Wall -Wextra")
 ENDIF(CMAKE_COMPILER_IS_GNUCC)
