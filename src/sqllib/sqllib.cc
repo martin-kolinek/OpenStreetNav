@@ -32,7 +32,7 @@ INSERT INTO TestTable (A, B, C) VALUES ($1, $2, $3)\n\
         return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, db);
 }
 
-psql::Statement<psql::BindTypes<int>, psql::RetTypes<int>> get_test_select(psql::Database& db, bool named, std::string const& name)
+psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>> get_test_select(psql::Database& db, bool named, std::string const& name)
 {
     std::string str("\
 \n\
@@ -43,9 +43,9 @@ A = $1;\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>>(str, name, db);
     else
-        return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int>>(str, db);
+        return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>>(str, db);
 }
 
 

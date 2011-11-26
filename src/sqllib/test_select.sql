@@ -1,4 +1,4 @@
--- type psql::BindTypes<int>, psql::RetTypes<int>
+-- type psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>
 -- test-depend create_test_table
 -- test-depend insert_test_table 10, "asdf", 20000000000
 -- test-param 10

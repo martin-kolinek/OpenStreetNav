@@ -11,6 +11,7 @@
 #include <tuple>
 #include <libpqtypes.h>
 #include "PqTypeWrap.h"
+#include "PgSqlException.h"
 
 namespace psql
 {
@@ -42,8 +43,10 @@ template<>
 class RetTypes<>
 {
 protected:
-    std::tuple<> get_values_prot(PGresult*, int, int)
+    std::tuple<> get_values_prot(PGresult* res, int, int col)
     {
+        if (PQnfields(res) != col)
+            throw PgSqlException("Statement not retrieving all data in result");
         return std::tuple<>();
     }
 public:
