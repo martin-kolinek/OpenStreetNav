@@ -6,6 +6,12 @@
 
 namespace psql
 {
+
+void noticeReceiver(void* arg, PGresult const* res)
+{
+    ((Database*)arg)->receiveNotice(res);
+}
+
 Database::Database(std::string const& conninfo, bool synchr):
     conn(NULL)
 {
@@ -24,6 +30,10 @@ Database::Database(std::string const& conninfo, bool synchr):
         throw PgSqlException("Unable to connect to postgresql server: " + std::string(PQerrorMessage(conn)));
     if (!async && PQinitTypes(conn) == 0)
         throw PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
+    if (!async)
+    {
+        PQsetNoticeReceiver(conn, noticeReceiver, (void*)this);
+    }
 
 }
 
@@ -46,6 +56,7 @@ PGconn* Database::get_db()
         async = false;
         if (PQinitTypes(conn) == 0)
             PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
+        PQsetNoticeReceiver(conn, noticeReceiver, (void*)this);
     }
     else
     {
@@ -110,6 +121,16 @@ void Database::unregist(std::string const& name, IStatement* st)
             PQclear(res);
         to_dealloc.push_back(name);
     }
+}
+
+boost::signal<void (PGresult const&)>& Database::notice_signal()
+{
+    return notice_sig;
+}
+
+void Database::receiveNotice(PGresult const* res)
+{
+    notice_sig(*res);
 }
 
 }
