@@ -21,7 +21,7 @@ namespace osmdb
 class DisplayDB
 {
 public:
-    DisplayDB(std::string const& filename);
+    DisplayDB(OsmDatabase& db);
     virtual ~DisplayDB();
     std::vector<osm::Edge> const& get_edges();
     std::unordered_map<int64_t, osm::Node> const& get_nodes();
@@ -30,19 +30,10 @@ public:
     void set_to_show(std::string const& key, std::string const& val, int minzoom, int maxzoom);
     void set_bounds(geo::Point const& topleft, geo::Point const& bottomright, int zoom);
 private:
-    osmdb::OsmDatabase db;
+    osmdb::OsmDatabase& db;
     std::unordered_map<int64_t, osm::Node> nodes;
     std::vector<osm::Edge> edges;
     std::unordered_set<int64_t> free_nodes;
-    sqlite::Statement to_show_upd;
-    sqlite::Statement to_show_ins;
-    sqlite::Statement to_show_select;
-    sqlite::Statement copy_stmt1;
-    sqlite::Statement copy_stmt2;
-    sqlite::Statement clear_stmt1;
-    sqlite::Statement clear_stmt2;
-    sqlite::Statement select_stmt1;
-    sqlite::Statement select_stmt2;
 };
 
 } /* namespace display */

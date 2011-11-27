@@ -3,17 +3,33 @@
 #include <poll.h>
 #include <libpqtypes.h>
 #include "PgSqlException.h"
+#include "psql.h"
 
 namespace psql
 {
 
-void noticeReceiver(void* arg, PGresult const* res)
+void Database::begin_transaction()
 {
-    ((Database*)arg)->receiveNotice(res);
+    execute_sql(*this, "BEGIN TRANSACTION");
 }
 
-Database::Database(std::string const& conninfo, bool synchr):
-    conn(NULL)
+void Database::commit_transaction()
+{
+    execute_sql(*this, "COMMIT TRANSACTION");
+}
+
+void Database::rollback_transaction()
+{
+    execute_sql(*this, "ROLLBACK TRANSACTION");
+}
+
+void noticeReceiver(void* arg, const PGresult* res)
+{
+    ((Database*)(arg))->receiveNotice(res);
+}
+
+Database::Database(const std::string& conninfo, bool synchr)
+    : conn(NULL)
 {
     if (synchr)
     {
@@ -28,13 +44,14 @@ Database::Database(std::string const& conninfo, bool synchr):
     async = !synchr;
     if (PQstatus(conn) == CONNECTION_BAD)
         throw PgSqlException("Unable to connect to postgresql server: " + std::string(PQerrorMessage(conn)));
+
     if (!async && PQinitTypes(conn) == 0)
         throw PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
+
     if (!async)
     {
-        PQsetNoticeReceiver(conn, noticeReceiver, (void*)this);
+        PQsetNoticeReceiver(conn, noticeReceiver, (void*)(this));
     }
-
 }
 
 PGconn* Database::get_db()
@@ -93,7 +110,7 @@ Database::~Database()
         PQfinish(conn);
 }
 
-void Database::regist(std::string const& name, std::string const& sql, IStatement* st)
+void Database::regist(const std::string& name, const std::string& sql, IStatement* st)
 {
     auto res = PQprepare(get_db(), name.c_str(), sql.c_str(), 0, NULL);
     if (res == NULL)
@@ -108,12 +125,14 @@ void Database::regist(std::string const& name, std::string const& sql, IStatemen
     stmts[name] = st;
 }
 
-void Database::unregist(std::string const& name, IStatement* st)
+void Database::unregist(const std::string& name, IStatement* st)
 {
     if (!stmts.count(name))
         throw PgSqlException("Unregistering not registered statement");
+
     if (stmts[name] != st)
         return;
+
     auto res = PQexec(conn, ("DEALLOCATE " + name).c_str());
     if (res == NULL || PQresultStatus(res) != PGRES_COMMAND_OK)
     {
@@ -122,13 +141,12 @@ void Database::unregist(std::string const& name, IStatement* st)
         to_dealloc.push_back(name);
     }
 }
-
-boost::signal<void (PGresult const&)>& Database::notice_signal()
+boost::signal<void(const PGresult& )> & Database::notice_signal()
 {
     return notice_sig;
 }
 
-void Database::receiveNotice(PGresult const* res)
+void Database::receiveNotice(const PGresult* res)
 {
     notice_sig(*res);
 }

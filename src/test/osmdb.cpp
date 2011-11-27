@@ -12,95 +12,83 @@
 class OsmDBFixture
 {
 public:
-    OsmDBFixture()
+    OsmDBFixture():
+        pdb("")
     {
-        BOOST_REQUIRE_MESSAGE(!boost::filesystem::exists("test.db"), "test.db exists, aborting");
+
+        psql::execute_sql(pdb, "CREATE SCHEMA testing");
+        psql::execute_sql(pdb, "SET search_path TO testing, public");
     }
     ~OsmDBFixture()
     {
-        remove("test.db");
+        psql::execute_sql(pdb, "DROP SCHEMA testing CASCADE");
     }
+    psql::Database pdb;
 };
 
 BOOST_FIXTURE_TEST_SUITE(OsmDBCreateTests, OsmDBFixture)
 
 BOOST_AUTO_TEST_CASE(create)
 {
-    {
-        osmdb::OsmDatabase db("test.db");
-    }
-    {
-        osmdb::OsmDatabase db("test.db");
-    }
+    osmdb::OsmDatabase db(pdb);
+    db.create_tables();
 }
 
 BOOST_AUTO_TEST_CASE(indexes)
 {
-    osmdb::OsmDatabase db(":memory:");
+    osmdb::OsmDatabase db(pdb);
+    db.create_tables();
     db.create_indexes();
-}
-
-void create_db()
-{
-    osmdb::OsmDatabase db("test.db");
-}
-
-BOOST_AUTO_TEST_CASE(error)
-{
-    {
-        sqlite::Database db("test.db");
-        sqlite::execute_sql("CREATE TABLE asdf (ID INTEGER)", db);
-    }
-    BOOST_CHECK_THROW(create_db(), osmdb::WrongDBException);
 }
 
 BOOST_AUTO_TEST_CASE(insert)
 {
-    osmdb::OsmDatabase db(":memory:");
+
+    osmdb::OsmDatabase db(pdb);
+    db.create_tables();
+    db.create_indexes();
     osmdb::ElementInsertion ins(db);
     osm::Node n(123, 1, 2);
     n.tags.push_back(osm::Tag("nkey", "nval"));
     ins.insert_node(n);
+    n.tags.clear();
+    n.id = 124;
+    ins.insert_node(n);
     osm::Way w(341);
-    w.nodes.push_back(444);
-    w.nodes.push_back(445);
+    w.nodes.push_back(123);
+    w.nodes.push_back(124);
     w.tags.push_back(osm::Tag("wkey", "wval"));
     ins.insert_way(w);
-    osm::Relation r(513);
-    r.members.push_back(osm::RelationMapping("role", osm::ObjectType::Node, 142));
-    r.tags.push_back(osm::Tag("rkey", "rval"));
-    ins.insert_relation(r);
-    std::vector<std::tuple<int64_t, double, double> > nodes {std::make_tuple(123, 1, 2)};
+    std::vector<std::tuple<int64_t, double, double> > nodes {std::make_tuple(123, 2, 1), std::make_tuple(124, 2, 1)};
     std::vector<std::tuple<int64_t> > ways {std::make_tuple(341)};
-    std::vector<std::tuple<int64_t, int64_t, int64_t> > edges {std::make_tuple(341, 444, 445)};
-    std::vector<std::tuple<int64_t> > rels {std::make_tuple(513)};
-    std::vector<std::tuple<int64_t, std::string, int, int64_t> > rel_cont {std::make_tuple(513, "role", (int)osm::ObjectType::Node, 142)};
-    std::vector<std::tuple<int, int64_t, std::string, std::string> > attrs
+    std::vector<std::tuple<int64_t, int64_t, int64_t> > edges {std::make_tuple(341, 123, 124)};
+    std::vector<std::tuple<int64_t, int64_t, int> > waynodes
     {
-        std::make_tuple((int)osm::ObjectType::Node, 123, "nkey", "nval"),
-        std::make_tuple((int)osm::ObjectType::Way, 341, "wkey", "wval"),
-        std::make_tuple((int)osm::ObjectType::Relation, 513, "rkey", "rval")
+        std::make_tuple(341, 123, 0),
+        std::make_tuple(341, 124, 1)
     };
-    std::sort(attrs.begin(), attrs.end());
-    auto nodes2 = sqlite::query_sql("SELECT ID, Latitude, Longitude FROM " + db.nodes_table, db.get_db(), sqlite::colint64(), sqlite::coldouble(), sqlite::coldouble());
-    auto ways2 = sqlite::query_sql("SELECT ID FROM " + db.ways_table, db.get_db(), sqlite::colint64());
-    auto edges2 = sqlite::query_sql("SELECT WayID, StartNodeID, EndNodeID FROM " + db.edges_table, db.get_db(), sqlite::colint64(), sqlite::colint64(), sqlite::colint64());
-    auto rels2 = sqlite::query_sql("SELECT ID FROM " + db.relations_table, db.get_db(), sqlite::colint64());
-    auto rel_cont2 = sqlite::query_sql("SELECT RelationID, Role, ObjectType, ObjectID FROM " + db.relation_contents_table, db.get_db(), sqlite::colint64(), sqlite::colstr(), sqlite::colint(), sqlite::colint64());
-    auto attrs2 = sqlite::query_sql("SELECT ObjectType, ObjectID, Key, Value FROM " + db.attributes_table, db.get_db(), sqlite::colint(), sqlite::colint64(), sqlite::colstr(), sqlite::colstr());
-    std::sort(attrs2.begin(), attrs2.end());
+    std::sort(waynodes.begin(), waynodes.end());
+    std::vector<std::tuple<int64_t, std::string, std::string> > ndattrs {std::make_tuple(123, "nkey", "nval")};
+    std::vector<std::tuple<int64_t, std::string, std::string> > wattrs {std::make_tuple(341, "wkey", "wval")};
+    auto nodes2 = psql::query_sql<int64_t, double, double>(db.get_db(), "SELECT ID, ST_X(Location::geometry), ST_Y(Location::geometry) FROM Nodes");
+    auto ways2 = psql::query_sql<int64_t>(db.get_db(), "SELECT ID FROM Ways");
+    auto waynodes2 = psql::query_sql<int64_t, int64_t, int>(db.get_db(), "SELECT WayID, NodeID, SequenceNo FROM WayNodes");
+    auto edges2 = psql::query_sql<int64_t, int64_t, int64_t>(db.get_db(), "SELECT WayID, StartNodeID, EndNodeID FROM Edges");
+    std::sort(waynodes2.begin(), waynodes2.end());
+    auto ndattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT NodeID, Key, Value FROM NodeAttributes");
+    auto wattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT WayID, Key, Value FROM WayAttributes");
     BOOST_CHECK(nodes == nodes2);
     BOOST_CHECK(ways == ways2);
     BOOST_CHECK(edges == edges2);
-    BOOST_CHECK(rels == rels2);
-    BOOST_CHECK(rel_cont == rel_cont2);
-    BOOST_CHECK(attrs == attrs2);
+    BOOST_CHECK(waynodes == waynodes2);
+    BOOST_CHECK(ndattrs == ndattrs2);
+    BOOST_CHECK(wattrs == wattrs2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(displaydb)
-
+/*
 BOOST_AUTO_TEST_CASE(empty)
 {
     osmdb::DisplayDB db(":memory:");
@@ -132,5 +120,5 @@ BOOST_AUTO_TEST_CASE(simple)
     BOOST_CHECK(db.get_free_nodes().size() == 1);
     BOOST_CHECK(db.get_edges().size() == 1);
 }
-
+*/
 BOOST_AUTO_TEST_SUITE_END()

@@ -1,2 +1,2 @@
-add_library(osmdb OsmDatabase.cpp ElementInsertion.cpp WrongDBException.cpp DisplayDB.cpp)
-target_link_libraries(osmdb sqlitewrap osmelements)
+add_library(osmdb OsmDatabase.cpp WrongDBException.cpp ElementInsertion.cpp DisplayDB.cpp)
+target_link_libraries(osmdb psql sqllib osmelements)

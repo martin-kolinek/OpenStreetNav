@@ -21,6 +21,9 @@ public:
     Database(std::string const& conninfo, bool synchr = false);
     void regist(std::string const& name, std::string const& sql, IStatement* st);
     void unregist(std::string const& name, IStatement* st);
+    void begin_transaction();
+    void commit_transaction();
+    void rollback_transaction();
     PGconn* get_db();
     boost::signal<void (PGresult const&)>& notice_signal();
     virtual ~Database();

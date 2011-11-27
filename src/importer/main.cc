@@ -18,10 +18,11 @@ void progress(int& i)
         std::cout << "Processed approximately " << i << " xml elements" << std::endl;
 }
 
-void import(std::string const& inp, std::string const& outp, bool with_indexes)
+void import(std::string const& inp, std::string const& dbname, bool with_indexes)
 {
-    osmdb::OsmDatabase db(outp);
-    sqlite::execute_sql("BEGIN TRANSACTION", db.get_db());
+    psql::Database pdb("dbname=" + dbname);
+    osmdb::OsmDatabase db(pdb);
+    db.get_db().begin_transaction();
     osmdb::ElementInsertion ins(db);
     osmxml::XmlParser pars;
     int done = 0;
@@ -48,7 +49,7 @@ void import(std::string const& inp, std::string const& outp, bool with_indexes)
     std::cout << "Starting import" << std::endl;
     pars.parse_file(inp);
     std::cout << "Done importing" << std::endl;
-    sqlite::execute_sql("COMMIT TRANSACTION", db.get_db());
+    db.get_db().commit_transaction();
     if (with_indexes)
     {
         std::cout << "Creating indexes" << std::endl;

@@ -8,7 +8,7 @@
 #ifndef OSMDATABASE_H_
 #define OSMDATABASE_H_
 
-#include "../sqlite/sqlitewrap.h"
+#include "../psql/psql.h"
 #include "../elements/osmelements.h"
 
 namespace osmdb
@@ -25,77 +25,26 @@ public:
      *
      * @param file filename where to store sqlite database
      */
-    OsmDatabase(std::string const& file);
+    OsmDatabase(psql::Database& db);
     virtual ~OsmDatabase();
-    std::string const nodes_table;
-    std::string const ways_table;
-    std::string const edges_table;
-    std::string const relations_table;
-    std::string const relation_contents_table;
-    std::string const attributes_table;
-    std::string const to_show_table;
+
     /**
      *
      * @return underlying database connection
      */
-    sqlite::Database& get_db();
+    psql::Database& get_db();
     /**
      * Creates indexes, this does not happen right away for optimization purposes.
      * Call after inserting most of the data.
      */
     void create_indexes();
 
-    std::string get_nodes_create(std::string const& nodes_table);
-    std::string get_ways_create(std::string const& ways_table);
-    std::string get_edges_create(std::string const& edges_table);
-    std::string get_relations_create(std::string const& relations_table);
-    std::string get_relation_contents_create(std::string const& relation_contents_table);
-    std::string get_attributes_create(std::string const& attributes_table);
-    std::string get_to_show_create(std::string const& table);
-
-    std::string get_attr_index1(std::string const& attributes_table);
-    std::string get_attr_index2(std::string const& attributes_table);
-    std::string get_attr_index3(std::string const& attributes_table);
-    std::string get_edge_index_start(std::string const& edges_table);
-    std::string get_edge_index_end(std::string const& edges_table);
-    std::string get_edge_index_way(std::string const& edges_table);
-    std::string get_node_index_lat(std::string const& nodes_table);
-    std::string get_node_index_lon(std::string const& nodes_table);
-    std::string get_rel_cont_index_obj(std::string const& relation_conents_table);
-    std::string get_rel_cont_index_rel(std::string const& relation_conents_table);
-    std::string get_rel_cont_index_role(std::string const& relation_conents_table);
-private:
-    sqlite::Database db;
-    std::string const nodes_create;
-    std::string const ways_create;
-    std::string const edges_create;
-    std::string const relations_create;
-    std::string const relation_contents_create;
-    std::string const attributes_create;
-    std::string const to_show_create;
-    std::string const attr_index1;
-    std::string const attr_index2;
-    std::string const attr_index3;
-    std::string const edge_index_start;
-    std::string const edge_index_end;
-    std::string const edge_index_way;
-    std::string const node_index_lat;
-    std::string const node_index_lon;
-    std::string const rel_cont_index_obj;
-    std::string const rel_cont_index_rel;
-    std::string const rel_cont_index_role;
-    std::string const nodes_test;
-    std::string const ways_test;
-    std::string const edge_test;
-    std::string const relation_test;
-    std::string const rel_contents_test;
-    std::string const attributes_test;
-    std::string const to_show_test;
-    std::vector<std::string> const indexes;
-    std::vector<std::string> const tables;
-    std::vector<std::string> const checks;
+    /**
+     * Creates needed tables in the database
+     */
     void create_tables();
-    void check_tables();
+private:
+    psql::Database& db;
 };
 
 } /* namespace osmdb */

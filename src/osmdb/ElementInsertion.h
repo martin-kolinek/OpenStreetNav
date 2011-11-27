@@ -44,19 +44,12 @@ public:
     void insert_relation(osm::Relation const& rel);
 private:
     OsmDatabase& db;
-    std::string insert_node_sql;
-    std::string insert_way_sql;
-    std::string insert_edge_sql;
-    std::string insert_attr_sql;
-    std::string insert_rel_contents_sql;
-    std::string insert_relation_sql;
-    sqlite::Statement attr_st;
-    sqlite::Statement node_st;
-    sqlite::Statement edge_st;
-    sqlite::Statement way_st;
-    sqlite::Statement member_st;
-    sqlite::Statement rel_st;
-    void insert_attributes(std::vector<osm::Tag> const& tags, int64_t id, osm::ObjectType tp);
+    psql::Statement<psql::BindTypes<int64_t, double, double>, psql::RetTypes<> > node_ins;
+    psql::Statement<psql::BindTypes<int64_t, int64_t, int64_t>, psql::RetTypes<> > edge_ins;
+    psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<> > waynode_ins;
+    psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<> > way_ins;
+    psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<> > node_attrs_ins;
+    psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<> > way_attrs_ins;
 
 };
 

@@ -27,7 +27,9 @@ int main(int argc, char** argv)
     bldr->get_widget("window1", wnd);
     display::MapDrawingArea* area = 0;
     bldr->get_widget_derived("drawingarea1", area);
-    area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(argv[1])));
+    psql::Database pdb("dbname=" + std::string(argv[1]));
+    osmdb::OsmDatabase odb(pdb);
+    area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(odb)));
     area->center(48.143, 17.109);
     area->show();
 

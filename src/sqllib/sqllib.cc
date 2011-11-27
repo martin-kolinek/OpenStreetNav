@@ -107,7 +107,7 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relation_attribu
 {
     std::string str("\
 \n\
-CREATE TABLE NodeAttributes (\n\
+CREATE TABLE RelationAttributes (\n\
 RelationID bigint REFERENCES Relations (ID),\n\
 Key text,\n\
 Value text,\n\
