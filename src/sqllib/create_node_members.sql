@@ -7,6 +7,6 @@ CREATE TABLE MemberNodes (
     RelationID bigint REFERENCES Relations (ID),
     Role text,
     NodeID bigint REFERENCES Nodes (ID),
-    PRIMARY KEY (RelationID, Role)
+    PRIMARY KEY (RelationID, Role, NodeID)
     )
 

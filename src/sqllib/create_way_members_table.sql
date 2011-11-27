@@ -7,6 +7,6 @@ CREATE TABLE MemberWays (
     RelationID bigint REFERENCES Relations (ID),
     Role text,
     WayID bigint REFERENCES Ways (ID),
-    PRIMARY KEY (RelationID, Role)
+    PRIMARY KEY (RelationID, Role, WayID)
     )
 

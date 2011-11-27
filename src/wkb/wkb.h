@@ -8,13 +8,6 @@
 #ifndef WKB_H_
 #define WKB_H_
 
-#include "../geoelements/geoelements.h"
-
-namespace wkb
-{
-
-std::vector<char> point_to_wkb(geo::Point const& p);
-
-}
+#include "WKBInterface.h"
 
 #endif /* WKB_H_ */

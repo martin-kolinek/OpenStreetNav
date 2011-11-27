@@ -67,7 +67,7 @@ CREATE TABLE MemberNodes (\n\
 RelationID bigint REFERENCES Relations (ID),\n\
 Role text,\n\
 NodeID bigint REFERENCES Nodes (ID),\n\
-PRIMARY KEY (RelationID, Role)\n\
+PRIMARY KEY (RelationID, Role, NodeID)\n\
 )\n\
 \n\
 ");
@@ -152,7 +152,7 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_way_attributes(p
 {
     std::string str("\
 \n\
-CREATE TABLE NodeAttributes (\n\
+CREATE TABLE WayAttributes (\n\
 WayID bigint REFERENCES Ways (ID),\n\
 Key text,\n\
 Value text,\n\
@@ -174,7 +174,7 @@ CREATE TABLE MemberWays (\n\
 RelationID bigint REFERENCES Relations (ID),\n\
 Role text,\n\
 WayID bigint REFERENCES Ways (ID),\n\
-PRIMARY KEY (RelationID, Role)\n\
+PRIMARY KEY (RelationID, Role, WayID)\n\
 )\n\
 \n\
 ");
@@ -214,6 +214,46 @@ CREATE TABLE Ways (ID bigint PRIMARY KEY)\n\
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
 
+psql::Statement<psql::BindTypes<int64_t, int64_t, int64_t>, psql::RetTypes<>> get_insert_edge(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+INSERT INTO Edges (WayID, StartNodeID, EndNodeID, Location)\n\
+SELECT $1, $2, $3, ST_MakeLine(n1.Location::geometry, n2.Location::geometry)::geography FROM Nodes n1, Nodes n2 WHERE n1.ID=$2 AND n2.ID=$3\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int64_t, int64_t, int64_t>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int64_t, int64_t, int64_t>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<int64_t, double, double>, psql::RetTypes<>> get_insert_node(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+INSERT INTO Nodes (ID, Location) VALUES ($1, ST_MakePoint($2, $3))\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int64_t, double, double>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int64_t, double, double>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>> get_insert_node_attr(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+INSERT INTO NodeAttributes (NodeID, Key, Value) VALUES ($1, $2, $3)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(str, db);
+}
+
 psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>> get_insert_test_table(psql::Database& db, bool named, std::string const& name)
 {
     std::string str("\
@@ -223,6 +263,45 @@ INSERT INTO TestTable (A, B, C) VALUES ($1, $2, $3)\n\
         return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, name, db);
     else
         return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<>> get_insert_way(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+INSERT INTO Ways (ID) VALUES ($1)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>> get_insert_way_attr(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+INSERT INTO WayAttributes (WayID, Key, Value) VALUES ($1, $2, $3)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>> get_insert_way_node(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+INSERT INTO WayNodes (WayID, NodeID, SequenceNo) VALUES ($1, $2, $3)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>>(str, db);
 }
 
 psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>> get_test_select(psql::Database& db, bool named, std::string const& name)

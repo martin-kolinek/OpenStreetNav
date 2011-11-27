@@ -12,7 +12,7 @@
 #include <geos/geom/Point.h>
 #include <geos/geom/Geometry.h>
 
-namespace display
+namespace wkb
 {
 
 WKBInterface::WKBInterface()
@@ -23,9 +23,11 @@ WKBInterface::~WKBInterface()
 {
 }
 
+WKBInterface* WKBInterface::inst = NULL;
+
 WKBInterface& WKBInterface::get_instance()
 {
-    if (inst != NULL)
+    if (inst == NULL)
     {
         inst = new WKBInterface();
     }
@@ -48,4 +50,4 @@ std::vector<char> WKBInterface::point_to_wkb(const geo::Point& p)
     return out;
 }
 
-} /* namespace display */
+} /* namespace wkb */

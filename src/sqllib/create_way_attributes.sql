@@ -2,7 +2,7 @@
 --test-depend create_ways_table
 --test-param
 
-CREATE TABLE NodeAttributes (
+CREATE TABLE WayAttributes (
     WayID bigint REFERENCES Ways (ID),
     Key text,
     Value text,

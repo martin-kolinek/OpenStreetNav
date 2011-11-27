@@ -13,7 +13,7 @@
 #include <geos/io/WKBWriter.h>
 #include <vector>
 
-namespace display
+namespace wkb
 {
 
 class WKBInterface
@@ -21,7 +21,7 @@ class WKBInterface
 public:
     WKBInterface();
     virtual ~WKBInterface();
-    WKBInterface& get_instance();
+    static WKBInterface& get_instance();
     std::vector<char> point_to_wkb(geo::Point const& p);
 private:
     static WKBInterface* inst;
@@ -29,5 +29,5 @@ private:
     geos::geom::GeometryFactory fct;
 };
 
-} /* namespace display */
+} /* namespace wkb */
 #endif /* WKBINTERFACE_H_ */
