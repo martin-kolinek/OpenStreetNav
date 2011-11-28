@@ -72,7 +72,7 @@ PGconn* Database::get_db()
             throw PgSqlException("Unable to connect to postgresql server: " + std::string(PQerrorMessage(conn)));
         async = false;
         if (PQinitTypes(conn) == 0)
-            PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
+            throw PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
         PQsetNoticeReceiver(conn, noticeReceiver, (void*)this);
     }
     else

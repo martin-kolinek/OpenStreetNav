@@ -23,17 +23,18 @@ class DisplayDB
 public:
     DisplayDB(OsmDatabase& db);
     virtual ~DisplayDB();
-    std::vector<osm::Edge> const& get_edges();
-    std::unordered_map<int64_t, osm::Node> const& get_nodes();
-    std::unordered_set<int64_t> const& get_free_nodes();
+    std::vector<geo::Edge> const& get_edges();
+    std::vector<geo::Point> const& get_points();
     OsmDatabase& get_db();
-    void set_to_show(std::string const& key, std::string const& val, int minzoom, int maxzoom);
     void set_bounds(geo::Point const& topleft, geo::Point const& bottomright, int zoom);
+    void set_to_show(std::string const& key, std::string const& value, int minzoom, int maxzoom);
 private:
     osmdb::OsmDatabase& db;
-    std::unordered_map<int64_t, osm::Node> nodes;
-    std::vector<osm::Edge> edges;
-    std::unordered_set<int64_t> free_nodes;
+    std::vector<geo::Point> points;
+    std::vector<geo::Edge> edges;
+    psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double> > edge_st;
+    psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double> > node_st;
+    psql::Statement<psql::BindTypes<std::string, std::string, int>, psql::RetTypes<> > to_show_ins;
 };
 
 } /* namespace display */

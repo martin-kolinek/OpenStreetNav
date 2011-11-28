@@ -1,1 +1,1 @@
-add_library(geoelems Point.cpp)
+add_library(geoelems Point.cpp Edge.cpp)

@@ -180,16 +180,8 @@ void MapDrawingArea::complete_redraw()
     cr->set_source_rgb(0, 1, 0);
     for (auto it = db->get_edges().begin(); it != db->get_edges().end(); ++it)
     {
-        auto it2 = db->get_nodes().find(it->start_node);
-        if (it2 == db->get_nodes().end())
-            continue;
-        osm::Node st = it2->second;
-        it2 = db->get_nodes().find(it->end_node);
-        if (it2 == db->get_nodes().end())
-            continue;
-        osm::Node en = it2->second;
-        proj::FlatPoint fps = proj->project(st.lat, st.lon);
-        proj::FlatPoint fpe = proj->project(en.lat, en.lon);
+        proj::FlatPoint fps = proj->project(it->start.lat, it->start.lon);
+        proj::FlatPoint fpe = proj->project(it->end.lat, it->end.lon);
         cr->move_to(fps.x, fps.y);
         cr->line_to(fpe.x, fpe.y);
         cr->stroke();

@@ -9,5 +9,6 @@
 #define GEOELEMENTS_H_
 
 #include "Point.h"
+#include "Edge.h"
 
 #endif /* GEOELEMENTS_H_ */

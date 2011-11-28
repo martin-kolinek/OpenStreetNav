@@ -85,19 +85,21 @@ BOOST_AUTO_TEST_CASE(insert)
     BOOST_CHECK(wattrs == wattrs2);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
-
-BOOST_AUTO_TEST_SUITE(displaydb)
-/*
-BOOST_AUTO_TEST_CASE(empty)
+BOOST_AUTO_TEST_CASE(empty_displaydb)
 {
-    osmdb::DisplayDB db(":memory:");
+    osmdb::OsmDatabase odb(pdb);
+    odb.create_tables();
+    odb.create_indexes();
+    osmdb::DisplayDB db(odb);
     db.set_bounds(geo::Point(0, 0), geo::Point(1, 1), 1);
 }
 
 BOOST_AUTO_TEST_CASE(simple)
 {
-    osmdb::DisplayDB db(":memory:");
+    osmdb::OsmDatabase odb(pdb);
+    odb.create_tables();
+    odb.create_indexes();
+    osmdb::DisplayDB db(odb);
     osmdb::ElementInsertion ins(db.get_db());
     osm::Node nd(1, 0.5, 0.5);
     nd.tags.push_back(osm::Tag("disp", "disp"));
@@ -116,9 +118,8 @@ BOOST_AUTO_TEST_CASE(simple)
     ins.insert_node(osm::Node(5, 0.6, 0.4));
     db.set_to_show("disp", "disp", 0, 15);
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
-    BOOST_CHECK(db.get_nodes().size() == 3);
-    BOOST_CHECK(db.get_free_nodes().size() == 1);
+    BOOST_CHECK(db.get_points().size() == 1);
     BOOST_CHECK(db.get_edges().size() == 1);
 }
-*/
+
 BOOST_AUTO_TEST_SUITE_END()

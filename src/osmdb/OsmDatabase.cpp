@@ -45,6 +45,7 @@ void OsmDatabase::create_tables()
     sqllib::get_create_node_members(db).execute();
     sqllib::get_create_way_members_table(db).execute();
     sqllib::get_create_relation_attributes(db).execute();
+    sqllib::get_create_toshow_table(db).execute();
 
 }
 

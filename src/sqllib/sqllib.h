@@ -32,6 +32,8 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relations_table(
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_test_table(psql::Database& db, bool named = false, std::string const& name = "");
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_toshow_table(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_way_attributes(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_way_members_table(psql::Database& db, bool named = false, std::string const& name = "");
@@ -48,11 +50,17 @@ psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTyp
 
 psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>> get_insert_test_table(psql::Database& db, bool named = false, std::string const& name = "");
 
+psql::Statement<psql::BindTypes<std::string, std::string, int>, psql::RetTypes<>> get_insert_toshow(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<>> get_insert_way(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>> get_insert_way_attr(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>> get_insert_way_node(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>> get_select_edges_in_box(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double>> get_select_nodes_in_box(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>> get_test_select(psql::Database& db, bool named = false, std::string const& name = "");
 

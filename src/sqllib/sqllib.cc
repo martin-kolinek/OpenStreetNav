@@ -148,6 +148,24 @@ CREATE TABLE TestTable (A int primary key, B text, C bigint)\n\
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_toshow_table(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+CREATE TABLE ToShow (\n\
+Key text,\n\
+Value text,\n\
+Zoom int,\n\
+PRIMARY KEY (Key, Value, Zoom)\n\
+)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_way_attributes(psql::Database& db, bool named, std::string const& name)
 {
     std::string str("\
@@ -265,6 +283,19 @@ INSERT INTO TestTable (A, B, C) VALUES ($1, $2, $3)\n\
         return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, db);
 }
 
+psql::Statement<psql::BindTypes<std::string, std::string, int>, psql::RetTypes<>> get_insert_toshow(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+INSERT INTO ToShow(Key, Value, Zoom) VALUES ($1, $2, $3)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<std::string, std::string, int>, psql::RetTypes<>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<std::string, std::string, int>, psql::RetTypes<>>(str, db);
+}
+
 psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<>> get_insert_way(psql::Database& db, bool named, std::string const& name)
 {
     std::string str("\
@@ -302,6 +333,34 @@ INSERT INTO WayNodes (WayID, NodeID, SequenceNo) VALUES ($1, $2, $3)\n\
         return psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>>(str, name, db);
     else
         return psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>> get_select_edges_in_box(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+SELECT ST_X(ST_StartPoint(e.Location::geometry)), ST_Y(ST_StartPoint(e.Location::geometry)), ST_X(ST_EndPoint(e.Location::geometry)), ST_Y(ST_EndPoint(e.Location::geometry)) FROM\n\
+Edges e INNER JOIN WayAttributes a ON e.WayID = a.WayID INNER JOIN ToShow t ON t.Key = a.Key AND t.Value=a.Value WHERE\n\
+t.Zoom=$1 AND e.Location && ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double>> get_select_nodes_in_box(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+SELECT ST_X(n.Location::geometry), ST_Y(n.Location::geometry) FROM\n\
+Nodes n INNER JOIN NodeAttributes a ON n.ID = a.NodeID INNER JOIN ToShow t ON t.Key = a.Key AND t.Value=a.Value WHERE\n\
+t.Zoom=$1 AND n.Location && ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double>>(str, name, db);
+    else
+        return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double>>(str, db);
 }
 
 psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>> get_test_select(psql::Database& db, bool named, std::string const& name)
