@@ -25,12 +25,27 @@ Node::~Node()
 {
 }
 
-bool Node::operator==(Node const& other) const
+bool Node::operator==(const Node& other) const
 {
     return id == other.id && lat == other.lat && lon == other.lon && tags == other.tags;
 }
 
-bool Node::operator!=(Node const& other) const
+const std::vector<Tag> & Node::get_tags()
+{
+    return tags;
+}
+
+int64_t Node::get_id()
+{
+    return id;
+}
+
+std::string Node::get_type_str()
+{
+    return "node";
+}
+
+bool Node::operator !=(const Node& other) const
 {
     return !(*this == other);
 }

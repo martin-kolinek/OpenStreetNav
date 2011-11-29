@@ -10,12 +10,13 @@
 
 #include <stdint.h>
 #include "Tag.h"
+#include "Element.h"
 #include <vector>
 
 namespace osm
 {
 
-class Way
+class Way : public Element
 {
 public:
     Way();
@@ -24,6 +25,9 @@ public:
     int64_t id;
     std::vector<int64_t> nodes;
     std::vector<Tag> tags;
+    std::vector<Tag> const& get_tags();
+    int64_t get_id();
+    std::string get_type_str();
     bool operator==(Way const& other) const;
     bool operator!=(Way const& other) const;
 };

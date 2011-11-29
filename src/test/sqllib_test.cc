@@ -268,6 +268,26 @@ BOOST_AUTO_TEST_CASE(lib_select_edges_in_box)
     st10.execute("asdf", "asdf", 5);
     auto tested_st(sqllib::get_select_edges_in_box(db));
     tested_st.execute(5, 0, 0, 50, 50);
+    tested_st.get_row(0);
+}
+
+BOOST_AUTO_TEST_CASE(lib_select_node_descr_in_box)
+{
+    auto st0(sqllib::get_create_nodes_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_insert_node(db, false));
+    st1.execute(10, 25, 40);
+    auto st2(sqllib::get_create_toshow_table(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_node_attributes(db, false));
+    st3.execute();
+    auto st4(sqllib::get_insert_node_attr(db, false));
+    st4.execute(10, "asdf", "asdf");
+    auto st5(sqllib::get_insert_toshow(db, false));
+    st5.execute("asdf", "asdf", 5);
+    auto tested_st(sqllib::get_select_node_descr_in_box(db));
+    tested_st.execute(5, 0, 0, 50, 50);
+    tested_st.get_row(0);
 }
 
 BOOST_AUTO_TEST_CASE(lib_select_nodes_in_box)
@@ -286,6 +306,36 @@ BOOST_AUTO_TEST_CASE(lib_select_nodes_in_box)
     st5.execute("asdf", "asdf", 5);
     auto tested_st(sqllib::get_select_nodes_in_box(db));
     tested_st.execute(5, 0, 0, 50, 50);
+    tested_st.get_row(0);
+}
+
+BOOST_AUTO_TEST_CASE(lib_select_way_descr_in_box)
+{
+    auto st0(sqllib::get_create_ways_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_edges_table(db, false));
+    st2.execute();
+    auto st3(sqllib::get_insert_way(db, false));
+    st3.execute(41);
+    auto st4(sqllib::get_insert_node(db, false));
+    st4.execute(10, 25, 40);
+    auto st5(sqllib::get_insert_node(db, false));
+    st5.execute(11, 20, 30);
+    auto st6(sqllib::get_insert_edge(db, false));
+    st6.execute(41, 10, 11);
+    auto st7(sqllib::get_create_toshow_table(db, false));
+    st7.execute();
+    auto st8(sqllib::get_create_way_attributes(db, false));
+    st8.execute();
+    auto st9(sqllib::get_insert_way_attr(db, false));
+    st9.execute(41, "asdf", "asdf");
+    auto st10(sqllib::get_insert_toshow(db, false));
+    st10.execute("asdf", "asdf", 5);
+    auto tested_st(sqllib::get_select_way_descr_in_box(db));
+    tested_st.execute(5, 0, 0, 50, 50);
+    tested_st.get_row(0);
 }
 
 BOOST_AUTO_TEST_CASE(lib_test_select)

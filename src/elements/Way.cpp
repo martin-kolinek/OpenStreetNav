@@ -23,12 +23,27 @@ Way::~Way()
 {
 }
 
-bool Way::operator==(Way const& other) const
+bool Way::operator==(const Way& other) const
 {
     return id == other.id && nodes == other.nodes && tags == other.tags;
 }
 
-bool Way::operator!=(Way const& other) const
+const std::vector<Tag> & Way::get_tags()
+{
+    return tags;
+}
+
+int64_t Way::get_id()
+{
+    return id;
+}
+
+std::string Way::get_type_str()
+{
+    return "way";
+}
+
+bool Way::operator !=(const Way& other) const
 {
     return !(*this == other);
 }

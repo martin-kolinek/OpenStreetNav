@@ -10,6 +10,7 @@
 
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/builder.h>
+#include <boost/signal.hpp>
 #include <memory>
 #include "../osmdb/osmdb.h"
 #include "../projection/projection.h"
@@ -23,6 +24,8 @@ public:
     MapDrawingArea(BaseObjectType* cobject, Glib::RefPtr<Gtk::Builder> const&);
     void assign_db(std::shared_ptr<osmdb::DisplayDB> db);
     void center(double lat, double lon);
+    boost::signal<void (int)> zoom_changed;
+    boost::signal<void (std::vector<osm::Element> const& elem)> element_clicked;
     virtual ~MapDrawingArea();
 protected:
     bool on_draw(Cairo::RefPtr<Cairo::Context> const& cr);

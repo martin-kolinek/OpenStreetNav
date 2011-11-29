@@ -174,10 +174,10 @@ void MapDrawingArea::complete_redraw()
     auto mx = std::max(surface->get_width(), surface->get_height());
     cr->scale(mx / 2.0, mx / 2.0);
     cr->translate(surface->get_width() / (double)mx, surface->get_height() / (double)mx);
-    cr->set_source_rgb(1, 0, 0);
+    cr->set_source_rgb(0, 0, 0);
     cr->paint();
     cr->set_line_width(0.005);
-    cr->set_source_rgb(0, 1, 0);
+    cr->set_source_rgb(0.8, 0.8, 0.8);
     for (auto it = db->get_edges().begin(); it != db->get_edges().end(); ++it)
     {
         proj::FlatPoint fps = proj->project(it->start.lat, it->start.lon);
@@ -185,6 +185,12 @@ void MapDrawingArea::complete_redraw()
         cr->move_to(fps.x, fps.y);
         cr->line_to(fpe.x, fpe.y);
         cr->stroke();
+    }
+    for (auto it = db->get_points().begin(); it != db->get_points().end(); ++it)
+    {
+        proj::FlatPoint fp = proj->project(it->lat, it->lon);
+        cr->arc(fp.x, fp.y, 0.01, 0, 2 * M_PI);
+        cr->fill();
     }
     invalidate();
 }

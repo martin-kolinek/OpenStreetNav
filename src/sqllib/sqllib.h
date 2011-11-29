@@ -60,7 +60,11 @@ psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>> get_in
 
 psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>> get_select_edges_in_box(psql::Database& db, bool named = false, std::string const& name = "");
 
+psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<int64_t, std::string, std::string>> get_select_node_descr_in_box(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double>> get_select_nodes_in_box(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<int64_t, std::string, std::string>> get_select_way_descr_in_box(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>> get_test_select(psql::Database& db, bool named = false, std::string const& name = "");
 

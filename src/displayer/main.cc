@@ -16,18 +16,19 @@
 
 int main(int argc, char** argv)
 {
-    if (argc != 2)
+    /*if (argc != 2)
     {
         std::cout << "unknown command line option only database name accepted" << std::endl;
         return 1;
-    }
+    }*/
     Gtk::Main kit(argc, argv);
-    Glib::RefPtr<Gtk::Builder> bldr = Gtk::Builder::create_from_file("display.glade");
+    Glib::RefPtr<Gtk::Builder> bldr = Gtk::Builder::create_from_file("build/bin/display.glade");
     Gtk::Window* wnd = 0;
     bldr->get_widget("window1", wnd);
     display::MapDrawingArea* area = 0;
     bldr->get_widget_derived("drawingarea1", area);
-    psql::Database pdb("dbname=" + std::string(argv[1]));
+    psql::Database pdb("");
+    psql::execute_sql(pdb, "SET search_path TO slovakia_osm, public");
     osmdb::OsmDatabase odb(pdb);
     area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(odb)));
     area->center(48.143, 17.109);

@@ -1,4 +1,4 @@
---type psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>
+--type psql::BindTypes<int, double, double, double, double>, psql::RetTypes<int64_t, std::string, std::string>
 --test-depend create_ways_table
 --test-depend create_nodes_table
 --test-depend create_edges_table
@@ -13,6 +13,6 @@
 --test-param 5, 0, 0, 50, 50
 --test-result 0
 
-SELECT ST_X(ST_StartPoint(e.Location::geometry)), ST_Y(ST_StartPoint(e.Location::geometry)), ST_X(ST_EndPoint(e.Location::geometry)), ST_Y(ST_EndPoint(e.Location::geometry)) FROM
-    Edges e INNER JOIN WayAttributes a ON e.WayID = a.WayID INNER JOIN ToShow t ON t.Key = a.Key AND t.Value=a.Value WHERE
+SELECT e.WayID, a2.Key, a2.Value FROM
+    WayAttributes a2 INNER JOIN Edges e ON e.WayID = a2.WayID INNER JOIN WayAttributes a ON e.WayID = a.WayID INNER JOIN ToShow t ON t.Key = a.Key AND t.Value=a.Value WHERE
     t.Zoom=$1 AND e.Location && ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)
