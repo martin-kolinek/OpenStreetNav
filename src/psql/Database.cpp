@@ -15,12 +15,26 @@ void Database::begin_transaction()
 
 void Database::commit_transaction()
 {
+    savepoints.clear();
     execute_sql(*this, "COMMIT TRANSACTION");
 }
 
 void Database::rollback_transaction()
 {
+    savepoints.clear();
     execute_sql(*this, "ROLLBACK TRANSACTION");
+}
+
+void Database::savepoint(std::string const& name)
+{
+    if (savepoints.count(name))
+        execute_sql(*this, "RELEASE SAVEPOINT " + name);
+    execute_sql(*this, "SAVEPOINT " + name);
+    savepoints.insert(name);
+}
+void Database::rollback_to_savepoint(std::string const& name)
+{
+    execute_sql(*this, "ROLLBACK TO SAVEPOINT " + name);
 }
 
 void noticeReceiver(void* arg, const PGresult* res)

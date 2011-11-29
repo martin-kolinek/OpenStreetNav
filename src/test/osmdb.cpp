@@ -48,6 +48,7 @@ BOOST_AUTO_TEST_CASE(insert)
     db.create_tables();
     db.create_indexes();
     osmdb::ElementInsertion ins(db);
+    pdb.begin_transaction();
     osm::Node n(123, 1, 2);
     n.tags.push_back(osm::Tag("nkey", "nval"));
     ins.insert_node(n);
@@ -59,6 +60,7 @@ BOOST_AUTO_TEST_CASE(insert)
     w.nodes.push_back(124);
     w.tags.push_back(osm::Tag("wkey", "wval"));
     ins.insert_way(w);
+    pdb.commit_transaction();
     std::vector<std::tuple<int64_t, double, double> > nodes {std::make_tuple(123, 2, 1), std::make_tuple(124, 2, 1)};
     std::vector<std::tuple<int64_t> > ways {std::make_tuple(341)};
     std::vector<std::tuple<int64_t, int64_t, int64_t> > edges {std::make_tuple(341, 123, 124)};
@@ -101,6 +103,7 @@ BOOST_AUTO_TEST_CASE(simple)
     odb.create_indexes();
     osmdb::DisplayDB db(odb);
     osmdb::ElementInsertion ins(db.get_db());
+    pdb.begin_transaction();
     osm::Node nd(1, 0.5, 0.5);
     nd.tags.push_back(osm::Tag("disp", "disp"));
     ins.insert_node(nd);
@@ -116,6 +119,7 @@ BOOST_AUTO_TEST_CASE(simple)
     nd.lon = 0.5;
     ins.insert_node(nd);
     ins.insert_node(osm::Node(5, 0.6, 0.4));
+    pdb.commit_transaction();
     db.set_to_show("disp", "disp", 0, 15);
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     BOOST_CHECK(db.get_points().size() == 1);

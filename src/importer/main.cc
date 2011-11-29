@@ -18,10 +18,17 @@ void progress(int& i)
         std::cout << "Processed approximately " << i << " xml elements" << std::endl;
 }
 
-void import(std::string const& inp, std::string const& dbname, bool with_indexes)
+void import(std::string const& inp, std::string const& dbname, std::string const& schema, bool tables, bool with_indexes)
 {
     psql::Database pdb("dbname=" + dbname);
+    if (schema != "")
+    {
+        psql::execute_sql(pdb, "CREATE SCHEMA " + schema);
+        psql::execute_sql(pdb, "SET search_path TO " + schema + ", public");
+    }
     osmdb::OsmDatabase db(pdb);
+    if (tables)
+        db.create_tables();
     db.get_db().begin_transaction();
     osmdb::ElementInsertion ins(db);
     osmxml::XmlParser pars;
@@ -64,8 +71,10 @@ int main(int argc, char** argv)
     desc.add_options()
     ("help,h", "print this help")
     ("input,i", boost::program_options::value<std::string>(), "input xml file")
-    ("output,o", boost::program_options::value<std::string>(), "output sqlite file")
-    ("without-indexes", "disable index creation");
+    ("output-db,d", boost::program_options::value<std::string>(), "output postgresql database name")
+    ("output-schema,s", boost::program_options::value<std::string>(), "outpu postgresql database schema")
+    ("create-tables,t", "enable table creation")
+    ("create-indexes,x", "enable index creation");
     boost::program_options::variables_map vm;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
     boost::program_options::notify(vm);
@@ -80,15 +89,19 @@ int main(int argc, char** argv)
         std::cout << desc << std::endl;
         return 1;
     }
-    if (!vm.count("output"))
+    if (!vm.count("output-db"))
     {
-        std::cout << "output file needed" << std::endl;
+        std::cout << "output db needed" << std::endl;
         std::cout << desc << std::endl;
         return 1;
     }
-    bool indexes = !vm.count("without-indexes");
+    bool indexes = vm.count("create-indexes");
+    bool tables = vm.count("create-tables");
     std::string inp = vm["input"].as<std::string>();
-    std::string out = vm["output"].as<std::string>();
-    import(inp, out, indexes);
+    std::string out = vm["output-db"].as<std::string>();
+    std::string sch = "";
+    if (vm.count("output-schema"))
+        sch = vm["output-schema"].as<std::string>();
+    import(inp, out, sch, tables, indexes);
     return 0;
 }

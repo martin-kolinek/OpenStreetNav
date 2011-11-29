@@ -97,7 +97,7 @@ foreach $f (@files)
 	}
 	print SRC "\");\n";
 	print SRC "if(named)\n";
-	print SRC "    return psql::Statement<$type>(str, name, db);\n";
+	print SRC "    return psql::Statement<$type>(name, str, db);\n";
 	print SRC "else\n";
 	print SRC "    return psql::Statement<$type>(str, db);\n";
 	print SRC "}\n";

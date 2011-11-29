@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <set>
 #include <boost/signal.hpp>
 
 namespace psql
@@ -24,6 +25,8 @@ public:
     void begin_transaction();
     void commit_transaction();
     void rollback_transaction();
+    void savepoint(std::string const& name);
+    void rollback_to_savepoint(std::string const& name);
     PGconn* get_db();
     boost::signal<void (PGresult const&)>& notice_signal();
     virtual ~Database();
@@ -33,6 +36,7 @@ private:
     std::unordered_map<std::string, IStatement*> stmts;
     boost::signal<void (PGresult const&)> notice_sig;
     std::vector<std::string> to_dealloc;
+    std::set<std::string> savepoints;
     void receiveNotice(PGresult const* res);
     friend void noticeReceiver(void* arg, PGresult const* res);
 };

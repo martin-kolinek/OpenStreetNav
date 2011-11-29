@@ -73,6 +73,19 @@ BOOST_AUTO_TEST_CASE(statement)
     auto st3(sqllib::get_test_select(db));
     st3.execute(32);
     auto res(st3.get_row(0));
+    std::tuple<int, std::string, int64_t> tup(32,  "asdf", 52341093);
+    BOOST_CHECK(res == tup);
+}
+
+BOOST_AUTO_TEST_CASE(named_statement)
+{
+    auto st1(sqllib::get_create_test_table(db, true, "asdf"));
+    st1.execute();
+    auto st2(sqllib::get_insert_test_table(db, true, "bvba"));
+    st2.execute(32, "asdf", 52341093);
+    auto st3(sqllib::get_test_select(db, true, "agsdf"));
+    st3.execute(32);
+    auto res(st3.get_row(0));
     std::tuple<int, std::string, int64_t> tup(32, "asdf", 52341093);
     BOOST_CHECK(res == tup);
 }

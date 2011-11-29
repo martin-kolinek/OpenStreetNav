@@ -18,7 +18,7 @@ CREATE INDEX IX_EdgesLocation ON Edges USING GIST (Location)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -36,7 +36,7 @@ PRIMARY KEY (WayID, StartNodeID, EndNodeID)\n\
 )\n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -54,7 +54,7 @@ PRIMARY KEY (NodeID, Key)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -72,7 +72,7 @@ PRIMARY KEY (RelationID, Role, NodeID)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -85,7 +85,7 @@ CREATE INDEX IX_NodesLoc ON Nodes USING GIST (Location)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -98,7 +98,7 @@ CREATE TABLE Nodes (ID bigint PRIMARY KEY, Location geography(POINT))\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -116,7 +116,7 @@ PRIMARY KEY (RelationID, Key)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -130,7 +130,7 @@ ID bigint PRIMARY KEY\n\
 )\n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -143,7 +143,7 @@ CREATE TABLE TestTable (A int primary key, B text, C bigint)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -161,7 +161,7 @@ PRIMARY KEY (Key, Value, Zoom)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -179,7 +179,7 @@ PRIMARY KEY (WayID, Key)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -197,7 +197,7 @@ PRIMARY KEY (RelationID, Role, WayID)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -214,7 +214,7 @@ PRIMARY KEY (WayID, SequenceNo)\n\
 )\n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -227,7 +227,7 @@ CREATE TABLE Ways (ID bigint PRIMARY KEY)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
@@ -241,7 +241,7 @@ SELECT $1, $2, $3, ST_MakeLine(n1.Location::geometry, n2.Location::geometry)::ge
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int64_t, int64_t, int64_t>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int64_t, int64_t, int64_t>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int64_t, int64_t, int64_t>, psql::RetTypes<>>(str, db);
 }
@@ -254,7 +254,7 @@ INSERT INTO Nodes (ID, Location) VALUES ($1, ST_MakePoint($2, $3))\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int64_t, double, double>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int64_t, double, double>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int64_t, double, double>, psql::RetTypes<>>(str, db);
 }
@@ -267,7 +267,7 @@ INSERT INTO NodeAttributes (NodeID, Key, Value) VALUES ($1, $2, $3)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(str, db);
 }
@@ -278,7 +278,7 @@ psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>> ge
 INSERT INTO TestTable (A, B, C) VALUES ($1, $2, $3)\n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int, std::string, int64_t>, psql::RetTypes<>>(str, db);
 }
@@ -291,7 +291,7 @@ INSERT INTO ToShow(Key, Value, Zoom) VALUES ($1, $2, $3)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<std::string, std::string, int>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<std::string, std::string, int>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<std::string, std::string, int>, psql::RetTypes<>>(str, db);
 }
@@ -304,7 +304,7 @@ INSERT INTO Ways (ID) VALUES ($1)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<>>(str, db);
 }
@@ -317,7 +317,7 @@ INSERT INTO WayAttributes (WayID, Key, Value) VALUES ($1, $2, $3)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<>>(str, db);
 }
@@ -330,7 +330,7 @@ INSERT INTO WayNodes (WayID, NodeID, SequenceNo) VALUES ($1, $2, $3)\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>>(str, db);
 }
@@ -344,7 +344,7 @@ Edges e INNER JOIN WayAttributes a ON e.WayID = a.WayID INNER JOIN ToShow t ON t
 t.Zoom=$1 AND e.Location && ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)\n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>>(str, db);
 }
@@ -358,7 +358,7 @@ Nodes n INNER JOIN NodeAttributes a ON n.ID = a.NodeID INNER JOIN ToShow t ON t.
 t.Zoom=$1 AND n.Location && ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)\n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double>>(str, db);
 }
@@ -374,7 +374,7 @@ A = $1;\n\
 \n\
 ");
     if (named)
-        return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>>(str, name, db);
+        return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>>(name, str, db);
     else
         return psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>>(str, db);
 }
