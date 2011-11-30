@@ -11,4 +11,4 @@
 SELECT DISTINCT n.ID, a2.Key, a2.Value FROM
     NodeAttributes a2 INNER JOIN
     Nodes n ON n.ID = a2.NodeID INNER JOIN NodeAttributes a ON n.ID = a.NodeID INNER JOIN ToShow t ON t.Key = a.Key AND t.Value=a.Value WHERE
-    t.Zoom=$1 AND n.Location && ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)
+    t.Zoom=$1 AND ST_Intersects(n.Location, ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)) ORDER BY n.ID
