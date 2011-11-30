@@ -17,6 +17,13 @@
       <column type="gint64"/>
     </columns>
   </object>
+  <object class="GtkAdjustment" id="zoomadjustment">
+    <property name="lower">1</property>
+    <property name="upper">20</property>
+    <property name="value">6</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
     <child>
@@ -65,6 +72,10 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">●</property>
+                    <property name="adjustment">zoomadjustment</property>
+                    <property name="snap_to_ticks">True</property>
+                    <property name="numeric">True</property>
+                    <property name="update_policy">if-valid</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -93,11 +104,21 @@
               </packing>
             </child>
             <child>
-              <object class="GtkTextView" id="textview1">
-                <property name="width_request">311</property>
+              <object class="GtkScrolledWindow" id="scrolledwindow1">
+                <property name="width_request">287</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkTextView" id="textview1">
+                    <property name="width_request">315</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>

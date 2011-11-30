@@ -353,7 +353,7 @@ psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetT
 {
     std::string str("\
 \n\
-SELECT n.ID, a2.Key, a2.Value FROM\n\
+SELECT DISTINCT n.ID, a2.Key, a2.Value FROM\n\
 NodeAttributes a2 INNER JOIN\n\
 Nodes n ON n.ID = a2.NodeID INNER JOIN NodeAttributes a ON n.ID = a.NodeID INNER JOIN ToShow t ON t.Key = a.Key AND t.Value=a.Value WHERE\n\
 t.Zoom=$1 AND n.Location && ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)\n\
@@ -382,7 +382,7 @@ psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetT
 {
     std::string str("\
 \n\
-SELECT e.WayID, a2.Key, a2.Value FROM\n\
+SELECT DISTINCT e.WayID, a2.Key, a2.Value FROM\n\
 WayAttributes a2 INNER JOIN Edges e ON e.WayID = a2.WayID INNER JOIN WayAttributes a ON e.WayID = a.WayID INNER JOIN ToShow t ON t.Key = a.Key AND t.Value=a.Value WHERE\n\
 t.Zoom=$1 AND e.Location && ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)\n\
 ");

@@ -13,6 +13,6 @@
 --test-param 5, 0, 0, 50, 50
 --test-result 0
 
-SELECT e.WayID, a2.Key, a2.Value FROM
+SELECT DISTINCT e.WayID, a2.Key, a2.Value FROM
     WayAttributes a2 INNER JOIN Edges e ON e.WayID = a2.WayID INNER JOIN WayAttributes a ON e.WayID = a.WayID INNER JOIN ToShow t ON t.Key = a.Key AND t.Value=a.Value WHERE
     t.Zoom=$1 AND e.Location && ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2, $3), ST_MakePoint($4, $5)), -1)

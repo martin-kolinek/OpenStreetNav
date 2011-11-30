@@ -91,11 +91,11 @@ std::vector<std::unique_ptr<osm::Element> > DisplayDB::get_selected(const geo::P
     if (n.id != -1)
         ret.push_back(std::unique_ptr<osm::Element>(new osm::Node(n)));
     osm::Way w(-1);
-    for (int i = 0; i < node_desc.row_count(); ++i)
+    for (int i = 0; i < way_desc.row_count(); ++i)
     {
         int64_t id;
         std::string key, val;
-        std::tie(id, key, val) = node_desc.get_row(i);
+        std::tie(id, key, val) = way_desc.get_row(i);
         if (id != w.id)
         {
             if (w.id != -1)

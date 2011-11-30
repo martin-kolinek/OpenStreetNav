@@ -24,8 +24,9 @@ public:
     MapDrawingArea(BaseObjectType* cobject, Glib::RefPtr<Gtk::Builder> const&);
     void assign_db(std::shared_ptr<osmdb::DisplayDB> db);
     void center(double lat, double lon);
+    void set_zoom(int zoom);
     boost::signal<void (int)> zoom_changed;
-    boost::signal<void (std::vector<osm::Element> const& elem)> element_clicked;
+    boost::signal<void (std::vector<std::unique_ptr<osm::Element> > const& elem)> element_clicked;
     virtual ~MapDrawingArea();
 protected:
     bool on_draw(Cairo::RefPtr<Cairo::Context> const& cr);
@@ -41,6 +42,8 @@ private:
     bool pressed;
     double press_x;
     double press_y;
+    double lclick_x;
+    double lclick_y;
     int zoom;
     double tran_x, tran_y;
     std::unique_ptr<proj::MapProjection> proj;

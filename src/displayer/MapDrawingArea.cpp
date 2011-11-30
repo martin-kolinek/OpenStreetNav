@@ -14,6 +14,8 @@ namespace display
 
 MapDrawingArea::MapDrawingArea(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> &):
     Gtk::DrawingArea(cobject),
+    lclick_x(-50),
+    lclick_y(-50),
     zoom(6),
     tran_x(0),
     tran_y(0)
@@ -31,7 +33,7 @@ MapDrawingArea::~MapDrawingArea()
 {
 }
 
-bool MapDrawingArea::on_draw(Cairo::RefPtr<Cairo::Context> const& cr)
+bool MapDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> & cr)
 {
     redraw(cr);
     return true;
@@ -45,6 +47,19 @@ bool MapDrawingArea::on_button_press_event(GdkEventButton* event)
         press_x = event->x;
         press_y = event->y;
     }
+    if (event->button == 1)
+    {
+        double mx = std::max(get_width(), get_height());
+        double new_x = ((event->x + (mx - get_width()) / 2.0) * 2 / mx) - 1;
+        double new_y = ((event->y + (mx - get_height()) / 2.0) * 2 / mx) - 1;
+        lclick_x = new_x;
+        lclick_y = new_y;
+        auto p1 = proj->unproject(new_x - 0.1, new_y - 0.1);
+        auto p2 = proj->unproject(new_x + 0.1, new_y + 0.1);
+        auto v = db->get_selected(p1, p2, zoom);
+        element_clicked(v);
+        complete_redraw();
+    }
     return true;
 }
 
@@ -55,7 +70,9 @@ bool MapDrawingArea::on_button_release_event(GdkEventButton* event)
         tran_x = 0;
         tran_y = 0;
         pressed = false;
-        get_projection(event->x - press_x, event->y - press_y);
+        lclick_x = -50;
+        lclick_y = -50;
+        get_projection(event->x - press_x, - event->y + press_y);
         setup_bounds();
         setup_db();
         complete_redraw();
@@ -108,10 +125,10 @@ bool MapDrawingArea::on_scroll_event(GdkEventScroll* event)
         setup_db();
         complete_redraw();
         report_pos();
+        zoom_changed(zoom);
     }
     return true;
 }
-
 
 void MapDrawingArea::on_size_allocate(Gtk::Allocation& alloc)
 {
@@ -129,12 +146,12 @@ void MapDrawingArea::setup_bounds()
     {
         x1 = -1;
         x2 = 1;
-        y1 = (double)((get_height())) / (double)((get_width()));
+        y1 = (double)(((get_height()))) / (double)(((get_width())));
         y2 = -1;
     }
     else
     {
-        x2 = (double)((get_width())) / (double)((get_height()));
+        x2 = (double)(((get_width()))) / (double)(((get_height())));
         x1 = -x2;
         y1 = 1;
         y2 = -1;
@@ -155,8 +172,7 @@ void MapDrawingArea::invalidate()
     Glib::RefPtr<Gdk::Window> win = get_window();
     if (win)
     {
-        Gdk::Rectangle r(0, 0, get_allocation().get_width(),
-                         get_allocation().get_height());
+        Gdk::Rectangle r(0, 0, get_allocation().get_width(), get_allocation().get_height());
         win->invalidate_rect(r, false);
     }
 }
@@ -173,7 +189,7 @@ void MapDrawingArea::complete_redraw()
     auto cr = Cairo::Context::create(surface);
     auto mx = std::max(surface->get_width(), surface->get_height());
     cr->scale(mx / 2.0, mx / 2.0);
-    cr->translate(surface->get_width() / (double)mx, surface->get_height() / (double)mx);
+    cr->translate(surface->get_width() / (double)(mx), surface->get_height() / (double)(mx));
     cr->set_source_rgb(0, 0, 0);
     cr->paint();
     cr->set_line_width(0.005);
@@ -182,16 +198,23 @@ void MapDrawingArea::complete_redraw()
     {
         proj::FlatPoint fps = proj->project(it->start.lat, it->start.lon);
         proj::FlatPoint fpe = proj->project(it->end.lat, it->end.lon);
-        cr->move_to(fps.x, fps.y);
-        cr->line_to(fpe.x, fpe.y);
+        cr->move_to(fps.x, -fps.y);
+        cr->line_to(fpe.x, -fpe.y);
         cr->stroke();
     }
     for (auto it = db->get_points().begin(); it != db->get_points().end(); ++it)
     {
         proj::FlatPoint fp = proj->project(it->lat, it->lon);
-        cr->arc(fp.x, fp.y, 0.01, 0, 2 * M_PI);
+        cr->arc(fp.x, -fp.y, 0.01, 0, 2 * M_PI);
         cr->fill();
     }
+    cr->set_source_rgb(0, 1, 0);
+    cr->move_to(lclick_x - 0.01, lclick_y - 0.01);
+    cr->line_to(lclick_x - 0.01, lclick_y + 0.01);
+    cr->line_to(lclick_x + 0.01, lclick_y + 0.01);
+    cr->line_to(lclick_x + 0.01, lclick_y - 0.01);
+    cr->close_path();
+    cr->fill();
     invalidate();
 }
 
@@ -202,7 +225,7 @@ void MapDrawingArea::setup_surfaces()
 
 double MapDrawingArea::get_radius_for_zoom()
 {
-    return (double)((8 << zoom));
+    return (double)(((8 << zoom)));
 }
 
 void MapDrawingArea::setup_db()
@@ -216,12 +239,23 @@ void MapDrawingArea::setup_db()
 
 void MapDrawingArea::center(double lat, double lon)
 {
-    proj = std::unique_ptr<proj::MapProjection>(new proj::OrthoProjection(geo::Point(lat, lon), get_radius_for_zoom()));
+    proj = std::unique_ptr < proj::MapProjection > (new proj::OrthoProjection(geo::Point(lat, lon), get_radius_for_zoom()));
     setup_bounds();
     setup_db();
     complete_redraw();
     invalidate();
     report_pos();
+}
+
+void MapDrawingArea::set_zoom(int z)
+{
+    zoom = std::max(std::min(z, 20), 1);
+    get_projection(0, 0);
+    setup_bounds();
+    setup_db();
+    complete_redraw();
+    report_pos();
+    zoom_changed(zoom);
 }
 
 void MapDrawingArea::report_pos()
