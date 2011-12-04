@@ -242,6 +242,17 @@ BOOST_AUTO_TEST_CASE(lib_insert_way_node)
     tested_st.execute(20, 21, 1);
 }
 
+BOOST_AUTO_TEST_CASE(lib_select_bounds)
+{
+    auto st0(sqllib::get_create_nodes_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_insert_node(db, false));
+    st1.execute(123, 10, 20);
+    auto tested_st(sqllib::get_select_bounds(db));
+    tested_st.execute();
+    tested_st.get_row(0);
+}
+
 BOOST_AUTO_TEST_CASE(lib_select_edges_in_box)
 {
     auto st0(sqllib::get_create_ways_table(db, false));

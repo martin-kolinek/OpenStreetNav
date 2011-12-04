@@ -1,0 +1,13 @@
+/*
+ * config.h
+ *
+ *  Created on: Dec 4, 2011
+ *      Author: martin
+ */
+
+#ifndef DISPCONFIG_H_
+#define DISPCONFIG_H_
+
+#cmakedefine GLADE_PATH "@GLADE_PATH@"
+
+#endif /* DISPCONFIG_H_ */

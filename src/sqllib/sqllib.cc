@@ -335,6 +335,19 @@ INSERT INTO WayNodes (WayID, NodeID, SequenceNo) VALUES ($1, $2, $3)\n\
         return psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>>(str, db);
 }
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<double, double, double, double>> get_select_bounds(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+select min(ST_X(Location::geometry)), max(ST_X(Location::geometry)), min(ST_Y(Location::geometry)), max(ST_Y(Location::geometry)) FROM Nodes\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<double, double, double, double>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<double, double, double, double>>(str, db);
+}
+
 psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>> get_select_edges_in_box(psql::Database& db, bool named, std::string const& name)
 {
     std::string str("\

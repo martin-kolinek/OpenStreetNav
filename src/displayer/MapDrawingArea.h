@@ -23,8 +23,10 @@ class MapDrawingArea : public Gtk::DrawingArea
 public:
     MapDrawingArea(BaseObjectType* cobject, Glib::RefPtr<Gtk::Builder> const&);
     void assign_db(std::shared_ptr<osmdb::DisplayDB> db);
-    void center(double lat, double lon);
-    void set_zoom(int zoom);
+    void set_latitude(double lat);
+    void set_longitude(double lon);
+    int set_zoom(int zoom);
+    int get_zoom();
     boost::signal<void (int)> zoom_changed;
     boost::signal<void (std::vector<std::unique_ptr<osm::Element> > const& elem)> element_clicked;
     virtual ~MapDrawingArea();
@@ -42,24 +44,29 @@ private:
     bool pressed;
     double press_x;
     double press_y;
-    double lclick_x;
-    double lclick_y;
     int zoom;
     double tran_x, tran_y;
     std::unique_ptr<proj::MapProjection> proj;
-    void get_projection(double x_mov, double y_mov);
-    void redraw(Cairo::RefPtr<Cairo::Context> const& cr);
-    void complete_redraw();
     Cairo::RefPtr<Cairo::ImageSurface> surface;
-    void setup_surfaces();
-    double get_radius_for_zoom();
-    void setup_db();
-    void invalidate();
-    void register_signals();
-    void setup_bounds();
     proj::FlatPoint topleft;
     proj::FlatPoint bottomright;
-    void report_pos();
+    double lat;
+    double lon;
+    Cairo::Matrix matrix;
+    Cairo::Matrix inverse;
+
+    void move_center(double x, double y);
+    void setup_surfaces();
+
+    void after_change();
+    void setup_projection();
+    void setup_bounds();
+    void setup_db();
+
+    void redraw_from_db();
+    void invalidate();
+
+    double get_radius_for_zoom();
 };
 
 } /* namespace display */

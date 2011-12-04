@@ -58,6 +58,8 @@ psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTyp
 
 psql::Statement<psql::BindTypes<int64_t, int64_t, int>, psql::RetTypes<>> get_insert_way_node(psql::Database& db, bool named = false, std::string const& name = "");
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<double, double, double, double>> get_select_bounds(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double, double, double>> get_select_edges_in_box(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<int64_t, std::string, std::string>> get_select_node_descr_in_box(psql::Database& db, bool named = false, std::string const& name = "");

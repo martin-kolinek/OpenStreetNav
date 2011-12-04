@@ -15,6 +15,10 @@
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/textview.h>
+#include <glibmm/optioncontext.h>
+#include <glibmm/optiongroup.h>
+#include <glibmm/optionentry.h>
+#include "config.h"
 
 class ZoomerDrawAreaConnector
 {
@@ -47,47 +51,88 @@ std::string get_els_text(std::vector<std::unique_ptr<osm::Element> > const& els)
     return str.str();
 }
 
+Glib::OptionEntry make_entry(std::string lname, char sname, std::string desc = "")
+{
+    Glib::OptionEntry e;
+    e.set_long_name(lname);
+    e.set_short_name(sname);
+    e.set_description(desc);
+    return e;
+}
+
 int main(int argc, char** argv)
 {
-    /*if (argc != 2)
+    Glib::ustring dbname;
+    Glib::ustring schema;
+    double lat = -500;
+    double lon = -500;
+    int zoom = -1;
+    Glib::OptionGroup gr("displayer", "displayer options");
+    auto e1 = make_entry("database", 'd', "database to connect to");
+    auto e2 = make_entry("schema", 's', "additional schema to look into");
+    auto e3 = make_entry("latitude", 'y', "starting center latitude");
+    auto e4 = make_entry("longitude", 'x', "starting center longitude");
+    auto e5 = make_entry("zoom", 'z', "starting zoom level");
+    gr.add_entry(e1, dbname);
+    gr.add_entry(e2, schema);
+    gr.add_entry(e3, lat);
+    gr.add_entry(e4, lon);
+    gr.add_entry(e5, zoom);
+    Glib::OptionContext cxt;
+    cxt.add_group(gr);
+    try
     {
-        std::cout << "unknown command line option only database name accepted" << std::endl;
+        Gtk::Main kit(argc, argv, cxt);
+
+        Glib::RefPtr<Gtk::Builder> bldr = Gtk::Builder::create_from_file(GLADE_PATH);
+        Gtk::Window* wnd = 0;
+        bldr->get_widget("window1", wnd);
+        display::MapDrawingArea* area = 0;
+        bldr->get_widget_derived("drawingarea1", area);
+
+        Gtk::SpinButton* zoomer;
+        bldr->get_widget("zoomspinbutton", zoomer);
+        ZoomerDrawAreaConnector conn(zoomer, area);
+        zoomer->get_adjustment()->signal_value_changed().connect(sigc::mem_fun(&conn, &ZoomerDrawAreaConnector::update));
+
+        Gtk::TextView* view;
+        bldr->get_widget("textview1", view);
+
+        std::string conninfo;
+        if (dbname == "")
+            conninfo = "";
+        else
+            conninfo = "dbname=" + dbname;
+        psql::Database pdb(conninfo);
+        if (schema != "")
+            psql::execute_sql(pdb, "SET search_path TO " + schema + ", public");
+        osmdb::OsmDatabase odb(pdb);
+        zoomer->get_adjustment()->set_value(area->get_zoom());
+        area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(odb)));
+        area->zoom_changed.connect([zoomer](int val)
+        {
+            zoomer->get_adjustment()->set_value(val);
+        });
+        area->element_clicked.connect([view](std::vector<std::unique_ptr<osm::Element> > const & els)
+        {
+            view->get_buffer()->set_text(get_els_text(els));
+        });
+        if (zoom >= 1 && zoom <= 15)
+            area->set_zoom(zoom);
+        if (lat >= -90 && lat <= 90)
+            area->set_latitude(lat);
+        if (lon >= -180 && lon <= 180)
+            area->set_longitude(lon);
+
+        area->show();
+
+        kit.run(*wnd);
+    }
+    catch (std::exception& err)
+    {
+        std::cout << "Error running displayer: " << std::endl << err.what() << std::endl;
         return 1;
-    }*/
-    Gtk::Main kit(argc, argv);
-    Glib::RefPtr<Gtk::Builder> bldr = Gtk::Builder::create_from_file("build/bin/display.glade");
-    Gtk::Window* wnd = 0;
-    bldr->get_widget("window1", wnd);
-    display::MapDrawingArea* area = 0;
-    bldr->get_widget_derived("drawingarea1", area);
-
-    Gtk::SpinButton* zoomer;
-    bldr->get_widget("zoomspinbutton", zoomer);
-    ZoomerDrawAreaConnector conn(zoomer, area);
-    zoomer->get_adjustment()->signal_value_changed().connect(sigc::mem_fun(&conn, &ZoomerDrawAreaConnector::update));
-
-    Gtk::TextView* view;
-    bldr->get_widget("textview1", view);
-
-    psql::Database pdb("");
-    psql::execute_sql(pdb, "SET search_path TO slovakia_osm, public");
-    osmdb::OsmDatabase odb(pdb);
-    area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(odb)));
-    area->center(48.143, 17.109);
-    area->zoom_changed.connect([zoomer](int val)
-    {
-        zoomer->get_adjustment()->set_value(val);
-    });
-    area->element_clicked.connect([view](std::vector<std::unique_ptr<osm::Element> > const & els)
-    {
-        view->get_buffer()->set_text(get_els_text(els));
-    });
-
-    conn.update();
-    zoomer->get_adjustment()->set_value(6);
-    area->show();
-
-    kit.run(*wnd);
+    }
 }
 
 

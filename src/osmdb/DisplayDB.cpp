@@ -17,8 +17,20 @@ DisplayDB::DisplayDB(OsmDatabase& db)
       node_st(sqllib::get_select_nodes_in_box(db.get_db())),
       to_show_ins(sqllib::get_insert_toshow(db.get_db())),
       way_desc(sqllib::get_select_way_descr_in_box(db.get_db())),
-      node_desc(sqllib::get_select_node_descr_in_box(db.get_db()))
+      node_desc(sqllib::get_select_node_descr_in_box(db.get_db())),
+      get_bounds(sqllib::get_select_bounds(db.get_db()))
 {
+    get_bounds.execute();
+    if (get_bounds.row_count() == 0)
+    {
+        clat = clon = 0;
+    }
+    else
+    {
+        auto tpl = get_bounds.get_row(0);
+        clon = (std::get<0>(tpl) + std::get<1>(tpl)) / 2;
+        clat = (std::get<2>(tpl) + std::get<3>(tpl)) / 2;
+    }
 }
 
 DisplayDB::~DisplayDB()
@@ -117,6 +129,16 @@ void DisplayDB::set_to_show(const std::string& key, const std::string& value, in
     {
         to_show_ins.execute(key, value, i);
     }
+}
+
+double DisplayDB::center_lat()
+{
+    return clat;
+}
+
+double DisplayDB::center_lon()
+{
+    return clon;
 }
 
 } /* namespace display */
