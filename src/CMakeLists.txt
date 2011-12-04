@@ -42,6 +42,11 @@ else()
   message(FATAL_ERROR "GEOS not found")
 endif()
 
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/include)
+include_directories(${CMAKE_BINARY_DIR}/include)
+
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/share)
+
 add_library(util util.cpp)
 
 add_subdirectory(sqlite)

@@ -2,6 +2,5 @@ dist
 build
 .project
 .cproject
-src/displayer/config.h
 *~
 #*#
