@@ -29,8 +29,64 @@ psql::Database& OsmDatabase::get_db()
 
 void OsmDatabase::create_indexes()
 {
+    sqllib::get_create_nodes_pkey(db).execute();
+    sqllib::get_create_ways_pkey(db).execute();
+    sqllib::get_create_relations_pkey(db).execute();
+    sqllib::get_create_edges_pkey(db).execute();
+    sqllib::get_create_waymembers_pkey(db).execute();
+    sqllib::get_create_nodemembers_pkey(db).execute();
+    sqllib::get_create_waynodes_pkey(db).execute();
+    sqllib::get_create_nodeattributes_pkey(db).execute();
+    sqllib::get_create_wayattributes_pkey(db).execute();
+    sqllib::get_create_relationattributes_pkey(db).execute();
+    sqllib::get_create_edges_startnode_fkey(db).execute();
+    sqllib::get_create_edges_endnode_fkey(db).execute();
+    sqllib::get_create_edges_wayid_fkey(db).execute();
+    sqllib::get_create_waymembers_way_fkey(db).execute();
+    sqllib::get_create_waymembers_relation_fkey(db).execute();
+    sqllib::get_create_nodemembers_node_fkey(db).execute();
+    sqllib::get_create_nodemembers_relation_fkey(db).execute();
+    sqllib::get_create_waynodes_node_fkey(db).execute();
+    sqllib::get_create_waynodes_way_fkey(db).execute();
+    sqllib::get_create_nodeattributes_nodes_fkey(db).execute();
+    sqllib::get_create_wayattributes_ways_fkey(db).execute();
+    sqllib::get_create_relationattributes_relation_fkey(db).execute();
     sqllib::get_create_nodes_loc_index(db).execute();
     sqllib::get_create_edges_location_index(db).execute();
+    sqllib::get_create_nodeattr_keyval_index(db).execute();
+    sqllib::get_create_wayattr_keyval_index(db).execute();
+    sqllib::get_create_relattr_keyval_index(db).execute();
+}
+
+void OsmDatabase::drop_indexes()
+{
+    sqllib::get_drop_relattr_keyval_index(db).execute();
+    sqllib::get_drop_wayattr_keyval_index(db).execute();
+    sqllib::get_drop_nodeattr_keyval_index(db).execute();
+    sqllib::get_drop_edges_location_index(db).execute();
+    sqllib::get_drop_nodes_loc_index(db).execute();
+    sqllib::get_drop_relationattributes_relation_fkey(db).execute();
+    sqllib::get_drop_wayattributes_ways_fkey(db).execute();
+    sqllib::get_drop_nodeattributes_nodes_fkey(db).execute();
+    sqllib::get_drop_waynodes_way_fkey(db).execute();
+    sqllib::get_drop_waynodes_node_fkey(db).execute();
+    sqllib::get_drop_nodemembers_relation_fkey(db).execute();
+    sqllib::get_drop_nodemembers_node_fkey(db).execute();
+    sqllib::get_drop_waymembers_relation_fkey(db).execute();
+    sqllib::get_drop_waymembers_way_fkey(db).execute();
+    sqllib::get_drop_edges_wayid_fkey(db).execute();
+    sqllib::get_drop_edges_endnode_fkey(db).execute();
+    sqllib::get_drop_edges_startnode_fkey(db).execute();
+    sqllib::get_drop_relationattributes_pkey(db).execute();
+    sqllib::get_drop_wayattributes_pkey(db).execute();
+    sqllib::get_drop_nodeattributes_pkey(db).execute();
+    sqllib::get_drop_waynodes_pkey(db).execute();
+    sqllib::get_drop_nodemembers_pkey(db).execute();
+    sqllib::get_drop_waymembers_pkey(db).execute();
+    sqllib::get_drop_nodes_pkey(db).execute();
+    sqllib::get_drop_ways_pkey(db).execute();
+    sqllib::get_drop_relations_pkey(db).execute();
+    sqllib::get_drop_edges_pkey(db).execute();
 }
 
 void OsmDatabase::create_tables()

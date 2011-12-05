@@ -2,5 +2,5 @@
 --test-depend create_edges_table
 --test-param
 
-CREATE INDEX IX_EdgesLocation ON Edges USING GIST (Location)
+ALTER TABLE Edges ADD CONSTRAINT PK_Edges PRIMARY KEY (WayID, StartNodeID, EndNodeID)
 

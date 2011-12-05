@@ -38,43 +38,133 @@ public:
 
 BOOST_FIXTURE_TEST_SUITE(sqllib, SqlLibFixture)
 
+BOOST_AUTO_TEST_CASE(lib_create_edges_endnode_fkey)
+{
+    auto st0(sqllib::get_create_edges_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_edges_endnode_fkey(db));
+    tested_st.execute();
+}
+
 BOOST_AUTO_TEST_CASE(lib_create_edges_location_index)
 {
-    auto st0(sqllib::get_create_nodes_table(db, false));
+    auto st0(sqllib::get_create_edges_table(db, false));
     st0.execute();
-    auto st1(sqllib::get_create_ways_table(db, false));
-    st1.execute();
-    auto st2(sqllib::get_create_edges_table(db, false));
-    st2.execute();
     auto tested_st(sqllib::get_create_edges_location_index(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_edges_pkey)
+{
+    auto st0(sqllib::get_create_edges_table(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_edges_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_edges_startnode_fkey)
+{
+    auto st0(sqllib::get_create_edges_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_edges_startnode_fkey(db));
     tested_st.execute();
 }
 
 BOOST_AUTO_TEST_CASE(lib_create_edges_table)
 {
-    auto st0(sqllib::get_create_ways_table(db, false));
-    st0.execute();
-    auto st1(sqllib::get_create_nodes_table(db, false));
-    st1.execute();
     auto tested_st(sqllib::get_create_edges_table(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_edges_wayid_fkey)
+{
+    auto st0(sqllib::get_create_edges_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_ways_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_ways_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_edges_wayid_fkey(db));
     tested_st.execute();
 }
 
 BOOST_AUTO_TEST_CASE(lib_create_node_attributes)
 {
-    auto st0(sqllib::get_create_nodes_table(db, false));
-    st0.execute();
     auto tested_st(sqllib::get_create_node_attributes(db));
     tested_st.execute();
 }
 
 BOOST_AUTO_TEST_CASE(lib_create_node_members)
 {
-    auto st0(sqllib::get_create_relations_table(db, false));
+    auto tested_st(sqllib::get_create_node_members(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_nodeattr_keyval_index)
+{
+    auto st0(sqllib::get_create_node_attributes(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_nodeattr_keyval_index(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_nodeattributes_nodes_fkey)
+{
+    auto st0(sqllib::get_create_nodes_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_node_attributes(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_nodeattributes_nodes_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_nodeattributes_pkey)
+{
+    auto st0(sqllib::get_create_node_attributes(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_nodeattributes_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_nodemembers_node_fkey)
+{
+    auto st0(sqllib::get_create_node_members(db, false));
     st0.execute();
     auto st1(sqllib::get_create_nodes_table(db, false));
     st1.execute();
-    auto tested_st(sqllib::get_create_node_members(db));
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_nodemembers_node_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_nodemembers_pkey)
+{
+    auto st0(sqllib::get_create_node_members(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_nodemembers_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_nodemembers_relation_fkey)
+{
+    auto st0(sqllib::get_create_node_members(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_relations_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_relations_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_nodemembers_relation_fkey(db));
     tested_st.execute();
 }
 
@@ -86,6 +176,14 @@ BOOST_AUTO_TEST_CASE(lib_create_nodes_loc_index)
     tested_st.execute();
 }
 
+BOOST_AUTO_TEST_CASE(lib_create_nodes_pkey)
+{
+    auto st0(sqllib::get_create_nodes_table(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_nodes_pkey(db));
+    tested_st.execute();
+}
+
 BOOST_AUTO_TEST_CASE(lib_create_nodes_table)
 {
     auto tested_st(sqllib::get_create_nodes_table(db));
@@ -94,15 +192,57 @@ BOOST_AUTO_TEST_CASE(lib_create_nodes_table)
 
 BOOST_AUTO_TEST_CASE(lib_create_relation_attributes)
 {
+    auto tested_st(sqllib::get_create_relation_attributes(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_relationattributes_pkey)
+{
+    auto st0(sqllib::get_create_relation_attributes(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_relationattributes_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_relationattributes_relation_fkey)
+{
     auto st0(sqllib::get_create_relations_table(db, false));
     st0.execute();
-    auto tested_st(sqllib::get_create_relation_attributes(db));
+    auto st1(sqllib::get_create_relation_attributes(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_relations_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_relationattributes_relation_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_relationattributess_pkey)
+{
+    auto st0(sqllib::get_create_relations_table(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_relationattributess_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_relations_pkey)
+{
+    auto st0(sqllib::get_create_relations_table(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_relations_pkey(db));
     tested_st.execute();
 }
 
 BOOST_AUTO_TEST_CASE(lib_create_relations_table)
 {
     auto tested_st(sqllib::get_create_relations_table(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_relattr_keyval_index)
+{
+    auto st0(sqllib::get_create_relation_attributes(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_relattr_keyval_index(db));
     tested_st.execute();
 }
 
@@ -120,35 +260,445 @@ BOOST_AUTO_TEST_CASE(lib_create_toshow_table)
 
 BOOST_AUTO_TEST_CASE(lib_create_way_attributes)
 {
-    auto st0(sqllib::get_create_ways_table(db, false));
-    st0.execute();
     auto tested_st(sqllib::get_create_way_attributes(db));
     tested_st.execute();
 }
 
 BOOST_AUTO_TEST_CASE(lib_create_way_members_table)
 {
-    auto st0(sqllib::get_create_relations_table(db, false));
+    auto tested_st(sqllib::get_create_way_members_table(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_wayattr_keyval_index)
+{
+    auto st0(sqllib::get_create_way_attributes(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_wayattr_keyval_index(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_wayattributes_pkey)
+{
+    auto st0(sqllib::get_create_way_attributes(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_wayattributes_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_wayattributes_ways_fkey)
+{
+    auto st0(sqllib::get_create_ways_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_way_attributes(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_ways_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_wayattributes_ways_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_waymembers_pkey)
+{
+    auto st0(sqllib::get_create_way_members_table(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_waymembers_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_waymembers_relation_fkey)
+{
+    auto st0(sqllib::get_create_way_members_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_relations_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_relations_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_waymembers_relation_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_waymembers_way_fkey)
+{
+    auto st0(sqllib::get_create_way_members_table(db, false));
     st0.execute();
     auto st1(sqllib::get_create_ways_table(db, false));
     st1.execute();
-    auto tested_st(sqllib::get_create_way_members_table(db));
+    auto st2(sqllib::get_create_ways_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_waymembers_way_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_waynodes_node_fkey)
+{
+    auto st0(sqllib::get_create_waynodes_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_waynodes_node_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_waynodes_pkey)
+{
+    auto st0(sqllib::get_create_waynodes_table(db, false));
+    st0.execute();
+    auto tested_st(sqllib::get_create_waynodes_pkey(db));
     tested_st.execute();
 }
 
 BOOST_AUTO_TEST_CASE(lib_create_waynodes_table)
 {
+    auto tested_st(sqllib::get_create_waynodes_table(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_waynodes_way_fkey)
+{
+    auto st0(sqllib::get_create_waynodes_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_ways_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_ways_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_create_waynodes_way_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_create_ways_pkey)
+{
     auto st0(sqllib::get_create_ways_table(db, false));
     st0.execute();
-    auto st1(sqllib::get_create_nodes_table(db, false));
-    st1.execute();
-    auto tested_st(sqllib::get_create_waynodes_table(db));
+    auto tested_st(sqllib::get_create_ways_pkey(db));
     tested_st.execute();
 }
 
 BOOST_AUTO_TEST_CASE(lib_create_ways_table)
 {
     auto tested_st(sqllib::get_create_ways_table(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_edges_endnode_fkey)
+{
+    auto st0(sqllib::get_create_edges_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_edges_endnode_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_edges_endnode_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_edges_location_index)
+{
+    auto st0(sqllib::get_create_edges_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_edges_location_index(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_edges_location_index(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_edges_pkey)
+{
+    auto st0(sqllib::get_create_edges_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_edges_pkey(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_edges_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_edges_startnode_fkey)
+{
+    auto st0(sqllib::get_create_edges_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_edges_startnode_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_edges_startnode_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_edges_wayid_fkey)
+{
+    auto st0(sqllib::get_create_edges_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_ways_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_ways_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_edges_wayid_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_edges_wayid_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_nodeattr_keyval_index)
+{
+    auto st0(sqllib::get_create_node_attributes(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodeattr_keyval_index(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_nodeattr_keyval_index(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_nodeattributes_nodes_fkey)
+{
+    auto st0(sqllib::get_create_nodes_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_node_attributes(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_nodeattributes_nodes_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_nodeattributes_nodes_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_nodeattributes_pkey)
+{
+    auto st0(sqllib::get_create_node_attributes(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodeattributes_pkey(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_nodeattributes_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_nodemembers_node_fkey)
+{
+    auto st0(sqllib::get_create_node_members(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_nodemembers_node_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_nodemembers_node_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_nodemembers_pkey)
+{
+    auto st0(sqllib::get_create_node_members(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodemembers_pkey(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_nodemembers_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_nodemembers_relation_fkey)
+{
+    auto st0(sqllib::get_create_node_members(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_relations_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_relations_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_nodemembers_relation_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_nodemembers_relation_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_nodes_loc_index)
+{
+    auto st0(sqllib::get_create_nodes_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_loc_index(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_nodes_loc_index(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_nodes_pkey)
+{
+    auto st0(sqllib::get_create_nodes_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_pkey(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_nodes_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_relationattributes_pkey)
+{
+    auto st0(sqllib::get_create_relation_attributes(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_relationattributes_pkey(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_relationattributes_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_relationattributes_relation_fkey)
+{
+    auto st0(sqllib::get_create_relations_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_relations_pkey(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_relation_attributes(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_relationattributes_relation_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_relationattributes_relation_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_relations_pkey)
+{
+    auto st0(sqllib::get_create_relations_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_relations_pkey(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_relations_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_relattr_keyval_index)
+{
+    auto st0(sqllib::get_create_relation_attributes(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_relattr_keyval_index(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_relattr_keyval_index(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_wayattr_keyval_index)
+{
+    auto st0(sqllib::get_create_way_attributes(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_wayattr_keyval_index(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_wayattr_keyval_index(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_wayattributes_pkey)
+{
+    auto st0(sqllib::get_create_way_attributes(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_wayattributes_pkey(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_wayattributes_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_wayattributes_ways_fkey)
+{
+    auto st0(sqllib::get_create_ways_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_way_attributes(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_ways_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_wayattributes_ways_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_wayattributes_ways_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_waymembers_pkey)
+{
+    auto st0(sqllib::get_create_way_members_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_waymembers_pkey(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_waymembers_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_waymembers_relation_fkey)
+{
+    auto st0(sqllib::get_create_way_members_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_relations_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_relations_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_waymembers_relation_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_waymembers_relation_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_waymembers_way_fkey)
+{
+    auto st0(sqllib::get_create_way_members_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_ways_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_ways_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_waymembers_way_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_waymembers_way_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_waynodes_node_fkey)
+{
+    auto st0(sqllib::get_create_waynodes_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_nodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_waynodes_node_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_waynodes_node_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_waynodes_pkey)
+{
+    auto st0(sqllib::get_create_ways_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_waynodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_waynodes_pkey(db, false));
+    st2.execute();
+    auto tested_st(sqllib::get_drop_waynodes_pkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_waynodes_way_fkey)
+{
+    auto st0(sqllib::get_create_ways_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_waynodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_ways_pkey(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_waynodes_way_fkey(db, false));
+    st3.execute();
+    auto tested_st(sqllib::get_drop_waynodes_way_fkey(db));
+    tested_st.execute();
+}
+
+BOOST_AUTO_TEST_CASE(lib_drop_ways_pkey)
+{
+    auto st0(sqllib::get_create_ways_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_ways_pkey(db, false));
+    st1.execute();
+    auto tested_st(sqllib::get_drop_ways_pkey(db));
     tested_st.execute();
 }
 

@@ -10,6 +10,19 @@
 namespace sqllib
 {
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_endnode_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Edges ADD CONSTRAINT FK_Edges_EndNode FOREIGN KEY (EndNodeID) REFERENCES Nodes (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_location_index(psql::Database& db, bool named, std::string const& name)
 {
     std::string str("\
@@ -23,17 +36,55 @@ CREATE INDEX IX_EdgesLocation ON Edges USING GIST (Location)\n\
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Edges ADD CONSTRAINT PK_Edges PRIMARY KEY (WayID, StartNodeID, EndNodeID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_startnode_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Edges ADD CONSTRAINT FK_Edges_StartNode FOREIGN KEY (StartNodeID) REFERENCES Nodes (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_table(psql::Database& db, bool named, std::string const& name)
 {
     std::string str("\
 \n\
 CREATE TABLE Edges (\n\
-WayID bigint REFERENCES Ways (ID),\n\
-StartNodeID bigint REFERENCES Nodes (ID),\n\
-EndNodeID bigint REFERENCES Nodes (ID),\n\
-Location geography(LINESTRING, 4326),\n\
-PRIMARY KEY (WayID, StartNodeID, EndNodeID)\n\
+WayID bigint,\n\
+StartNodeID bigint,\n\
+EndNodeID bigint,\n\
+Location geography(LINESTRING, 4326)\n\
 )\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_wayid_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Edges ADD CONSTRAINT FK_Edges_Way FOREIGN KEY (WayID) REFERENCES Ways (ID)\n\
+\n\
 ");
     if (named)
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
@@ -46,10 +97,9 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_node_attributes(
     std::string str("\
 \n\
 CREATE TABLE NodeAttributes (\n\
-NodeID bigint REFERENCES Nodes (ID),\n\
+NodeID bigint,\n\
 Key text,\n\
-Value text,\n\
-PRIMARY KEY (NodeID, Key)\n\
+Value text\n\
 )\n\
 \n\
 ");
@@ -64,11 +114,88 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_node_members(psq
     std::string str("\
 \n\
 CREATE TABLE MemberNodes (\n\
-RelationID bigint REFERENCES Relations (ID),\n\
+RelationID bigint,\n\
 Role text,\n\
-NodeID bigint REFERENCES Nodes (ID),\n\
-PRIMARY KEY (RelationID, Role, NodeID)\n\
+NodeID bigint\n\
 )\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodeattr_keyval_index(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+CREATE INDEX IX_NodeAttr_KeyVal ON NodeAttributes (Key, Value)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodeattributes_nodes_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE NodeAttributes ADD CONSTRAINT FK_NodeAttributes_Nodes FOREIGN KEY (NodeID) REFERENCES Nodes (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodeattributes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE NodeAttributes ADD CONSTRAINT PK_NodeAttributes PRIMARY KEY (NodeID, Key)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodemembers_node_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberNodes ADD CONSTRAINT FK_NodeMembers_Node FOREIGN KEY (NodeID) REFERENCES Nodes (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodemembers_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberNodes ADD CONSTRAINT PK_NodeMembers PRIMARY KEY (RelationID, Role, NodeID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodemembers_relation_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberNodes ADD CONSTRAINT FK_NodeMembers_Relation FOREIGN KEY (RelationID) REFERENCES Relations (ID)\n\
 \n\
 ");
     if (named)
@@ -90,11 +217,24 @@ CREATE INDEX IX_NodesLoc ON Nodes USING GIST (Location)\n\
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
 }
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Nodes ADD CONSTRAINT PK_Nodes PRIMARY KEY (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodes_table(psql::Database& db, bool named, std::string const& name)
 {
     std::string str("\
 \n\
-CREATE TABLE Nodes (ID bigint PRIMARY KEY, Location geography(POINT))\n\
+CREATE TABLE Nodes (ID bigint, Location geography(POINT))\n\
 \n\
 ");
     if (named)
@@ -108,11 +248,62 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relation_attribu
     std::string str("\
 \n\
 CREATE TABLE RelationAttributes (\n\
-RelationID bigint REFERENCES Relations (ID),\n\
+RelationID bigint,\n\
 Key text,\n\
-Value text,\n\
-PRIMARY KEY (RelationID, Key)\n\
+Value text\n\
 )\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relationattributes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE RelationAttributes ADD CONSTRAINT PK_RelationAttributes PRIMARY KEY (RelationID, Key)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relationattributes_relation_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE RelationAttributes ADD CONSTRAINT FK_RelationAttributes_Relations FOREIGN KEY (RelationID) REFERENCES Relations (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relationattributess_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Relations ADD CONSTRAINT PK_Relations PRIMARY KEY (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relations_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Relations ADD CONSTRAINT PK_Relations PRIMARY KEY (ID)\n\
 \n\
 ");
     if (named)
@@ -126,8 +317,21 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relations_table(
     std::string str("\
 \n\
 CREATE TABLE Relations (\n\
-ID bigint PRIMARY KEY\n\
+ID bigint\n\
 )\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relattr_keyval_index(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+CREATE INDEX IX_RelAttr_KeyVal ON RelationAttributes (Key, Value)\n\
+\n\
 ");
     if (named)
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
@@ -171,10 +375,9 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_way_attributes(p
     std::string str("\
 \n\
 CREATE TABLE WayAttributes (\n\
-WayID bigint REFERENCES Ways (ID),\n\
+WayID bigint,\n\
 Key text,\n\
-Value text,\n\
-PRIMARY KEY (WayID, Key)\n\
+Value text\n\
 )\n\
 \n\
 ");
@@ -189,11 +392,114 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_way_members_tabl
     std::string str("\
 \n\
 CREATE TABLE MemberWays (\n\
-RelationID bigint REFERENCES Relations (ID),\n\
+RelationID bigint,\n\
 Role text,\n\
-WayID bigint REFERENCES Ways (ID),\n\
-PRIMARY KEY (RelationID, Role, WayID)\n\
+WayID bigint\n\
 )\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_wayattr_keyval_index(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+CREATE INDEX IX_WayAttr_KeyVal ON WayAttributes (Key, Value)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_wayattributes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayAttributes ADD CONSTRAINT PK_WayAttributes PRIMARY KEY (WayID, Key)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_wayattributes_ways_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayAttributes ADD CONSTRAINT FK_WayAttributes_Ways FOREIGN KEY (WayID) REFERENCES Ways (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waymembers_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberWays ADD CONSTRAINT PK_WayMembers PRIMARY KEY (RelationID, Role, WayID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waymembers_relation_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberWays ADD CONSTRAINT FK_WayMembers_Relation FOREIGN KEY (RelationID) REFERENCES Relations (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waymembers_way_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberWays ADD CONSTRAINT FK_WayMembers_Way FOREIGN KEY (WayID) REFERENCES Ways (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waynodes_node_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayNodes ADD CONSTRAINT FK_WayNodes_Node FOREIGN KEY (NodeID) REFERENCES Nodes (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waynodes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayNodes ADD CONSTRAINT PK_WayNodes PRIMARY KEY (WayID, SequenceNo)\n\
 \n\
 ");
     if (named)
@@ -207,11 +513,36 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waynodes_table(p
     std::string str("\
 \n\
 CREATE TABLE WayNodes (\n\
-WayID bigint REFERENCES Ways (ID),\n\
-NodeID bigint REFERENCES Nodes (ID),\n\
-SequenceNo int,\n\
-PRIMARY KEY (WayID, SequenceNo)\n\
+WayID bigint,\n\
+NodeID bigint,\n\
+SequenceNo int\n\
 )\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waynodes_way_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayNodes ADD CONSTRAINT FK_WayNodes_Way FOREIGN KEY (WayID) REFERENCES Ways (ID)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_ways_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Ways ADD CONSTRAINT PK_Ways PRIMARY KEY (ID)\n\
+\n\
 ");
     if (named)
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
@@ -223,7 +554,358 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_ways_table(psql:
 {
     std::string str("\
 \n\
-CREATE TABLE Ways (ID bigint PRIMARY KEY)\n\
+CREATE TABLE Ways (ID bigint)\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_endnode_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Edges DROP CONSTRAINT FK_Edges_EndNode\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_location_index(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+DROP INDEX IX_EdgesLocation\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Edges DROP CONSTRAINT PK_Edges\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_startnode_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Edges DROP CONSTRAINT FK_Edges_StartNode\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_wayid_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Edges DROP CONSTRAINT FK_Edges_Way\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodeattr_keyval_index(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+DROP INDEX IX_NodeAttr_KeyVal\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodeattributes_nodes_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE NodeAttributes DROP CONSTRAINT FK_NodeAttributes_Nodes\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodeattributes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE NodeAttributes DROP CONSTRAINT PK_NodeAttributes\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodemembers_node_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberNodes DROP CONSTRAINT FK_NodeMembers_Node\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodemembers_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberNodes DROP CONSTRAINT PK_NodeMembers\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodemembers_relation_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberNodes DROP CONSTRAINT FK_NodeMembers_Relation\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodes_loc_index(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+DROP INDEX IX_NodesLoc\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Nodes DROP CONSTRAINT PK_Nodes\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_relationattributes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE RelationAttributes DROP CONSTRAINT PK_RelationAttributes\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_relationattributes_relation_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE RelationAttributes DROP CONSTRAINT FK_RelationAttributes_Relations\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_relations_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Relations DROP CONSTRAINT PK_Relations\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_relattr_keyval_index(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+DROP INDEX IX_RelAttr_KeyVal\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_wayattr_keyval_index(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+DROP INDEX IX_WayAttr_KeyVal\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_wayattributes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayAttributes DROP CONSTRAINT PK_WayAttributes\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_wayattributes_ways_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayAttributes DROP CONSTRAINT FK_WayAttributes_Ways\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waymembers_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberWays DROP CONSTRAINT PK_WayMembers\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waymembers_relation_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberWays DROP CONSTRAINT FK_WayMembers_Relation\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waymembers_way_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE MemberWays DROP CONSTRAINT FK_WayMembers_Way\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waynodes_node_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayNodes DROP CONSTRAINT FK_WayNodes_Node\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waynodes_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayNodes DROP CONSTRAINT PK_WayNodes\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waynodes_way_fkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE WayNodes DROP CONSTRAINT FK_WayNodes_Way\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_ways_pkey(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+ALTER TABLE Ways DROP CONSTRAINT PK_Ways\n\
 \n\
 ");
     if (named)

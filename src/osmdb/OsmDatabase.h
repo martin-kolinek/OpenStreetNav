@@ -34,10 +34,15 @@ public:
      */
     psql::Database& get_db();
     /**
-     * Creates indexes, this does not happen right away for optimization purposes.
+     * Creates indexes and keys, this does not happen right away for optimization purposes.
      * Call after inserting most of the data.
      */
     void create_indexes();
+
+    /**
+     * Drops all indexes and keys. Call before inserting large amounts of data
+     */
+    void drop_indexes();
 
     /**
      * Creates needed tables in the database

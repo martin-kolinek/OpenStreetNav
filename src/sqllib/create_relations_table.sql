@@ -2,5 +2,5 @@
 --test-param
 
 CREATE TABLE Relations (
-    ID bigint PRIMARY KEY
+    ID bigint
     )

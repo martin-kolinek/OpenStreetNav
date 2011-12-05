@@ -1,6 +1,7 @@
 --type psql::BindTypes<>, psql::RetTypes<>
 --test-depend create_edges_table
+--test-depend create_edges_location_index
 --test-param
 
-CREATE INDEX IX_EdgesLocation ON Edges USING GIST (Location)
+DROP INDEX IX_EdgesLocation
 

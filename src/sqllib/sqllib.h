@@ -14,21 +14,53 @@
 namespace sqllib
 {
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_endnode_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_location_index(psql::Database& db, bool named = false, std::string const& name = "");
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_startnode_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_table(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_edges_wayid_fkey(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_node_attributes(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_node_members(psql::Database& db, bool named = false, std::string const& name = "");
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodeattr_keyval_index(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodeattributes_nodes_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodeattributes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodemembers_node_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodemembers_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodemembers_relation_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodes_loc_index(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_nodes_table(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relation_attributes(psql::Database& db, bool named = false, std::string const& name = "");
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relationattributes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relationattributes_relation_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relationattributess_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relations_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relations_table(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_relattr_keyval_index(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_test_table(psql::Database& db, bool named = false, std::string const& name = "");
 
@@ -38,9 +70,83 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_way_attributes(p
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_way_members_table(psql::Database& db, bool named = false, std::string const& name = "");
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_wayattr_keyval_index(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_wayattributes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_wayattributes_ways_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waymembers_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waymembers_relation_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waymembers_way_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waynodes_node_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waynodes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waynodes_table(psql::Database& db, bool named = false, std::string const& name = "");
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_waynodes_way_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_ways_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
 psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_create_ways_table(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_endnode_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_location_index(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_startnode_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_edges_wayid_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodeattr_keyval_index(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodeattributes_nodes_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodeattributes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodemembers_node_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodemembers_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodemembers_relation_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodes_loc_index(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_nodes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_relationattributes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_relationattributes_relation_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_relations_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_relattr_keyval_index(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_wayattr_keyval_index(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_wayattributes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_wayattributes_ways_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waymembers_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waymembers_relation_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waymembers_way_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waynodes_node_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waynodes_pkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_waynodes_way_fkey(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<>> get_drop_ways_pkey(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<int64_t, int64_t, int64_t>, psql::RetTypes<>> get_insert_edge(psql::Database& db, bool named = false, std::string const& name = "");
 

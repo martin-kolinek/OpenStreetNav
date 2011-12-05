@@ -39,6 +39,9 @@ BOOST_AUTO_TEST_CASE(indexes)
     osmdb::OsmDatabase db(pdb);
     db.create_tables();
     db.create_indexes();
+    db.drop_indexes();
+    db.create_indexes();
+    db.drop_indexes();
 }
 
 BOOST_AUTO_TEST_CASE(insert)
