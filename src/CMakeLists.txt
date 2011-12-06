@@ -1,4 +1,4 @@
-find_package(Boost COMPONENTS test_exec_monitor thread system filesystem signals program_options)
+find_package(Boost COMPONENTS test_exec_monitor thread system filesystem signals program_options regex)
 
 if(Boost_FOUND)
   link_directories(${Boost_LIBRARY_DIRS})

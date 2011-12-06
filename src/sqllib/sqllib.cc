@@ -1087,6 +1087,44 @@ t.Zoom=$1 AND ST_Intersects(e.Location, ST_SetSRID(ST_MakeBox2D(ST_MakePoint($2,
         return psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<int64_t, std::string, std::string>>(str, db);
 }
 
+psql::Statement<psql::BindTypes<int64_t, int64_t>, psql::RetTypes<int64_t, std::string, std::string>> get_select_wayattributes_between_wayids(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+select wayid, key, value from wayattributes where wayid>=$1 and wayid<$2 order by wayid\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int64_t, int64_t>, psql::RetTypes<int64_t, std::string, std::string>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<int64_t, int64_t>, psql::RetTypes<int64_t, std::string, std::string>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<int64_t, int64_t>, psql::RetTypes<int64_t, int64_t, double>> get_select_waynodes_for_ways_between(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+select w.WayID, w.NodeID, coalesce(ST_Length(e.Location,false), 0) FROM WayNodes w left join Edges e on e.wayid=w.wayid and e.startnodeid = w.nodeid where w.WayID >=$1 and w.WayID<$2 order by w.wayid\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<int64_t, int64_t>, psql::RetTypes<int64_t, int64_t, double>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<int64_t, int64_t>, psql::RetTypes<int64_t, int64_t, double>>(str, db);
+}
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t>> get_select_ways(psql::Database& db, bool named, std::string const& name)
+{
+    std::string str("\
+\n\
+SELECT ID FROM Ways;\n\
+\n\
+");
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t>>(name, str, db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t>>(str, db);
+}
+
 psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>> get_test_select(psql::Database& db, bool named, std::string const& name)
 {
     std::string str("\

@@ -10,6 +10,7 @@
 
 #include "../psql/psql.h"
 #include <string>
+#include "sqllib_custom.h"
 
 namespace sqllib
 {
@@ -173,6 +174,12 @@ psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetT
 psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<double, double>> get_select_nodes_in_box(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<int, double, double, double, double>, psql::RetTypes<int64_t, std::string, std::string>> get_select_way_descr_in_box(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<int64_t, int64_t>, psql::RetTypes<int64_t, std::string, std::string>> get_select_wayattributes_between_wayids(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<int64_t, int64_t>, psql::RetTypes<int64_t, int64_t, double>> get_select_waynodes_for_ways_between(psql::Database& db, bool named = false, std::string const& name = "");
+
+psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t>> get_select_ways(psql::Database& db, bool named = false, std::string const& name = "");
 
 psql::Statement<psql::BindTypes<int>, psql::RetTypes<int, std::string, int64_t>> get_test_select(psql::Database& db, bool named = false, std::string const& name = "");
 

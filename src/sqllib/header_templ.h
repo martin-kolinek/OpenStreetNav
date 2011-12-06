@@ -10,6 +10,7 @@
 
 #include "../psql/psql.h"
 #include <string>
+#include "sqllib_custom.h"
 
 namespace sqllib
 {

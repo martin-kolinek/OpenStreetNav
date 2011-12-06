@@ -899,6 +899,60 @@ BOOST_AUTO_TEST_CASE(lib_select_way_descr_in_box)
     tested_st.get_row(0);
 }
 
+BOOST_AUTO_TEST_CASE(lib_select_wayattributes_between_wayids)
+{
+    auto st0(sqllib::get_create_ways_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_way_attributes(db, false));
+    st1.execute();
+    auto st2(sqllib::get_insert_way(db, false));
+    st2.execute(20);
+    auto st3(sqllib::get_insert_way_attr(db, false));
+    st3.execute(20, "asdf", "asdf");
+    auto tested_st(sqllib::get_select_wayattributes_between_wayids(db));
+    tested_st.execute(10, 30);
+    tested_st.get_row(0);
+}
+
+BOOST_AUTO_TEST_CASE(lib_select_waynodes_for_ways_between)
+{
+    auto st0(sqllib::get_create_ways_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_create_waynodes_table(db, false));
+    st1.execute();
+    auto st2(sqllib::get_create_nodes_table(db, false));
+    st2.execute();
+    auto st3(sqllib::get_create_edges_table(db, false));
+    st3.execute();
+    auto st4(sqllib::get_insert_node(db, false));
+    st4.execute(21, 0, 0);
+    auto st5(sqllib::get_insert_node(db, false));
+    st5.execute(22, 0, 1);
+    auto st6(sqllib::get_insert_way(db, false));
+    st6.execute(20);
+    auto st7(sqllib::get_insert_way_node(db, false));
+    st7.execute(20, 21, 1);
+    auto st8(sqllib::get_insert_way_node(db, false));
+    st8.execute(20, 22, 2);
+    auto st9(sqllib::get_insert_edge(db, false));
+    st9.execute(20, 21, 22);
+    auto tested_st(sqllib::get_select_waynodes_for_ways_between(db));
+    tested_st.execute(10, 30);
+    tested_st.get_row(0);
+    tested_st.get_row(1);
+}
+
+BOOST_AUTO_TEST_CASE(lib_select_ways)
+{
+    auto st0(sqllib::get_create_ways_table(db, false));
+    st0.execute();
+    auto st1(sqllib::get_insert_way(db, false));
+    st1.execute(20);
+    auto tested_st(sqllib::get_select_ways(db));
+    tested_st.execute();
+    tested_st.get_row(0);
+}
+
 BOOST_AUTO_TEST_CASE(lib_test_select)
 {
     auto st0(sqllib::get_create_test_table(db, false));
