@@ -1,5 +1,6 @@
-add_executable(displayer main.cc MapDrawingArea.cpp)
+add_executable(displayer main.cc MapDrawingArea.cpp DisplayElement.cpp DisplayStyle.cpp)
 configure_file(display.glade ${CMAKE_BINARY_DIR}/share/display.glade COPYONLY)
 SET(GLADE_PATH ${CMAKE_BINARY_DIR}/share/display.glade)
+SET(TOSHOW_PATH ${CMAKE_BINARY_DIR}/share/toshow/)
 configure_file(${CMAKE_SOURCE_DIR}/src/displayer/config.h.in ${CMAKE_BINARY_DIR}/include/osmdisp_config.h)
 target_link_libraries(displayer geoelems projection sqlitewrap osmelements osmdb ${GTKMM_LIBRARIES} ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SIGNALS_LIBRARY})

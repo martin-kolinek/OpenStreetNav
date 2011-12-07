@@ -108,7 +108,7 @@ int main(int argc, char** argv)
             psql::execute_sql(pdb, "SET search_path TO " + schema + ", public");
         osmdb::OsmDatabase odb(pdb);
         zoomer->get_adjustment()->set_value(area->get_zoom());
-        area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(odb)));
+        area->assign_db(std::shared_ptr<osmdb::DisplayDB>(new osmdb::DisplayDB(odb, TOSHOW_PATH, 1, 15)));
         area->zoom_changed.connect([zoomer](int val)
         {
             zoomer->get_adjustment()->set_value(val);
