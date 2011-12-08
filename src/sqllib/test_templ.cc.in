@@ -6,8 +6,7 @@
  */
 
 #include <boost/test/unit_test.hpp>
-#include "../sqllib/sqllib.h"
-#include "../wkb/wkb.h"
+#include "sqllib_gen.h"
 #include <iostream>
 
 class SqlLibFixture

@@ -45,27 +45,45 @@ sub end_template
 	close OUT;
 }
 
-begin_template("sqllib/header_templ.h", "sqllib/sqllib.h");
-begin_template("sqllib/src_templ.cc", "sqllib/sqllib.cc");
-begin_template("sqllib/test_templ.cc", "test/sqllib_test.cc");
+begin_template("$ARGV[0]/header_templ.h", "$ARGV[2]/sqllib_gen.h");
+begin_template("$ARGV[0]/src_templ.cc", "$ARGV[1]/sqllib_gen.cc");
+begin_template("$ARGV[0]/test_templ.cc", "$ARGV[2]/sqllib_gen_test.cc");
 
-open HDR, ">>sqllib/sqllib.h";
-open SRC, ">>sqllib/sqllib.cc";
-open TST, ">>test/sqllib_test.cc";
+open HDR, ">>$ARGV[2]/sqllib_gen.h";
+open SRC, ">>$ARGV[1]/sqllib_gen.cc";
+open TST, ">>$ARGV[2]/sqllib_gen_test.cc";
 
-my $f;
-my @files = <sqllib/*.sql>;
-foreach $f (@files)
+for(my $ix=3; $ix<(scalar @ARGV); $ix++)
 {
-	$f =~ m/^sqllib\/(.*)\.sql$/;
+    my $f = $ARGV[$ix];
+	$f =~ m/[\/\\]([^\/^\\]*)\.sql$/;
 	my $name = $1;
 	open IN, $f;
 	my $i = 0;
 	my $type="";
+    my $needend = 0;
 	print TST "BOOST_AUTO_TEST_CASE(lib_$name)\n";
 	print TST "{\n";
 	while(<IN>)
 	{
+        if(/^\s*--\s*name\s+(\S*)\s*$/)
+        {
+            if($needend)
+            {
+                print SRC "\");\n";
+                print SRC "if(named)\n";
+                print SRC "    return psql::Statement<$type>(name, str, db);\n";
+                print SRC "else\n";
+                print SRC "    return psql::Statement<$type>(str, db);\n";
+                print SRC "}\n";
+                print TST "}\n";
+                print HDR "\n";
+                print SRC "\n";
+                print TST "\n";
+            }
+            $name = $_;
+            next;
+        }
 		if(/^\s*--\s*test\-depend\s+(\S+)\s+(.*)$/)
 		{
 			print TST "auto st$i(sqllib::get_$1(db, false));\n";
@@ -80,6 +98,7 @@ foreach $f (@files)
 			print SRC "{\n";
 			print SRC "std::string str(\"\\\n";
 			$type=$1;
+            $needend=1;
 			next;
 		}
 		if(/^\s*--\s*test-param\s+(.*)$/)
@@ -111,6 +130,6 @@ close HDR;
 close SRC;
 close TST;
 
-end_template("sqllib/header_templ.h", "sqllib/sqllib.h");
-end_template("sqllib/src_templ.cc", "sqllib/sqllib.cc");
-end_template("sqllib/test_templ.cc", "test/sqllib_test.cc");
+end_template("$ARGV[0]/header_templ.h", "$ARGV[2]/sqllib_gen.h");
+end_template("$ARGV[0]/src_templ.cc", "$ARGV[1]/sqllib_gen.cc");
+end_template("$ARGV[0]/test_templ.cc", "$ARGV[2]/sqllib_gen_test.cc");

@@ -5,7 +5,7 @@
  *      Author: martin
  */
 
-#include "sqllib.h"
+#include "sqllib_gen.h"
 
 namespace sqllib
 {

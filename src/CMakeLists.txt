@@ -42,11 +42,17 @@ else()
   message(FATAL_ERROR "GEOS not found")
 endif()
 
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/include)
-include_directories(${CMAKE_BINARY_DIR}/include)
+find_package(Perl REQUIRED)
+
+SET(INCDIR ${CMAKE_BINARY_DIR}/include)
+file(MAKE_DIRECTORY ${INCDIR})
+include_directories(${INCDIR})
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/share)
 
+SET(GENSRC ${CMAKE_BINARY_DIR}/generated)
+file(MAKE_DIRECTORY ${GENSRC})
+                    
 add_library(util util.cpp)
 
 add_subdirectory(sqlite)
