@@ -17,8 +17,8 @@ class DisplayStyle
 {
 public:
     virtual ~DisplayStyle();
-    virtual void prepare(Cairo::RefPtr<Cairo::Context> cr) = 0;
-    virtual void exec(Cairo::RefPtr<Cairo::Context> cr) = 0;
+    virtual void prepare(Cairo::RefPtr<Cairo::Context> cr) const = 0;
+    virtual void exec(Cairo::RefPtr<Cairo::Context> cr) const = 0;
 };
 
 } /* namespace display */

@@ -8,6 +8,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 #include "../osmdb/osmdb.h"
+#include <test_config.h>
 
 class OsmDBFixture
 {
@@ -92,46 +93,42 @@ BOOST_AUTO_TEST_CASE(insert)
 
 BOOST_AUTO_TEST_CASE(empty_displaydb)
 {
-    /*    osmdb::OsmDatabase odb(pdb);
-        odb.create_tables();
-        odb.create_indexes();
-        osmdb::DisplayDB db(odb);
-        db.set_bounds(geo::Point(0, 0), geo::Point(1, 1), 1);*/
+    osmdb::OsmDatabase odb(pdb);
+    odb.create_tables();
+    odb.create_indexes();
+    osmdb::DisplayDB db(odb, TEST_TO_SHOW_EDGES, 1, 1);
+    db.set_bounds(geo::Point(0, 0), geo::Point(1, 1), 1);
 }
 
 BOOST_AUTO_TEST_CASE(simple)
 {
-    /*    osmdb::OsmDatabase odb(pdb);
-        odb.create_tables();
-        odb.create_indexes();
-        osmdb::DisplayDB db(odb);
-        osmdb::ElementInsertion ins(db.get_db());
-        pdb.begin_transaction();
-        osm::Node nd(1, 0.5, 0.5);
-        nd.tags.push_back(osm::Tag("disp", "disp"));
-        ins.insert_node(nd);
-        ins.insert_node(osm::Node(2, 0.4, 0.4));
-        ins.insert_node(osm::Node(3, 0.4, 0.8));
-        osm::Way w(1);
-        w.nodes.push_back(2);
-        w.nodes.push_back(3);
-        w.tags.push_back(osm::Tag("disp", "disp"));
-        ins.insert_way(w);
-        nd.id = 4;
-        nd.lat = 1.5;
-        nd.lon = 0.5;
-        ins.insert_node(nd);
-        ins.insert_node(osm::Node(5, 0.6, 0.4));
-        pdb.commit_transaction();
-        db.set_to_show("disp", "disp", 0, 15);
-        db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
-        BOOST_CHECK(db.get_points().size() == 1);
-        BOOST_CHECK(db.get_edges().size() == 1);
-        auto elems = db.get_selected(geo::Point(1, 0), geo::Point(0, 1), 1);
-        BOOST_CHECK(elems.size() == 2);
-        BOOST_CHECK(elems[0]->get_type_str() == "node" || elems[1]->get_type_str() == "node");
-        BOOST_CHECK(elems[0]->get_type_str() == "way" || elems[1]->get_type_str() == "way");
-        BOOST_CHECK(elems[0]->get_tags().size() == 1 && elems[1]->get_tags().size() == 1);*/
+    osmdb::OsmDatabase odb(pdb);
+    odb.create_tables();
+    odb.create_indexes();
+    osmdb::DisplayDB db(odb, TEST_TO_SHOW_EDGES, 1, 1);
+    osmdb::ElementInsertion ins(db.get_db());
+    pdb.begin_transaction();
+    osm::Node nd(1, 0.5, 0.5);
+    nd.tags.push_back(osm::Tag("key", "val"));
+    ins.insert_node(nd);
+    ins.insert_node(osm::Node(2, 0.4, 0.4));
+    ins.insert_node(osm::Node(3, 0.4, 0.8));
+    osm::Way w(1);
+    w.nodes.push_back(2);
+    w.nodes.push_back(3);
+    w.tags.push_back(osm::Tag("key", "val"));
+    ins.insert_way(w);
+    nd.id = 4;
+    nd.lat = 1.5;
+    nd.lon = 0.5;
+    ins.insert_node(nd);
+    ins.insert_node(osm::Node(5, 0.6, 0.4));
+    pdb.commit_transaction();
+    db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
+    BOOST_CHECK(db.get_display_elements().size() == 1);
+    auto elems = db.get_selected(geo::Point(1, 0), geo::Point(0, 1), 1);
+    BOOST_CHECK(elems.size() == 1);
+    BOOST_CHECK(elems[0]->get_type_str() == "way");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

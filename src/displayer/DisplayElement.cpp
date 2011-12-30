@@ -12,7 +12,7 @@ namespace display
 
 
 
-DisplayElement::DisplayElement(std::unique_ptr<DisplayStyle> disp):
+DisplayElement::DisplayElement(std::unique_ptr<DisplayStyle> && disp):
     disp(std::move(disp))
 {
 }
@@ -21,13 +21,13 @@ DisplayElement::~DisplayElement()
 {
 }
 
-void DisplayElement::draw(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr)
+void DisplayElement::draw(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const
 {
     disp->prepare(cr);
     draw_internal(cr, pr);
     disp->exec(cr);
 }
 
-}
+}    /* namespace display */
 
-/* namespace display */
+

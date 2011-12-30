@@ -1,0 +1,34 @@
+<entries>
+	<entry>
+		<add>
+			<red>
+				1.0
+			</red>
+			<green>
+				0.0
+			</gree>
+			<blue>
+				0.0
+			</blue>
+			<alpha>
+				1.0
+			</alpha>
+			<thickness>
+				1.0
+			</thickness>
+			<style>
+				0
+			</style>
+		</add>
+		<elements>
+			<el>
+				<key>
+					highway
+				</key>
+				<value>
+					primary
+				</value>
+			</el>
+		</elements>
+	</entry>
+</entries>

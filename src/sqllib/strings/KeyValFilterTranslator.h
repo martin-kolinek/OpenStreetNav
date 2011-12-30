@@ -16,13 +16,14 @@ namespace sqllib
 class KeyValFilterTranslator
 {
 public:
-    KeyValFilterTranslator(std::string const& cols, std::string const& tables, std::string const& where, std::string const& kvtable);
+    KeyValFilterTranslator(std::string const& cols, std::string const& tables, std::string const& where, std::string const& kvtable, std::vector<std::string> const& types);
     boost::property_tree::ptree translate(boost::property_tree::ptree const& input);
 private:
     std::string cols;
     std::string tables;
     std::string where_cond;
     std::string kvtable;
+    std::vector<std::string> types;
 };
 
 } /* namespace sqllib */

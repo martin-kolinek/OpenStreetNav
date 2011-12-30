@@ -1,0 +1,6 @@
+#ifndef TESTCONF_H_
+#define TESTCONF_H_
+
+#define TEST_TO_SHOW_EDGES "@TOSHOW_TEST_PATH@/testtoshow"
+
+#endif

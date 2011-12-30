@@ -185,19 +185,9 @@ void MapDrawingArea::redraw_from_db()
     cr->paint();
     cr->set_line_width(0.005);
     cr->set_source_rgb(0.8, 0.8, 0.8);
-    for (auto it = db->get_edges().begin(); it != db->get_edges().end(); ++it)
+    for (auto it = db->get_display_elements().begin(); it != db->get_display_elements().end(); ++it)
     {
-        proj::FlatPoint fps = proj->project(it->start.lat, it->start.lon);
-        proj::FlatPoint fpe = proj->project(it->end.lat, it->end.lon);
-        cr->move_to(fps.x, fps.y);
-        cr->line_to(fpe.x, fpe.y);
-        cr->stroke();
-    }
-    for (auto it = db->get_points().begin(); it != db->get_points().end(); ++it)
-    {
-        proj::FlatPoint fp = proj->project(it->lat, it->lon);
-        cr->arc(fp.x, -fp.y, 0.01, 0, 2 * M_PI);
-        cr->fill();
+        (*it)->draw(cr, *proj);
     }
     invalidate();
 }

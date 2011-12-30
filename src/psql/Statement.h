@@ -81,7 +81,10 @@ public:
         param = other.param;
         return *this;
     }
-    Statement(Statement && other)
+    Statement(Statement && other):
+        db(NULL),
+        param(NULL),
+        res(NULL)
     {
         *this = std::move(other);
     }

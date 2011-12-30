@@ -7,6 +7,7 @@
 
 #include "DisplayDB.h"
 #include "../sqllib/sqllib.h"
+#include "ToShowEdgesSelector.h"
 
 namespace osmdb
 {
@@ -40,45 +41,46 @@ OsmDatabase& DisplayDB::get_db()
     return db;
 }
 
-const std::vector<geo::Edge> & DisplayDB::get_edges()
+std::vector<std::unique_ptr<display::DisplayElement> > const& DisplayDB::get_display_elements()
 {
-    return edges;
-}
-
-const std::vector<geo::Point> & DisplayDB::get_points()
-{
-    return points;
+    return display_elements;
 }
 
 void DisplayDB::set_bounds(const geo::Point& p1, const geo::Point& p2, int zoom)
 {
-    edges.clear();
-    points.clear();
+    display_elements.clear();
     double left = std::min(p1.lon, p2.lon);
     double right = std::max(p1.lon, p2.lon);
     double lower = std::min(p1.lat, p2.lat);
     double higher = std::max(p1.lat, p2.lat);
     auto& stmt = coll.get_edges_for_zoom(zoom);
-    stmt.execute(left, lower, right, higher);/*
-    for (int i = 0; i < stmt.row_count(); ++i)
+    std::vector<std::unique_ptr<display::DisplayElement> > && edges = std::move(ToShowEdgesSelector::get_edges(stmt, left, lower, right, higher));
+    for (unsigned int i = 0; i < edges.size(); ++i)
     {
-        double a, b, c, d, red, green, blue, th;
-        int64_t wayid;
-        int arrow, polygon;
-        std::tie(wayid, a, b, c, d, red, green, blue, th, arrow, polygon) = stmt.get_row(i);
-        edges.push_back(geo::Edge(geo::Point(b, a), geo::Point(d, c)));
-    }*/
-
+        display_elements.push_back(std::move(edges[i]));
+    }
 }
 
-std::vector<std::unique_ptr<osm::Element> > DisplayDB::get_selected(const geo::Point&, const geo::Point&, int)
+std::vector<std::unique_ptr<osm::Element> > DisplayDB::get_selected(const geo::Point& p1, const geo::Point& p2, int zoom)
 {
-    /*    double left = std::min(p1.lon, p2.lon);
-        double right = std::max(p1.lon, p2.lon);
-        double lower = std::min(p1.lat, p2.lat);
-        double higher = std::max(p1.lat, p2.lat);
-    */
-    return std::vector<std::unique_ptr<osm::Element> >();
+    double left = std::min(p1.lon, p2.lon);
+    double right = std::max(p1.lon, p2.lon);
+    double lower = std::min(p1.lat, p2.lat);
+    double higher = std::max(p1.lat, p2.lat);
+
+    std::vector<std::unique_ptr<osm::Element> > ret;
+    auto& stmt = coll.get_select_edges(zoom);
+    stmt.execute(left, lower, right, higher);
+    for (int i = 0; i < stmt.row_count(); ++i)
+    {
+        int64_t id;
+        double r, g, b, a, t;
+        int attr;
+        std::tie(id, r, g, b, a, t, attr) = stmt.get_row(i);
+        ret.push_back(std::unique_ptr<osm::Element>(new osm::Way(id)));
+    }
+
+    return ret;
 }
 
 double DisplayDB::center_lat()

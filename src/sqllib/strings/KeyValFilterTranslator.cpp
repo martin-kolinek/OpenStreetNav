@@ -10,11 +10,12 @@
 namespace sqllib
 {
 
-KeyValFilterTranslator::KeyValFilterTranslator(std::string const& cols, std::string const& tables, std::string const& where, std::string const& kvtable):
+KeyValFilterTranslator::KeyValFilterTranslator(std::string const& cols, std::string const& tables, std::string const& where, std::string const& kvtable, std::vector<std::string> const& types):
     cols(cols),
     tables(tables),
     where_cond(where),
-    kvtable(kvtable)
+    kvtable(kvtable),
+    types(types)
 {
 }
 
@@ -36,9 +37,13 @@ boost::property_tree::ptree KeyValFilterTranslator::translate(const boost::prope
             el.put("type", "simple");
             std::ostringstream s;
             s << "SELECT " << cols;
+            unsigned int i = 0;
             for (auto it3 = add.begin(); it3 != add.end(); ++it3)
             {
                 s << ", " << it3->second.data();
+                if (i < types.size())
+                    s << "::" << types[i];
+                i++;
             }
             s << " FROM " << tables << " WHERE " << where_cond;
             s << " AND " << kvtable << ".Key=" << "'" << it2->second.get<std::string>("key") << "'";

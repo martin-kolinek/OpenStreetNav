@@ -10,4 +10,8 @@
 namespace display
 {
 
+DisplayStyle::~DisplayStyle()
+{
+}
+
 } /* namespace display */

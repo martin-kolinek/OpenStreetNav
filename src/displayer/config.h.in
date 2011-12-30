@@ -9,6 +9,6 @@
 #define DISPCONFIG_H_
 
 #cmakedefine GLADE_PATH "@GLADE_PATH@"
-#cmakedefine TOSHOW_PATH "@TOSHOW_PATH@"
+#define TO_SHOW_EDGES "@TOSHOW_PATH@/to_show_edges"
 
 #endif /* DISPCONFIG_H_ */
