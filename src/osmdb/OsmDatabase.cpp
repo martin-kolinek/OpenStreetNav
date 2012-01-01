@@ -56,10 +56,16 @@ void OsmDatabase::create_indexes()
     sqllib::get_create_nodeattr_keyval_index(db).execute();
     sqllib::get_create_wayattr_keyval_index(db).execute();
     sqllib::get_create_relattr_keyval_index(db).execute();
+    sqllib::get_create_relmembers_pkey(db).execute();
+    sqllib::get_create_relmembers_child_fkey(db).execute();
+    sqllib::get_create_relmembers_parent_fkey(db).execute();
 }
 
 void OsmDatabase::drop_indexes()
 {
+    sqllib::get_drop_relmembers_pkey(db).execute();
+    sqllib::get_drop_relmembers_child_fkey(db).execute();
+    sqllib::get_drop_relmembers_parent_fkey(db).execute();
     sqllib::get_drop_relattr_keyval_index(db).execute();
     sqllib::get_drop_wayattr_keyval_index(db).execute();
     sqllib::get_drop_nodeattr_keyval_index(db).execute();
@@ -102,6 +108,7 @@ void OsmDatabase::create_tables()
     sqllib::get_create_way_members_table(db).execute();
     sqllib::get_create_relation_attributes(db).execute();
     sqllib::get_create_toshow_table(db).execute();
+    sqllib::get_create_relation_members(db).execute();
 
 }
 

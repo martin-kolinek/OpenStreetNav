@@ -68,6 +68,7 @@ for(my $ix=3; $ix<(scalar @ARGV); $ix++)
 	{
         if(/^\s*--\s*name\s+(\S*)\s*$/)
         {
+            $name = $1;
             if($needend)
             {
                 print SRC "\");\n";
@@ -80,8 +81,9 @@ for(my $ix=3; $ix<(scalar @ARGV); $ix++)
                 print HDR "\n";
                 print SRC "\n";
                 print TST "\n";
+                print TST "BOOST_AUTO_TEST_CASE(lib_$name)\n";
+            	print TST "{\n";
             }
-            $name = $_;
             next;
         }
 		if(/^\s*--\s*test\-depend\s+(\S+)\s+(.*)$/)
@@ -101,10 +103,10 @@ for(my $ix=3; $ix<(scalar @ARGV); $ix++)
             $needend=1;
 			next;
 		}
-		if(/^\s*--\s*test-param\s+(.*)$/)
+		if(/^\s*--\s*test-param(\s+(\S.*))?\s*$/)
 		{
 			print TST "auto tested_st(sqllib::get_$name(db));\n";
-			print TST "tested_st.execute($1);\n";
+			print TST "tested_st.execute($2);\n";
 			next;
 		}
 		if(/^\s*--\s*test-result\s+(.*)$/)
