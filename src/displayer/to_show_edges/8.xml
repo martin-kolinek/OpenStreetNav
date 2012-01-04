@@ -6,7 +6,7 @@
 			</red>
 			<green>
 				0.0
-			</gree>
+			</green>
 			<blue>
 				0.0
 			</blue>
@@ -38,19 +38,19 @@
 			</red>
 			<green>
 				1.0
-			</gree>
+			</green>
 			<blue>
 				0.0
 			</blue>
+			<alpha>
+				1.0
+			</alpha>
 			<thickness>
 				1.0
 			</thickness>
 			<style>
 				0
 			</style>
-			<additional>
-				0
-			</additional>
 		</add>
 		<elements>
 			<el>
@@ -70,19 +70,19 @@
 			</red>
 			<green>
 				0.0
-			</gree>
+			</green>
 			<blue>
 				1.0
 			</blue>
+			<alpha>
+				1.0
+			</alpha>
 			<thickness>
 				1.0
 			</thickness>
 			<style>
 				0
 			</style>
-			<additional>
-				0
-			</additional>
 		</add>
 		<elements>
 			<el>

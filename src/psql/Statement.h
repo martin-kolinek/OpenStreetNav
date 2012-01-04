@@ -43,6 +43,7 @@ public:
     Statement(std::string const& name, std::string const& sql, Database& db):
         db(&db),
         name(name),
+        sql(sql),
         prep(true),
         param(PQparamCreate(db.get_db())),
         res(NULL)
@@ -119,6 +120,11 @@ public:
         if (PQresultStatus(res) == PGRES_TUPLES_OK)
             return PQntuples(res);
         return 0;
+    }
+
+    std::string get_sql() const
+    {
+        return sql;
     }
 
 private:

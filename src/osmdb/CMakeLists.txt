@@ -1,2 +1,2 @@
-add_library(osmdb OsmDatabase.cpp WrongDBException.cpp ElementInsertion.cpp DisplayDB.cpp ToShowSelectCollection.cpp)
+add_library(osmdb OsmDatabase.cpp WrongDBException.cpp ElementInsertion.cpp DisplayDB.cpp ToShowSelectCollection.cpp PropertiesSelection.cpp PropertiesSelectionException.cpp)
 target_link_libraries(osmdb displaylib psql sqllib osmelements)

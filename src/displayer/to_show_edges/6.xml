@@ -6,7 +6,7 @@
 			</red>
 			<green>
 				0.0
-			</gree>
+			</green>
 			<blue>
 				0.0
 			</blue>
@@ -27,6 +27,70 @@
 				</key>
 				<value>
 					primary
+				</value>
+			</el>
+		</elements>
+	</entry>
+	<entry>
+		<add>
+			<red>
+				0.0
+			</red>
+			<green>
+				1.0
+			</green>
+			<blue>
+				0.0
+			</blue>
+			<alpha>
+				1.0
+			</alpha>
+			<thickness>
+				1.0
+			</thickness>
+			<style>
+				0
+			</style>
+		</add>
+		<elements>
+			<el>
+				<key>
+					highway
+				</key>
+				<value>
+					secondary
+				</value>
+			</el>
+		</elements>
+	</entry>
+	<entry>
+		<add>
+			<red>
+				0.0
+			</red>
+			<green>
+				0.0
+			</green>
+			<blue>
+				1.0
+			</blue>
+			<alpha>
+				1.0
+			</alpha>
+			<thickness>
+				1.0
+			</thickness>
+			<style>
+				0
+			</style>
+		</add>
+		<elements>
+			<el>
+				<key>
+					highway
+				</key>
+				<value>
+					tertiary
 				</value>
 			</el>
 		</elements>

@@ -15,7 +15,7 @@ LineDisplayStyle::LineDisplayStyle(double red, double green, double blue, double
     green(green),
     blue(blue),
     alpha(alpha),
-    thickness(thickness)
+    thickness(thickness * 0.005)
 {
 }
 

@@ -38,6 +38,8 @@ else(DOCUMENTATION_LATEX)
     SET(DOXYGEN_LATEX_DOC "NO")
 endif(DOCUMENTATION_LATEX)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/xmlschema/libxsd)
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile)
 
 add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile)

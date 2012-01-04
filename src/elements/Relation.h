@@ -8,24 +8,35 @@
 #ifndef RELATION_H_
 #define RELATION_H_
 
-#include "RelationMapping.h"
-#include "Tag.h"
-#include <vector>
+#include <memory>
+#include <map>
+#include "Element.h"
 
 namespace osm
 {
 
-class Relation
+class Node;
+class Way;
+
+class Relation : public Element
 {
 public:
     Relation();
     Relation(int64_t id);
     virtual ~Relation();
     int64_t id;
-    std::vector<RelationMapping> members;
-    std::vector<Tag> tags;
-    bool operator==(Relation const& other) const;
-    bool operator!=(Relation const& other) const;
+    std::multimap<std::string, std::shared_ptr<osm::Element> > members;
+    std::multimap<std::string, std::string> tags;
+    boost::property_tree::ptree get_description();
+    osm::ObjectType get_type() const;
+    bool operator==(Element const& e) const;
+    void fill(osmdb::PropertiesSelection& db);
+    void add_to_relation(osmdb::ElementInsertion& db, int64_t relation, std::string const& role);
+    void add_node(std::string const& role, osm::Node const& nd);
+    void add_way(std::string const& role, osm::Way const& w);
+    void add_rel(std::string const& role, osm::Relation const& r);
+private:
+    void add_member_ptr(std::string const& role, osm::Element* ptr);
 };
 
 }

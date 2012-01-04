@@ -61,3 +61,12 @@ SELECT Role, WayID FROM MemberWays WHERE RelationID = $1
 
 SELECT Role, ChildID FROM MemberRelations WHERE ParentID = $1
 
+--name select_position
+--type psql::BindTypes<int64_t>, psql::RetTypes<double, double>
+--test-depend create_nodes_table
+--test-depend insert_node 10, 12.3, 13.5
+--test-param 10
+--test-result 0
+
+SELECT ST_X(Location::geometry), ST_Y(Location::geometry) FROM Nodes WHERE ID = $1
+

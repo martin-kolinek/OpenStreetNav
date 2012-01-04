@@ -6,6 +6,7 @@
  */
 
 #include "Point.h"
+#include <cmath>
 
 namespace geo
 {
@@ -16,14 +17,19 @@ Point::Point(double lat, double lon):
 {
 }
 
-bool Point::operator ==(const Point& other)
+bool Point::operator ==(const Point& other) const
 {
     return lat == other.lat && lon == other.lon;
 }
 
-bool Point::operator !=(const Point& other)
+bool Point::operator !=(const Point& other) const
 {
     return !(*this == other);
+}
+
+bool Point::close(Point const& other, double tolerance) const
+{
+    return std::abs(lat - other.lat) < tolerance && std::abs(lon - other.lon) < tolerance;
 }
 
 } /* namespace geo */

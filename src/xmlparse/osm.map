@@ -1,0 +1,9 @@
+#include "../elements/osmelements.h"
+
+member_type osm::ObjectType;
+member "std::pair<std::string, std::shared_ptr<osm::Element> >";
+nd int64_t int64_t;
+node osm::Node;
+relation osm::Relation;
+tag "std::pair<std::string, std::string>";
+way osm::Way;

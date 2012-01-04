@@ -17,8 +17,9 @@ public:
     Point(double lat = 0, double lon = 0);
     double lat;
     double lon;
-    bool operator==(Point const& other);
-    bool operator!=(Point const& other);
+    bool operator==(Point const& other) const;
+    bool operator!=(Point const& other) const;
+    bool close(Point const& other, double tolerance) const;
 };
 
 } /* namespace geo */

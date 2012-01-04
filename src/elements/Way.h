@@ -9,9 +9,10 @@
 #define WAY_H_
 
 #include <stdint.h>
-#include "Tag.h"
 #include "Element.h"
+#include "Node.h"
 #include <vector>
+#include <map>
 
 namespace osm
 {
@@ -23,11 +24,13 @@ public:
     Way(int64_t id);
     virtual ~Way();
     int64_t id;
-    std::vector<int64_t> nodes;
-    std::vector<Tag> tags;
-    std::vector<Tag> const& get_tags();
-    int64_t get_id();
-    std::string get_type_str();
+    std::vector<osm::Node> nodes;
+    std::multimap<std::string, std::string> tags;
+    boost::property_tree::ptree get_description();
+    osm::ObjectType get_type() const;
+    bool operator==(Element const& e) const;
+    void fill(osmdb::PropertiesSelection& db);
+    void add_to_relation(osmdb::ElementInsertion& db, int64_t relation, std::string const& role);
     bool operator==(Way const& other) const;
     bool operator!=(Way const& other) const;
 };

@@ -1,12 +1,13 @@
 #include <boost/test/unit_test.hpp>
 #include "../xmlparse/xmlparse.h"
 #include <iostream>
+#include "../util.h"
 
 BOOST_AUTO_TEST_SUITE(xml)
 
 BOOST_AUTO_TEST_CASE(basic)
 {
-    std::string input(" <osm version=\"adsf\"> <asdf><aaa></aaa><bbb></bbb></asdf> <node id=\"1234556\" lat=\"34.252\" lon=\"21.512\"> <tag k=\"key\" v=\"val\" /> </node>");
+    std::string input(" <osm version=\"adsf\"> <node id=\"1234556\" lat=\"34.252\" lon=\"21.512\"> <tag k=\"key\" v=\"val\" /> </node>");
     input += "<node id=\"35312\" lat=\"234\" lon=\"23\" />";
     input += "<way id=\"5432\"><nd ref=\"555\" /><tag k=\"wkey\" v=\"wval\" /> </way>";
     input += "<relation id=\"1253\"> <member type=\"node\" ref=\"2521\" role=\"role\" />";
@@ -15,21 +16,21 @@ BOOST_AUTO_TEST_CASE(basic)
     osmxml::XmlParser p;
     std::vector<osm::Node> correctn;
     osm::Node n1(1234556, 34.252, 21.512);
-    n1.tags.push_back(osm::Tag("key", "val"));
+    n1.tags.insert(osm::Tag("key", "val"));
     correctn.push_back(n1);
     n1 = osm::Node(35312, 234, 23);
     correctn.push_back(n1);
     std::vector<osm::Way> correctw;
     osm::Way w1(5432);
-    w1.tags.push_back(osm::Tag("wkey", "wval"));
+    w1.tags.insert(osm::Tag("wkey", "wval"));
     w1.nodes.push_back(555);
     correctw.push_back(w1);
     std::vector<osm::Relation> correctr;
     osm::Relation r1(1253);
-    r1.tags.push_back(osm::Tag("rkey", "rval"));
-    r1.members.push_back(osm::RelationMapping("role", osm::ObjectType::Node, 2521));
-    r1.members.push_back(osm::RelationMapping("role", osm::ObjectType::Way, 2522));
-    r1.members.push_back(osm::RelationMapping("role", osm::ObjectType::Relation, 2523));
+    r1.tags.insert(osm::Tag("rkey", "rval"));
+    r1.add_node("role", osm::Node(2521));
+    r1.add_way("role", osm::Way(2522));
+    r1.add_rel("role", osm::Relation(2523));
     correctr.push_back(r1);
     std::vector<osm::Node> nodes;
     std::vector<osm::Way> ways;
@@ -42,21 +43,37 @@ BOOST_AUTO_TEST_CASE(basic)
     {
         ways.push_back(w);
     };
-    p.relation_handler = [&rels](osm::Relation const & w)
+    p.relation_handler = [&rels](osm::Relation const & r)
     {
-        rels.push_back(w);
+        rels.push_back(r);
     };
-    p.parse_memory(input);
-    BOOST_CHECK(correctn == nodes);
-    BOOST_CHECK(correctw == ways);
-    BOOST_CHECK(correctr == rels);
+    try
+    {
+        p.parse_memory(input);
+        BOOST_CHECK(correctn == nodes);
+        BOOST_CHECK(correctw == ways);
+        BOOST_CHECK(correctr == rels);
+    }
+    catch (xml_schema::parsing& e)
+    {
+        BOOST_CHECK_MESSAGE(false, to_str(e));
+    }
+
 }
 
 BOOST_AUTO_TEST_CASE(isthrowing)
 {
     osmxml::XmlParser p;
-    BOOST_CHECK_THROW(p.parse_memory("<assdf></asdf>"), osmxml::XmlParserException);
-    BOOST_CHECK_THROW(p.parse_memory("<asdf></asdf>"), osmxml::XmlParserException);
+    try
+    {
+        p.parse_memory("<assdf></asdf>");
+    }
+    catch (std::exception& ex)
+    {
+        return;
+    }
+    BOOST_ERROR("Expected parsing exception");
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

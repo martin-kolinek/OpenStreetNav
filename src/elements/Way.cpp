@@ -6,6 +6,7 @@
  */
 
 #include "Way.h"
+#include "../osmdb/osmdb.h"
 
 namespace osm
 {
@@ -28,19 +29,57 @@ bool Way::operator==(const Way& other) const
     return id == other.id && nodes == other.nodes && tags == other.tags;
 }
 
-const std::vector<Tag> & Way::get_tags()
+boost::property_tree::ptree Way::get_description()
 {
-    return tags;
+    boost::property_tree::ptree ret;
+    boost::property_tree::ptree way;
+    way.data() = to_str(id);
+    boost::property_tree::ptree tags;
+    for (auto it = tags.begin(); it != tags.end(); ++it)
+    {
+        tags.push_back(*it);
+    }
+    way.put_child("tags", tags);
+    boost::property_tree::ptree nds;
+    for (unsigned int i = 0; i < nodes.size(); ++i)
+    {
+        nds.push_back(nodes[i].get_description().front());
+    }
+    way.put_child("nodes", nds);
+    ret.put_child("way", way);
+    return ret;
 }
 
-int64_t Way::get_id()
+void Way::fill(osmdb::PropertiesSelection& db)
 {
-    return id;
+    tags = db.get_way_tags(id);
+    auto v = db.get_waynodes(id);
+    for (unsigned int i = 0; i < v.size(); ++i)
+    {
+        nodes.push_back(osm::Node(v[i]));
+    }
+    for (unsigned int i = 0; i < nodes.size(); ++i)
+    {
+        nodes[i].fill(db);
+    }
 }
 
-std::string Way::get_type_str()
+void Way::add_to_relation(osmdb::ElementInsertion& db, int64_t relation, const std::string& role)
 {
-    return "way";
+    db.insert_member_way(relation, role, id);
+}
+
+osm::ObjectType Way::get_type() const
+{
+    return osm::ObjectType::Way;
+}
+
+bool Way::operator ==(const Element& e) const
+{
+    if (e.get_type() != osm::ObjectType::Way)
+        return false;
+    Way const& w = static_cast<Way const&>(e);
+    return id == w.id && w.tags == tags && w.nodes == nodes;
 }
 
 bool Way::operator !=(const Way& other) const

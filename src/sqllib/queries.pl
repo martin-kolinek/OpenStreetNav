@@ -56,7 +56,7 @@ open TST, ">>$ARGV[2]/sqllib_gen_test.cc";
 for(my $ix=3; $ix<(scalar @ARGV); $ix++)
 {
     my $f = $ARGV[$ix];
-	$f =~ m/[\/\\]([^\/^\\]*)\.sql$/;
+	$f =~ m/([^\/^\\]*)\.sql$/;
 	my $name = $1;
 	open IN, $f;
 	my $i = 0;

@@ -8,21 +8,35 @@
 #ifndef OSMELEMENT_H_
 #define OSMELEMENT_H_
 
-#include "Tag.h"
 #include <string>
 #include <vector>
 #include <stdint.h>
+#include <boost/property_tree/ptree.hpp>
+#include "ObjectType.h"
+
+namespace osmdb
+{
+
+class PropertiesSelection;
+class ElementInsertion;
+
+}
 
 namespace osm
 {
+
+typedef std::pair<std::string, std::string> Tag;
 
 class Element
 {
 public:
     virtual ~Element();
-    virtual std::vector<Tag> const& get_tags() = 0;
-    virtual int64_t get_id() = 0;
-    virtual std::string get_type_str() = 0;
+    virtual boost::property_tree::ptree get_description() = 0;
+    virtual osm::ObjectType get_type() const = 0;
+    virtual bool operator==(Element const& e) const = 0;
+    virtual bool operator!=(Element const& e) const;
+    virtual void fill(osmdb::PropertiesSelection& db) = 0;
+    virtual void add_to_relation(osmdb::ElementInsertion& db, int64_t parentid, std::string const& role) = 0;
 };
 
 } /* namespace osm */

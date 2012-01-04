@@ -1,1 +1,3 @@
-add_library(osmelements Node.cpp Relation.cpp Relation.cpp RelationMapping.cpp Tag.cpp Way.cpp Edge.cpp Element.cpp)
+add_library(osmelements Node.cpp Relation.cpp Relation.cpp Way.cpp Edge.cpp Element.cpp)
+
+target_link_libraries(osmelements osmdb)

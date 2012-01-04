@@ -54,10 +54,10 @@ void DisplayDB::set_bounds(const geo::Point& p1, const geo::Point& p2, int zoom)
     double lower = std::min(p1.lat, p2.lat);
     double higher = std::max(p1.lat, p2.lat);
     auto& stmt = coll.get_edges_for_zoom(zoom);
-    std::vector<std::unique_ptr<display::DisplayElement> > && edges = std::move(ToShowEdgesSelector::get_edges(stmt, left, lower, right, higher));
+    std::vector<std::unique_ptr<display::DisplayElement> > edges = std::move(ToShowEdgesSelector::get_edges(stmt, left, lower, right, higher));
     for (unsigned int i = 0; i < edges.size(); ++i)
     {
-        display_elements.push_back(std::move(edges[i]));
+        display_elements.push_back(std::unique_ptr<display::DisplayElement>(std::move(edges[i])));
     }
 }
 

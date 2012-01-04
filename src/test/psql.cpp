@@ -30,7 +30,7 @@ public:
     }
 };
 
-BOOST_AUTO_TEST_SUITE(psql)
+BOOST_AUTO_TEST_SUITE(psql_test)
 
 BOOST_AUTO_TEST_CASE(db)
 {
@@ -88,6 +88,22 @@ BOOST_AUTO_TEST_CASE(named_statement)
     auto res(st3.get_row(0));
     std::tuple<int, std::string, int64_t> tup(32, "asdf", 52341093);
     BOOST_CHECK(res == tup);
+}
+
+BOOST_AUTO_TEST_CASE(utils)
+{
+    auto st1(sqllib::get_create_test_table(db));
+    st1.execute();
+    auto st2(sqllib::get_insert_test_table(db));
+    st2.execute(32, "asdf", 52341093);
+    auto st3(sqllib::get_test_select(db));
+    auto ret = psql::exec_statement(st3, 32);
+    std::tuple<int, std::string, int64_t> tup(32, "asdf", 52341093);
+    std::vector<std::tuple<int, std::string, int64_t> > vect {tup};
+    std::vector<int64_t> vect2 {52341093};
+    auto ret2 = psql::exec_statement_col<2>(st3, 32);
+    BOOST_CHECK(ret == vect);
+    BOOST_CHECK(ret2 == vect2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

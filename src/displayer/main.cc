@@ -36,17 +36,26 @@ public:
     }
 };
 
+void write_ptree(boost::property_tree::ptree const& ptree, std::ostream& ost, int depth)
+{
+    for (auto it = ptree.begin(); it != ptree.end(); ++it)
+    {
+        for (int i = 0; i < depth; ++i)
+            ost << "  ";
+        ost << it->first << " ";
+        ost << it->second.data();
+        ost << std::endl;
+        write_ptree(it->second, ost, depth + 1);
+    }
+}
+
 std::string get_els_text(std::vector<std::unique_ptr<osm::Element> > const& els)
 {
     std::ostringstream str;
     str << "clicked" << std::endl;
     for (unsigned int i = 0; i < els.size(); ++i)
     {
-        str << els[i]->get_type_str() << " " << els[i]->get_id() << std::endl;
-        for (unsigned int j = 0; j < els[i]->get_tags().size(); ++j)
-        {
-            str << "\t" << els[i]->get_tags()[j].key << " " << els[i]->get_tags()[j].value << std::endl;
-        }
+        write_ptree(els[i]->get_description(), str, 0);
     }
     return str.str();
 }

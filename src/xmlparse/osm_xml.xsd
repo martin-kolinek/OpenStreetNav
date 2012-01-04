@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ 
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:simpleType name="member_type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="way" />
+			<xs:enumeration value="node" />
+			<xs:enumeration value="relation" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="member">
+		<xs:attribute name="type" use="required" type="member_type" />
+		<xs:attribute name="ref" type="xs:long" use="required" />
+		<xs:attribute name="role" type="xs:string" use="optional" />
+	</xs:complexType>
+
+    <xs:complexType name="nd">
+		<xs:attribute name="ref" type="xs:long" use="required" />
+	</xs:complexType> 
+ 
+	<xs:complexType name="node">
+        <xs:sequence>
+			<xs:element name="tag" type="tag" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+        <xs:attribute name="id" type="xs:long" use="required" />
+		<xs:attribute name="user" type="xs:string"></xs:attribute>
+		<xs:attribute name="timestamp" type="xs:dateTime" use="optional" />
+		<xs:attribute name="changeset" type="xs:int" use="optional" />
+		<xs:attribute name="version" type="xs:int"></xs:attribute>
+		<xs:attribute name="visible" type="xs:boolean" use="optional" />		
+		<xs:attribute name="lat" type="xs:decimal" use="required" />
+		<xs:attribute name="lon" type="xs:decimal" use="required" />
+		<xs:attribute name="action" type="xs:string" use="optional" />
+	</xs:complexType>
+ 
+	<xs:complexType name="osm">
+        <xs:sequence>
+		    <xs:element name="bound" minOccurs="0">
+			    <xs:complexType>
+				    <xs:attribute name="box" type="xs:string">
+				    </xs:attribute>
+				    <xs:attribute name="origin" type="xs:anyURI">
+				    </xs:attribute>
+			    </xs:complexType>
+		    </xs:element>
+		    <xs:choice maxOccurs="unbounded" minOccurs="1">
+			    <xs:element name="node" type="node" />
+			    <xs:element name="way" type="way" />
+			    <xs:element name="relation" type="relation" />
+		    </xs:choice>
+		</xs:sequence>
+	    <xs:attribute name="version" type="xs:string" use="required"
+			fixed="0.6" />
+		<xs:attribute name="generator" type="xs:string" use="optional" />
+	</xs:complexType>
+ 
+	<xs:complexType name="relation">
+		<xs:choice maxOccurs="unbounded" minOccurs="1">
+			<xs:element name="tag" type="tag" />
+			<xs:element name="member" type="member" />
+		</xs:choice>
+        <xs:attribute name="id" type="xs:long" use="required" />
+		<xs:attribute name="user" type="xs:string"></xs:attribute>
+		<xs:attribute name="timestamp" type="xs:dateTime" use="optional" />
+		<xs:attribute name="changeset" type="xs:int" use="optional" />
+		<xs:attribute name="version" type="xs:int"></xs:attribute>
+		<xs:attribute name="visible" type="xs:boolean" use="optional" />		
+	</xs:complexType>
+ 
+	<xs:complexType name="tag">
+		<xs:attribute name="k" type="xs:string" use="required" />
+		<xs:attribute name="v" type="xs:string" use="required" />
+	</xs:complexType>
+ 
+	<xs:complexType name="way">
+	    <xs:choice maxOccurs="unbounded" minOccurs="0">
+		    <xs:element name="tag" type="tag" />
+		    <xs:element name="nd" type="nd" />
+	    </xs:choice>
+        <xs:attribute name="id" type="xs:long" use="required" />
+        <xs:attribute name="user" type="xs:string"></xs:attribute>
+        <xs:attribute name="timestamp" type="xs:dateTime" use="optional" />
+        <xs:attribute name="changeset" type="xs:int" use="optional" />
+        <xs:attribute name="version" type="xs:int"></xs:attribute>
+        <xs:attribute name="visible" type="xs:boolean" use="optional" />		
+	</xs:complexType>
+ 
+    <xs:element name="osm" type="osm" />
+ 
+</xs:schema>

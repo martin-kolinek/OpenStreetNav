@@ -12,5 +12,6 @@
 #include "DisplayDB.h"
 #include "ElementInsertion.h"
 #include "WrongDBException.h"
+#include "PropertiesSelection.h"
 
 #endif /* OSMDB_H_ */
