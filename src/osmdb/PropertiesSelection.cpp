@@ -64,7 +64,7 @@ geo::Point PropertiesSelection::get_position(int64_t node_id)
 {
     get_node_pos_st.execute(node_id);
     if (get_node_pos_st.row_count() != 1)
-        throw PropertiesSelectionException(concatenate(" ", "Node with id ", node_id, "does not exist"));
+        throw PropertiesSelectionException(util::concatenate(" ", "Node with id ", node_id, "does not exist"));
     double a, b;
     std::tie(a, b) = get_node_pos_st.get_row(0);
     return geo::Point(b, a);

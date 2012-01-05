@@ -1,6 +1,9 @@
 #include "util.h"
 #include <iostream>
 
+namespace util
+{
+
 template<>
 double parse<double>(std::string const& str)
 {
@@ -11,4 +14,6 @@ template<>
 int64_t parse<int64_t>(std::string const& str)
 {
     return atol(str.c_str());
+}
+
 }

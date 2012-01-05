@@ -28,20 +28,20 @@ Node::~Node()
 
 bool Node::operator==(const Node& other) const
 {
-    return id == other.id && position == other.position && tags == other.tags;
+    return id == other.id && position == other.position && util::multimap_eq(tags, other.tags);
 }
 
 boost::property_tree::ptree Node::get_description()
 {
     boost::property_tree::ptree ret;
     boost::property_tree::ptree node;
-    node.data() = to_str(id);
-    boost::property_tree::ptree tags;
+    node.data() = util::to_str(id);
+    boost::property_tree::ptree tags_desc;
     for (auto it = tags.begin(); it != tags.end(); ++it)
     {
-        tags.push_back(*it);
+        tags_desc.push_back(*it);
     }
-    node.put_child("tags", tags);
+    node.put_child("tags", tags_desc);
     ret.put_child("node", node);
     return ret;
 }

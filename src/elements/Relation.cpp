@@ -36,25 +36,32 @@ bool Relation::operator==(const Element& e) const
     if (e.get_type() != ObjectType::Relation)
         return false;
     Relation const& r = static_cast<Relation const&>(e);
-    if (r.id != id || r.tags != tags || r.members.size() != members.size())
-        return false;
-    for (auto it = members.begin(); it != members.end(); ++it)
-    {
-        bool wrong = true;
-        for (auto it2 = r.members.lower_bound(it->first); it2 != r.members.upper_bound(it->first); ++it2)
-        {
-            if (*(it->second) == *(it->second))
-                wrong = false;
-        }
-        if (wrong)
-            return false;
-    }
-    return true;
+    return r.id == id && util::multimap_eq(tags, r.tags) &&
+           util::multimap_eq < decltype(util::get_dereferenced_equal_to(members.begin()->second, r.members.begin()->second)) > (members, r.members);
 }
 
 boost::property_tree::ptree Relation::get_description()
 {
-    return boost::property_tree::ptree();
+    boost::property_tree::ptree ret;
+    boost::property_tree::ptree rel;
+    rel.data() = util::to_str(id);
+    boost::property_tree::ptree tags_desc;
+    for (auto it = tags.begin(); it != tags.end(); ++it)
+    {
+        tags_desc.push_back(*it);
+    }
+    rel.put_child("tags", tags_desc);
+    boost::property_tree::ptree mmbrs;
+    for (auto it = members.begin(); it != members.end(); ++it)
+    {
+        boost::property_tree::ptree mem;
+        mem.put("role", it->first);
+        mem.push_back(it->second->get_description().front());
+        mmbrs.add_child("member", mem);
+    }
+    rel.put_child("members", mmbrs);
+    ret.put_child("relation", rel);
+    return ret;
 }
 
 void Relation::fill(osmdb::PropertiesSelection& db)

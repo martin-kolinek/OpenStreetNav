@@ -19,6 +19,7 @@
 #include <glibmm/optiongroup.h>
 #include <glibmm/optionentry.h>
 #include <osmdisp_config.h>
+#include "../util.h"
 
 class ZoomerDrawAreaConnector
 {
@@ -40,8 +41,10 @@ void write_ptree(boost::property_tree::ptree const& ptree, std::ostream& ost, in
 {
     for (auto it = ptree.begin(); it != ptree.end(); ++it)
     {
+        if (it->second.data() == "" && it->second.size() == 0)
+            continue;
         for (int i = 0; i < depth; ++i)
-            ost << "  ";
+            ost << "\t";
         ost << it->first << " ";
         ost << it->second.data();
         ost << std::endl;
@@ -52,10 +55,15 @@ void write_ptree(boost::property_tree::ptree const& ptree, std::ostream& ost, in
 std::string get_els_text(std::vector<std::unique_ptr<osm::Element> > const& els)
 {
     std::ostringstream str;
+    std::vector<osm::Element const*> used;
     str << "clicked" << std::endl;
     for (unsigned int i = 0; i < els.size(); ++i)
     {
-        write_ptree(els[i]->get_description(), str, 0);
+        if (util::find<decltype(util::get_dereferenced_equal_to(*used.begin(), els[i]))>(used.begin(), used.end(), els[i]) == used.end())
+        {
+            used.push_back(els[i].get());
+            write_ptree(els[i]->get_description(), str, 0);
+        }
     }
     return str.str();
 }

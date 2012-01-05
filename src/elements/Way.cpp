@@ -26,20 +26,20 @@ Way::~Way()
 
 bool Way::operator==(const Way& other) const
 {
-    return id == other.id && nodes == other.nodes && tags == other.tags;
+    return id == other.id && nodes == other.nodes && util::multimap_eq(tags, other.tags);
 }
 
 boost::property_tree::ptree Way::get_description()
 {
     boost::property_tree::ptree ret;
     boost::property_tree::ptree way;
-    way.data() = to_str(id);
-    boost::property_tree::ptree tags;
+    way.data() = util::to_str(id);
+    boost::property_tree::ptree tags_desc;
     for (auto it = tags.begin(); it != tags.end(); ++it)
     {
-        tags.push_back(*it);
+        tags_desc.push_back(*it);
     }
-    way.put_child("tags", tags);
+    way.put_child("tags", tags_desc);
     boost::property_tree::ptree nds;
     for (unsigned int i = 0; i < nodes.size(); ++i)
     {

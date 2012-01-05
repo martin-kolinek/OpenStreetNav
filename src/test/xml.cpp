@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(basic)
     }
     catch (xml_schema::parsing& e)
     {
-        BOOST_CHECK_MESSAGE(false, to_str(e));
+        BOOST_CHECK_MESSAGE(false, util::to_str(e));
     }
 
 }

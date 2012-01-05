@@ -1,4 +1,4 @@
-add_executable(tests test.cpp sqlite.cpp osmdb.cpp xml.cpp projection.cpp util.cpp psql.cpp sqllib2.cpp sqllib.cpp)
+add_executable(tests test.cpp sqlite.cpp osmdb.cpp xml.cpp projection.cpp util.cpp psql.cpp sqllib2.cpp sqllib.cpp osmelements.cpp)
 SET(TOSHOW_TEST_PATH ${CMAKE_BINARY_DIR}/share/toshow/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/testtoshow DESTINATION ${TOSHOW_TEST_PATH})
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/testconf.h.in ${CMAKE_BINARY_DIR}/include/test_config.h)

@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(properties)
     r.tags.insert(osm::Tag("rkey", "rval"));
     r.add_node("rnode", osm::Node(124));
     r.add_way("rway", osm::Way(341));
-    r.add_rel("rrel", osm::Relation(432));
+    r.add_rel("rrel", osm::Relation(433));
     ins.insert_relation(r);
     osmdb::PropertiesSelection db(odb);
     BOOST_CHECK(db.get_node_tags(123).count("nkey") == 1);
@@ -187,7 +187,21 @@ BOOST_AUTO_TEST_CASE(properties)
     BOOST_CHECK(db.get_node_members(432).count("rnode") == 1);
     BOOST_CHECK(db.get_way_members(432).count("rway") == 1);
     BOOST_CHECK(db.get_relation_members(432).count("rrel") == 1);
-
+    osm::Node n2(123);
+    n2.fill(db);
+    n.id = 123;
+    n.tags.insert(osm::Tag("nkey", "nval"));
+    BOOST_CHECK(n == n2);
+    osm::Way w2(341);
+    w2.fill(db);
+    w.nodes[0].fill(db);
+    w.nodes[1].fill(db);
+    BOOST_CHECK(w == w2);
+    osm::Relation r2(432);
+    r2.fill(db);
+    for (auto it = r.members.begin(); it != r.members.end(); ++it)
+        it->second->fill(db);
+    BOOST_CHECK(r == r2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

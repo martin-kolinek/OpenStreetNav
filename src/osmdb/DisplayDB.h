@@ -16,6 +16,7 @@
 #include <vector>
 #include "../displayer/DisplayElement.h"
 #include "ToShowSelectCollection.h"
+#include "PropertiesSelection.h"
 
 namespace osmdb
 {
@@ -33,6 +34,7 @@ public:
     double center_lon();
 private:
     osmdb::OsmDatabase& db;
+    osmdb::PropertiesSelection pdb;
     std::vector<std::unique_ptr<display::DisplayElement> > display_elements;
     double clat;
     double clon;

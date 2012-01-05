@@ -14,6 +14,7 @@ namespace osmdb
 
 DisplayDB::DisplayDB(OsmDatabase& db, std::string const& path_base, int min_zoom, int max_zoom)
     : db(db),
+      pdb(db),
       minz(min_zoom),
       maxz(max_zoom),
       coll(path_base, db.get_db(), min_zoom, max_zoom),
@@ -78,6 +79,11 @@ std::vector<std::unique_ptr<osm::Element> > DisplayDB::get_selected(const geo::P
         int attr;
         std::tie(id, r, g, b, a, t, attr) = stmt.get_row(i);
         ret.push_back(std::unique_ptr<osm::Element>(new osm::Way(id)));
+    }
+
+    for (int i = 0; i < ret.size(); ++i)
+    {
+        ret[i]->fill(pdb);
     }
 
     return ret;
