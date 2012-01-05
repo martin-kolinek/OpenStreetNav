@@ -1,4 +1,4 @@
-add_library(xmlparse XmlParser.cpp UnknownParser.cpp XmlParserException.cpp 
+add_library(xmlparse XmlParser.cpp 
     bound-pimpl.cxx
     member_type-pimpl.cxx
     member-pimpl.cxx
@@ -21,5 +21,5 @@ add_library(xmlparse XmlParser.cpp UnknownParser.cpp XmlParserException.cpp
     way-pskel.cxx
     )
 
-target_link_libraries(xmlparse util ${LibXML++_LIBRARIES} ${Boost_SIGNALS_LIBRARY})
+target_link_libraries(xmlparse util ${EXPAT_LIBRARIES})
 

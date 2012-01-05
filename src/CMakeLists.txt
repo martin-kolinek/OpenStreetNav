@@ -1,9 +1,6 @@
 find_package(Boost REQUIRED COMPONENTS test_exec_monitor thread system filesystem signals program_options regex)
 include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(LibXML++ REQUIRED)
-include_directories(${LibXML++_INCLUDE_DIRS})
-
 find_package(Sqlite3 REQUIRED)
 include_directories(${SQLITE3_INCLUDE_DIR})
 
@@ -16,6 +13,9 @@ link_directories(${PostgreSQL_LIBRARY_DIRS})
 
 find_package(GEOS REQUIRED)
 include_directories(${GEOS_INCLUDE_DIRS})
+
+find_package(EXPAT REQUIRED)
+include_directories(${EXPAT_INCLUDE_DIRS})
 
 find_package(Perl REQUIRED)
 

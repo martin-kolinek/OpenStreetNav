@@ -16,7 +16,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND STREQUAL "NO")
-message(FATAL_ERROR "Doxygen not found")
+message(MESSAGE "Doxygen not found")
 endif(DOXYGEN_FOUND STREQUAL "NO")
 
 SET(DOXYGEN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/api-doc")
@@ -42,9 +42,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/xmlschema/libxsd)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile)
 
-add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile)
-
-enable_testing()
-
 add_subdirectory(src)
 
+if (DOXYGEN_FOUND STREQUAL "YES")
+message("Found doxygen, run 'make doxygen' to build documentation")
+add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile)
+endif (DOXYGEN_FOUND STREQUAL "YES")
