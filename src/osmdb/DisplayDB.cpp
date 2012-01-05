@@ -72,7 +72,7 @@ std::vector<std::unique_ptr<osm::Element> > DisplayDB::get_selected(const geo::P
     std::vector<std::unique_ptr<osm::Element> > ret;
     auto& stmt = coll.get_select_edges(zoom);
     stmt.execute(left, lower, right, higher);
-    for (int i = 0; i < stmt.row_count(); ++i)
+    for (unsigned int i = 0; i < stmt.row_count(); ++i)
     {
         int64_t id;
         double r, g, b, a, t;
