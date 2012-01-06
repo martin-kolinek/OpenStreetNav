@@ -67,23 +67,23 @@ void DisplayLine::draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProje
 {
     auto pp1 = pr.project(p1);
     auto pp2 = pr.project(p2);
-    if(arrow)
+    if (arrow)
     {
-    	double l = sqrt((pp2.x-pp1.x)*(pp2.x-pp1.x) + (pp2.y-pp1.y)*(pp2.y-pp1.y));
-    	double norm_x = (pp2.x-pp1.x)/(l*100);
-    	double norm_y = (pp2.y-pp1.y)/(l*100);
-    	proj::FlatPoint ppc((pp1.x+pp2.x)/2.0, (pp1.y+pp2.y)/2.0);
-    	cr->move_to(pp1.x, pp1.y);
-    	cr->line_to(ppc.x, ppc.y);
-    	cr->line_to(ppc.x-norm_x-norm_y, ppc.y-norm_y+norm_x);
-    	cr->move_to(ppc.x-norm_x+norm_y, ppc.y-norm_y-norm_x);
-    	cr->line_to(ppc.x, ppc.y);
-    	cr->line_to(pp2.x, pp2.y);
+        double l = sqrt((pp2.x - pp1.x) * (pp2.x - pp1.x) + (pp2.y - pp1.y) * (pp2.y - pp1.y));
+        double norm_x = (pp2.x - pp1.x) / (l * 100);
+        double norm_y = (pp2.y - pp1.y) / (l * 100);
+        proj::FlatPoint ppc((pp1.x + pp2.x) / 2.0, (pp1.y + pp2.y) / 2.0);
+        cr->move_to(pp1.x, pp1.y);
+        cr->line_to(ppc.x, ppc.y);
+        cr->line_to(ppc.x - norm_x - norm_y, ppc.y - norm_y + norm_x);
+        cr->move_to(ppc.x - norm_x + norm_y, ppc.y - norm_y - norm_x);
+        cr->line_to(ppc.x, ppc.y);
+        cr->line_to(pp2.x, pp2.y);
     }
     else
     {
-    	cr->move_to(pp1.x, pp1.y);
-    	cr->line_to(pp2.x, pp2.y);
+        cr->move_to(pp1.x, pp1.y);
+        cr->line_to(pp2.x, pp2.y);
     }
 }
 

@@ -48,28 +48,28 @@ boost::property_tree::ptree KeyValFilterTranslator::translate(const boost::prope
                 s << " AS " + it3->first;
             }
             std::string k = it2->second.get<std::string>("key", "");
-            if(k=="*")
-            	k="";
+            if (k == "*")
+                k = "";
             std::string v = it2->second.get<std::string>("value", "");
-            if(v=="*")
-            	v="";
-            if(v=="" && k =="" && where_cond=="")
-            	s << " FROM " << tables;
+            if (v == "*")
+                v = "";
+            if (v == "" && k == "" && where_cond == "")
+                s << " FROM " << tables;
             else
             {
-            	s << " FROM " << tables << " WHERE " << where_cond;
-            	if(k!="")
-            	{
-            		if(where_cond!="")
-            			s << " AND ";
-            		s << kvtable << ".Key=" << "'" << k << "'";
-            	}
-            	if(v!="")
-            	{
-            		if(where_cond!="" || k!="")
-            			s << " AND ";
-            		s << kvtable << ".Value=" << "'" << v << "'";
-            	}
+                s << " FROM " << tables << " WHERE " << where_cond;
+                if (k != "")
+                {
+                    if (where_cond != "")
+                        s << " AND ";
+                    s << kvtable << ".Key=" << "'" << k << "'";
+                }
+                if (v != "")
+                {
+                    if (where_cond != "" || k != "")
+                        s << " AND ";
+                    s << kvtable << ".Value=" << "'" << v << "'";
+                }
             }
             el.put("query", s.str());
             chldrn.add_child("child", el);
