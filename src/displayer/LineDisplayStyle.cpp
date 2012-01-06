@@ -27,6 +27,7 @@ void LineDisplayStyle::prepare(Cairo::RefPtr<Cairo::Context> cr) const
 {
     cr->set_source_rgba(red, green, blue, alpha);
     cr->set_line_width(thickness);
+    cr->set_line_cap(Cairo::LineCap::LINE_CAP_SQUARE);
 }
 
 void LineDisplayStyle::exec(Cairo::RefPtr<Cairo::Context> cr) const

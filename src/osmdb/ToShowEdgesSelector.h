@@ -29,11 +29,13 @@ public:
         {
             double lon1, lat1, lon2, lat2, r, g, b, a, t;
             int attrs, p;
+            bool arrow = attrs & 1;
             std::tie(lon1, lat1, lon2, lat2, r, g, b, a, t, attrs, p) = st.get_row(i);
             ret.push_back(std::unique_ptr<display::DisplayElement>(
                               new display::DisplayLine(
                                   geo::Point(lat1, lon1),
                                   geo::Point(lat2, lon2),
+                                  arrow,
                                   std::unique_ptr<display::DisplayStyle>(
                                       new display::LineDisplayStyle(r, g, b, a, t)
                                   ))));
