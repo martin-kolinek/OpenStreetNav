@@ -39,4 +39,17 @@ BOOST_AUTO_TEST_CASE(kvtransast)
     BOOST_CHECK(boost::regex_match(creat->create_sql(), r));
 }
 
+BOOST_AUTO_TEST_CASE(kvtransempty)
+{
+    sqllib::KeyValFilterTranslator tr("a.col1", "Test t, Abc a", "t.a=a.a", "t", std::vector<std::string> {"asdf"}, "order by a");
+    boost::property_tree::ptree entries;
+    std::istringstream ss("<entries></entries>");
+    boost::property_tree::xml_parser::read_xml(ss, entries);
+    auto ret = tr.translate(entries);
+    auto creat = sqllib::SqlCreatorFactory::create(ret);
+    boost::regex r("\\s*", boost::regex_constants::icase);
+    BOOST_CHECK(boost::regex_match(creat->create_sql(), r));
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()

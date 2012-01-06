@@ -28,7 +28,8 @@ std::string sqllib::CompositeSqlCreator::create_sql()
         fst = false;
         ret += "(" + children[i]->create_sql() + ") ";
     }
-    ret += end;
+    if (children.size() != 0)
+        ret += end;
     return ret;
 }
 
