@@ -23,8 +23,8 @@ private:
     std::string tables;
     std::string where_cond;
     std::string kvtable;
-    std::string order_by;
     std::vector<std::string> types;
+    std::string order_by;
 };
 
 } /* namespace sqllib */
