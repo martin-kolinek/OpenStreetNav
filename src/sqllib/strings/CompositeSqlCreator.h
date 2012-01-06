@@ -18,11 +18,12 @@ namespace sqllib
 class CompositeSqlCreator : public SqlCreator
 {
 public:
-    CompositeSqlCreator(std::string const& composite_operator, std::vector<std::shared_ptr<SqlCreator> > children);
+    CompositeSqlCreator(std::string const& composite_operator, std::vector<std::shared_ptr<SqlCreator> > children, std::string const& ending = "");
     std::string create_sql();
 private:
     std::string op;
     std::vector<std::shared_ptr<SqlCreator> > children;
+    std::string end;
 };
 
 } /* namespace sqllib */

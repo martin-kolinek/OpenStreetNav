@@ -30,12 +30,12 @@ ToShowSelectCollection::ToShowSelectCollection(const std::string& path_base, psq
     }
 }
 
-psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<double, double, double, double, double, double, double, double, double, int> >& ToShowSelectCollection::get_edges_for_zoom(int zoom)
+psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<double, double, double, double, double, double, double, double, double, int, int> >& ToShowSelectCollection::get_edges_for_zoom(int zoom)
 {
     return statements[zoom-offset];
 }
 
-psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int> >& ToShowSelectCollection::get_select_edges(int zoom)
+psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int, int> >& ToShowSelectCollection::get_select_edges(int zoom)
 {
     return select_statements[zoom-offset];
 }

@@ -9,9 +9,9 @@
 namespace sqllib
 {
 
-psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<double, double, double, double, double, double, double, double, double, int> > get_toshow_edges_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
+psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<double, double, double, double, double, double, double, double, double, int, int> > get_toshow_edges_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
 
-psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int> > get_selected_edges_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
+psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int, int> > get_selected_edges_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
 
 }
 

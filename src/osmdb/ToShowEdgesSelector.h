@@ -20,7 +20,7 @@ class ToShowEdgesSelector
 public:
     template<typename... Args>
     static std::vector<std::unique_ptr<display::DisplayElement> > get_edges(psql::Statement < psql::BindTypes<Args...>,
-            psql::RetTypes<double, double, double, double, double, double, double, double, double, int> > & st,
+            psql::RetTypes<double, double, double, double, double, double, double, double, double, int, int> > & st,
             Args... args)
     {
         std::vector<std::unique_ptr<display::DisplayElement> > ret;
@@ -28,8 +28,8 @@ public:
         for (int i = 0; i < st.row_count(); ++i)
         {
             double lon1, lat1, lon2, lat2, r, g, b, a, t;
-            int attrs;
-            std::tie(lon1, lat1, lon2, lat2, r, g, b, a, t, attrs) = st.get_row(i);
+            int attrs, p;
+            std::tie(lon1, lat1, lon2, lat2, r, g, b, a, t, attrs, p) = st.get_row(i);
             ret.push_back(std::unique_ptr<display::DisplayElement>(
                               new display::DisplayLine(
                                   geo::Point(lat1, lon1),

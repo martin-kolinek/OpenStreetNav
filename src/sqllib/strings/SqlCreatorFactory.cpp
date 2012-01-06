@@ -22,7 +22,8 @@ std::shared_ptr<SqlCreator> sqllib::SqlCreatorFactory::create(const boost::prope
         {
             vect.push_back(create(it->second));
         }
-        return std::shared_ptr<SqlCreator>(new CompositeSqlCreator(tree.get<std::string>("type"), vect));
+        std::string ending = tree.get<std::string>("ending", "");
+        return std::shared_ptr<SqlCreator>(new CompositeSqlCreator(tree.get<std::string>("type"), vect, ending));
     }
     if (tree.get<std::string>("type") == "simple")
     {

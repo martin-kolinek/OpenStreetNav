@@ -10,12 +10,13 @@
 namespace sqllib
 {
 
-KeyValFilterTranslator::KeyValFilterTranslator(std::string const& cols, std::string const& tables, std::string const& where, std::string const& kvtable, std::vector<std::string> const& types):
+KeyValFilterTranslator::KeyValFilterTranslator(std::string const& cols, std::string const& tables, std::string const& where, std::string const& kvtable, std::vector<std::string> const& types, std::string const& order_by):
     cols(cols),
     tables(tables),
     where_cond(where),
     kvtable(kvtable),
-    types(types)
+    types(types),
+    order_by(order_by)
 {
 }
 
@@ -44,6 +45,7 @@ boost::property_tree::ptree KeyValFilterTranslator::translate(const boost::prope
                 if (i < types.size())
                     s << "::" << types[i];
                 i++;
+                s << " AS " + it3->first;
             }
             s << " FROM " << tables << " WHERE " << where_cond;
             s << " AND " << kvtable << ".Key=" << "'" << it2->second.get<std::string>("key") << "'";
@@ -55,6 +57,7 @@ boost::property_tree::ptree KeyValFilterTranslator::translate(const boost::prope
         retchldrn.add_child("child", chld);
     }
     ret.put_child("children", retchldrn);
+    ret.put("ending", order_by);
     return ret;
 }
 

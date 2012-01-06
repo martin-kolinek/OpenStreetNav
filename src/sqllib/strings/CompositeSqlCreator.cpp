@@ -10,9 +10,10 @@
 namespace sqllib
 {
 
-sqllib::CompositeSqlCreator::CompositeSqlCreator(std::string const& composite_operator, std::vector<std::shared_ptr<SqlCreator> > children):
+sqllib::CompositeSqlCreator::CompositeSqlCreator(std::string const& composite_operator, std::vector<std::shared_ptr<SqlCreator> > children, std::string const& ending):
     op(composite_operator),
-    children(children)
+    children(children),
+    end(ending)
 {
 }
 
@@ -27,6 +28,7 @@ std::string sqllib::CompositeSqlCreator::create_sql()
         fst = false;
         ret += "(" + children[i]->create_sql() + ") ";
     }
+    ret += end;
     return ret;
 }
 

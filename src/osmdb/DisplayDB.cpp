@@ -72,16 +72,16 @@ std::vector<std::unique_ptr<osm::Element> > DisplayDB::get_selected(const geo::P
     std::vector<std::unique_ptr<osm::Element> > ret;
     auto& stmt = coll.get_select_edges(zoom);
     stmt.execute(left, lower, right, higher);
-    for (unsigned int i = 0; i < stmt.row_count(); ++i)
+    for (int i = 0; i < stmt.row_count(); ++i)
     {
         int64_t id;
         double r, g, b, a, t;
-        int attr;
-        std::tie(id, r, g, b, a, t, attr) = stmt.get_row(i);
+        int attr, p;
+        std::tie(id, r, g, b, a, t, attr, p) = stmt.get_row(i);
         ret.push_back(std::unique_ptr<osm::Element>(new osm::Way(id)));
     }
 
-    for (int i = 0; i < ret.size(); ++i)
+    for (unsigned int i = 0; i < ret.size(); ++i)
     {
         ret[i]->fill(pdb);
     }

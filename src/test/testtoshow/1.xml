@@ -19,6 +19,9 @@
 			<style>
 				0
 			</style>
+			<priority>
+				1
+			</priority>
 		</add>
 		<elements>
 			<el>

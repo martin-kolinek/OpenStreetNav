@@ -12,8 +12,8 @@
 #include <gtkmm/builder.h>
 #include <boost/signal.hpp>
 #include <memory>
-#include "../osmdb/osmdb.h"
 #include "../projection/projection.h"
+#include "DisplayProvider.h"
 
 namespace display
 {
@@ -22,7 +22,7 @@ class MapDrawingArea : public Gtk::DrawingArea
 {
 public:
     MapDrawingArea(BaseObjectType* cobject, Glib::RefPtr<Gtk::Builder> const&);
-    void assign_db(std::shared_ptr<osmdb::DisplayDB> db);
+    void add_dp(int priority, std::shared_ptr<DisplayProvider> dp);
     void set_latitude(double lat);
     void set_longitude(double lon);
     int set_zoom(int zoom);
@@ -40,7 +40,7 @@ protected:
     bool on_scroll_event(GdkEventScroll* event);
     void on_size_allocate(Gtk::Allocation& alloc);
 private:
-    std::shared_ptr<osmdb::DisplayDB> db;
+    std::multimap<int, std::shared_ptr<DisplayProvider> > dps;
     bool pressed;
     double press_x;
     double press_y;
@@ -67,6 +67,8 @@ private:
     void invalidate();
 
     double get_radius_for_zoom();
+
+    std::vector<std::unique_ptr<osm::Element> > get_selected(geo::Point const& p1, geo::Point const& p2, int zoom);
 };
 
 } /* namespace display */

@@ -8,6 +8,8 @@
 #include "MapDrawingArea.h"
 #include <cmath>
 #include <iostream>
+#include "../util.h"
+#include <set>
 
 namespace display
 {
@@ -29,11 +31,14 @@ MapDrawingArea::MapDrawingArea(BaseObjectType* cobject, const Glib::RefPtr<Gtk::
     setup_bounds();
 }
 
-void MapDrawingArea::assign_db(std::shared_ptr<osmdb::DisplayDB> db)
+void MapDrawingArea::add_dp(int priority, std::shared_ptr<DisplayProvider> dp)
 {
-    this->db = db;
-    lat = db->center_lat();
-    lon = db->center_lon();
+    dps.insert(std::pair<int, std::shared_ptr<DisplayProvider> >(-priority, dp));
+    if (dps.size() == 1)
+    {
+        lat = dp->center_lat();
+        lon = dp->center_lon();
+    }
     after_change();
 }
 
@@ -64,7 +69,7 @@ bool MapDrawingArea::on_button_press_event(GdkEventButton* event)
         inverse.transform_point(new_x, new_y);
         auto p1 = proj->unproject(new_x - 0.01, new_y - 0.01);
         auto p2 = proj->unproject(new_x + 0.01, new_y + 0.01);
-        auto v = db->get_selected(p1, p2, zoom);
+        auto v = get_selected(p1, p2, zoom);
         element_clicked(v);
     }
     return true;
@@ -147,13 +152,13 @@ void MapDrawingArea::setup_bounds()
     {
         x1 = -1;
         x2 = 1;
-        y1 = (double)(get_height()) / (double)(get_width());
+        y1 = (double)((get_height())) / (double)((get_width()));
         y2 = -y1;
         scale = get_width();
     }
     else
     {
-        x2 = ((double)get_width()) / (double)(get_height());
+        x2 = ((double)(get_width())) / (double)((get_height()));
         x1 = -x2;
         y1 = 1;
         y2 = -1;
@@ -185,9 +190,27 @@ void MapDrawingArea::redraw_from_db()
     cr->paint();
     cr->set_line_width(0.005);
     cr->set_source_rgb(0.8, 0.8, 0.8);
-    for (auto it = db->get_display_elements().begin(); it != db->get_display_elements().end(); ++it)
+
+    class DisplayElemPtrLess
     {
-        (*it)->draw(cr, *proj);
+    public:
+        bool operator()(DisplayElement* a, DisplayElement* b)
+        {
+            return *a < *b;
+        }
+    };
+    std::set<DisplayElement*, DisplayElemPtrLess> displayed;
+    for (auto it = dps.begin(); it != dps.end(); ++it)
+    {
+        auto const& vect = it->second->get_display_elements();
+        for (unsigned int i = 0; i < vect.size(); ++i)
+        {
+            if (displayed.find(vect[i].get()) == displayed.end())
+            {
+                vect[i]->draw(cr, *proj);
+                displayed.insert(vect[i].get());
+            }
+        }
     }
     invalidate();
 }
@@ -205,12 +228,8 @@ void MapDrawingArea::invalidate()
 void MapDrawingArea::after_change()
 {
     setup_projection();
-    if (db)
-    {
-        setup_db();
-        redraw_from_db();
-    }
-
+    setup_db();
+    redraw_from_db();
 }
 
 void MapDrawingArea::move_center(double x, double y)
@@ -225,7 +244,7 @@ void MapDrawingArea::move_center(double x, double y)
 
 double MapDrawingArea::get_radius_for_zoom()
 {
-    return (double)((((((8 << zoom))))));
+    return (double)(((((((8 << zoom)))))));
 }
 
 void MapDrawingArea::setup_db()
@@ -234,7 +253,8 @@ void MapDrawingArea::setup_db()
     geo::Point br = proj->unproject(bottomright);
     geo::Point tr = proj->unproject(bottomright.x, topleft.y);
     geo::Point bl = proj->unproject(topleft.x, bottomright.y);
-    db->set_bounds(geo::Point(std::max(tl.lat, tr.lat), std::min(tl.lon, bl.lon)), geo::Point(std::min(br.lat, bl.lat), std::max(br.lon, tr.lon)), zoom);
+    for (auto it = dps.begin(); it != dps.end(); ++it)
+        it->second->set_bounds(geo::Point(std::max(tl.lat, tr.lat), std::min(tl.lon, bl.lon)), geo::Point(std::min(br.lat, bl.lat), std::max(br.lon, tr.lon)), zoom);
 }
 
 int MapDrawingArea::set_zoom(int z)
@@ -258,6 +278,22 @@ void MapDrawingArea::set_longitude(double lon)
 int MapDrawingArea::get_zoom()
 {
     return zoom;
+}
+
+std::vector<std::unique_ptr<osm::Element> > MapDrawingArea::get_selected(const geo::Point& p1, const geo::Point& p2, int zoom)
+{
+    std::vector<std::unique_ptr<osm::Element> > ret;
+
+    for (auto it = dps.begin(); it != dps.end(); ++it)
+    {
+        auto v(std::move(it->second->get_selected(p1, p2, zoom)));
+        for (unsigned int i = 0; i < v.size(); ++i)
+        {
+            if (util::find<decltype(util::get_dereferenced_equal_to(*ret.begin(), v[i]))>(ret.begin(), ret.end(), v[i]) == ret.end())
+                ret.push_back(std::move(v[i]));
+        }
+    }
+    return ret;
 }
 
 } /* namespace display */

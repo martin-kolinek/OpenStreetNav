@@ -17,6 +17,13 @@ class DisplayLine : public DisplayElement
 {
 public:
     DisplayLine(geo::Point p1, geo::Point p2, std::unique_ptr<DisplayStyle> && style);
+    DisplayElementType get_type() const;
+    bool operator<(DisplayElement const& other) const;
+    bool operator>(DisplayElement const& other) const;
+    bool operator<=(DisplayElement const& other) const;
+    bool operator>=(DisplayElement const& other) const;
+    bool operator==(DisplayElement const& other) const;
+    bool operator!=(DisplayElement const& other) const;
     virtual ~DisplayLine();
 protected:
     virtual void draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const;

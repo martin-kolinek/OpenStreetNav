@@ -16,12 +16,24 @@
 namespace display
 {
 
+enum class DisplayElementType
+{
+    Line = 0
+};
+
 class DisplayElement
 {
 public:
     DisplayElement(std::unique_ptr<DisplayStyle> && disp);
     virtual ~DisplayElement();
     virtual void draw(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const;
+    virtual DisplayElementType get_type() const = 0;
+    virtual bool operator<(DisplayElement const& other) const = 0;
+    virtual bool operator>(DisplayElement const& other) const = 0;
+    virtual bool operator<=(DisplayElement const& other) const = 0;
+    virtual bool operator>=(DisplayElement const& other) const = 0;
+    virtual bool operator==(DisplayElement const& other) const = 0;
+    virtual bool operator!=(DisplayElement const& other) const = 0;
 protected:
     std::unique_ptr<DisplayStyle> disp;
     virtual void draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const = 0;

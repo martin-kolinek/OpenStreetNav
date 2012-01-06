@@ -8,20 +8,15 @@
 #ifndef DISPLAYDB_H_
 #define DISPLAYDB_H_
 
-#include "../osmdb/osmdb.h"
-#include "../geoelements/geoelements.h"
-#include "../elements/Node.h"
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-#include "../displayer/DisplayElement.h"
+#include "OsmDatabase.h"
+#include "../displayer/DisplayProvider.h"
 #include "ToShowSelectCollection.h"
 #include "PropertiesSelection.h"
 
 namespace osmdb
 {
 
-class DisplayDB
+class DisplayDB : public display::DisplayProvider
 {
 public:
     DisplayDB(OsmDatabase& db, std::string const& path_base, int min_zoom, int max_zoom);
