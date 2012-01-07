@@ -31,7 +31,7 @@ public:
     osm::ObjectType get_type() const;
     bool operator==(Element const& e) const;
     void fill(osmdb::PropertiesSelection& db);
-    void add_to_relation(osmdb::ElementInsertion& db, int64_t relation, std::string const& role);
+    void add_to_relation(osmdb::ElementImporter& db, int64_t relation, std::string const& role);
     void add_node(std::string const& role, osm::Node const& nd);
     void add_way(std::string const& role, osm::Way const& w);
     void add_rel(std::string const& role, osm::Relation const& r);

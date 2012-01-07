@@ -88,7 +88,7 @@ void Relation::fill(osmdb::PropertiesSelection& db)
     }
 }
 
-void Relation::add_to_relation(osmdb::ElementInsertion& db, int64_t relation, const std::string& role)
+void Relation::add_to_relation(osmdb::ElementImporter& db, int64_t relation, const std::string& role)
 {
     db.insert_member_relation(relation, role, id);
 }

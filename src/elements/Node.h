@@ -29,7 +29,7 @@ public:
     osm::ObjectType get_type() const;
     bool operator==(Element const& e) const;
     void fill(osmdb::PropertiesSelection& db);
-    void add_to_relation(osmdb::ElementInsertion& db, int64_t relation, std::string const& role);
+    void add_to_relation(osmdb::ElementImporter& db, int64_t relation, std::string const& role);
     bool operator==(Node const& other) const;
     bool operator!=(Node const& other) const;
 };

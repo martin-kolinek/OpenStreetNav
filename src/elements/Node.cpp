@@ -53,7 +53,7 @@ void Node::fill(osmdb::PropertiesSelection& db)
     tags = db.get_node_tags(id);
 }
 
-void Node::add_to_relation(osmdb::ElementInsertion& db, int64_t relation, const std::string& role)
+void Node::add_to_relation(osmdb::ElementImporter& db, int64_t relation, const std::string& role)
 {
     db.insert_member_node(relation, role, id);
 }

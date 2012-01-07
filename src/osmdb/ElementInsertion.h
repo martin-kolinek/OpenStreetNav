@@ -9,7 +9,7 @@
 #define ELEMENTINSERTION_H_
 
 #include "OsmDatabase.h"
-#include "../elements/osmelements.h"
+#include "ElementImporter.h"
 
 namespace osmdb
 {
@@ -18,7 +18,7 @@ namespace osmdb
  * \class ElementInsertion
  * Responsible for inserting osm elements into database
  */
-class ElementInsertion
+class ElementInsertion : public ElementImporter
 {
 public:
     /**

@@ -18,7 +18,7 @@ namespace osmdb
 {
 
 class PropertiesSelection;
-class ElementInsertion;
+class ElementImporter;
 
 }
 
@@ -36,7 +36,7 @@ public:
     virtual bool operator==(Element const& e) const = 0;
     virtual bool operator!=(Element const& e) const;
     virtual void fill(osmdb::PropertiesSelection& db) = 0;
-    virtual void add_to_relation(osmdb::ElementInsertion& db, int64_t parentid, std::string const& role) = 0;
+    virtual void add_to_relation(osmdb::ElementImporter& db, int64_t parentid, std::string const& role) = 0;
 };
 
 } /* namespace osm */
