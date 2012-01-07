@@ -88,6 +88,7 @@ set(SQLFILES
     select_waynodes_for_ways_between.sql
     select_ways.sql
     test_select.sql
+    import.sql
     )
 
 set(TEMPL ${CMAKE_BINARY_DIR}/templ)

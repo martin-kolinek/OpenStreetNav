@@ -9,7 +9,7 @@ class PSqlFixture
 public:
     psql::Database db;
     PSqlFixture():
-        db("")
+        db("", true)
     {
         psql::Statement<psql::BindTypes<>, psql::RetTypes<> > st("CREATE SCHEMA testing", db);
         st.execute();
@@ -105,5 +105,26 @@ BOOST_AUTO_TEST_CASE(utils)
     BOOST_CHECK(ret == vect);
     BOOST_CHECK(ret2 == vect2);
 }
+
+BOOST_AUTO_TEST_CASE(copy)
+{
+    auto st1(sqllib::get_create_test_table(db));
+    st1.execute();
+    auto st2(sqllib::get_copy_test_table(db));
+    BOOST_CHECK(!st2.copying());
+    st2.execute();
+    BOOST_CHECK(st2.copying());
+    st2.copy_data(32, "asdf", 52341093);
+    st2.end_copy();
+    BOOST_CHECK(!st2.copying());
+    auto st3(sqllib::get_test_select(db));
+    st3.execute(32);
+    BOOST_CHECK(st3.row_count() == 1);
+    auto res(st3.get_row(0));
+    std::tuple<int, std::string, int64_t> tup(32,  "asdf", 52341093);
+    BOOST_CHECK(res == tup);
+}
+
+
 
 BOOST_AUTO_TEST_SUITE_END()

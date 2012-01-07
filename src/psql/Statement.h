@@ -3,6 +3,8 @@
 
 #include "Database.h"
 #include "PgSqlException.h"
+#include "CopyTypes.h"
+#include "BindTypes.h"
 #include <libpqtypes.h>
 #include <tuple>
 #include "../util.h"
@@ -14,7 +16,31 @@ class IStatement
 {
 };
 
-template<typename BindTypes, typename RetTypes>
+template<typename BindTypes>
+PGresult* execBT(PGconn* conn, PGparam* param, std::string const& sql)
+{
+    auto res = PQparamExec(conn, param, sql.c_str(), 1);
+    if (res == NULL)
+        throw PgSqlException("Error retrieving statement result: " + std::string(PQgeterror()));
+    return res;
+}
+
+template<>
+PGresult* execBT<BindTypes<> >(PGconn* conn, PGparam*, std::string const& sql);
+
+template<typename BindTypes>
+PGresult* execPrepBT(PGconn* conn, PGparam* param, std::string const& name)
+{
+    auto res = PQparamExecPrepared(conn, param, name.c_str(), 1);
+    if (res == NULL)
+        throw PgSqlException("Error retrieving statement result: " + std::string(PQgeterror()));
+    return res;
+}
+
+template<>
+PGresult* execPrepBT<BindTypes<> >(PGconn* conn, PGparam*, std::string const& name);
+
+template < typename BindTypes, typename RetTypes, typename CopyTypes = CopyTypes<> >
 class Statement : IStatement
 {
 private:
@@ -27,7 +53,8 @@ public:
     Statement():
         db(NULL),
         param(NULL),
-        res(NULL)
+        res(NULL),
+        cp(false)
     {
     }
 
@@ -36,7 +63,8 @@ public:
         sql(sql),
         prep(false),
         param(PQparamCreate(db.get_db())),
-        res(NULL)
+        res(NULL),
+        cp(false)
     {
         check_param();
     }
@@ -46,7 +74,8 @@ public:
         sql(sql),
         prep(true),
         param(PQparamCreate(db.get_db())),
-        res(NULL)
+        res(NULL),
+        cp(false)
     {
         db.regist(name, sql, this);
         check_param();
@@ -59,11 +88,13 @@ public:
             db->unregist(name, this);
         if (res != NULL)
             PQclear(res);
+        if (cp)
+            end_copy();
         PQparamClear(param);
     }
 
     Statement& operator=(Statement const&) = delete;
-    Statement(Statement<BindTypes, RetTypes> const&) = delete;
+    Statement(Statement<BindTypes, RetTypes, CopyTypes> const&) = delete;
     Statement& operator=(Statement && other)
     {
         if (db != NULL)
@@ -80,6 +111,7 @@ public:
         sql = other.sql;
         name = other.name;
         param = other.param;
+        cp = other.cp;
         return *this;
     }
     Statement(Statement && other):
@@ -99,11 +131,12 @@ public:
 
         bt.put(param, args...);
         if (prep)
-            res = PQparamExecPrepared(db->get_db(), param, name.c_str(), 1);
+            res = execPrepBT<BindTypes>(db->get_db(), param, name);
         else
-            res = PQparamExec(db->get_db(), param, sql.c_str(), 1);
-        if (res == NULL)
-            throw PgSqlException("Error retrieving statement result: " + std::string(PQgeterror()));
+            res = execBT<BindTypes>(db->get_db(), param, sql);
+
+        if (PQresultStatus(res) == PGRES_COPY_IN)
+            cp = true;
     }
 
     typename RetTypes::RowType get_row(int row)
@@ -122,6 +155,38 @@ public:
         return 0;
     }
 
+    int affected_rows()
+    {
+        if (res == NULL)
+            return 0;
+        std::string aff(PQcmdTuples(res));
+        if (aff == "")
+            return 0;
+        return util::parse<int>(aff);
+    }
+
+    bool copying()
+    {
+        return cp;
+    }
+
+    void end_copy()
+    {
+        auto conn = db->get_db();
+        cp = false;
+        auto result = PQputCopyEnd(conn, NULL);
+        if (result == 0)
+            throw PgSqlException("Sorry copy for asynchronous connections is not implemented");
+        if (result == -1)
+            throw PgSqlException("Error sending end copy request: " + std::string(PQerrorMessage(conn)));
+    }
+
+    template<typename... Args>
+    void copy_data(Args... args)
+    {
+        ct.copy(*db, args...);
+    }
+
     std::string get_sql() const
     {
         return sql;
@@ -134,8 +199,10 @@ private:
     bool prep;
     BindTypes bt;
     RetTypes rt;
+    CopyTypes ct;
     PGparam* param;
     PGresult* res;
+    bool cp;
 };
 
 }

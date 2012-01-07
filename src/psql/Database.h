@@ -33,6 +33,7 @@ public:
 private:
     PGconn* conn;
     bool async;
+    bool conn_synchr;
     std::unordered_map<std::string, IStatement*> stmts;
     boost::signal<void (PGresult const&)> notice_sig;
     std::vector<std::string> to_dealloc;

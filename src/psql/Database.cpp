@@ -25,25 +25,27 @@ void Database::rollback_transaction()
     execute_sql(*this, "ROLLBACK TRANSACTION");
 }
 
-void Database::savepoint(std::string const& name)
+void Database::savepoint(const std::string& name)
 {
     if (savepoints.count(name))
         execute_sql(*this, "RELEASE SAVEPOINT " + name);
+
     execute_sql(*this, "SAVEPOINT " + name);
     savepoints.insert(name);
 }
-void Database::rollback_to_savepoint(std::string const& name)
+void Database::rollback_to_savepoint(const std::string& name)
 {
     execute_sql(*this, "ROLLBACK TO SAVEPOINT " + name);
 }
 
 void noticeReceiver(void* arg, const PGresult* res)
 {
-    ((Database*)(arg))->receiveNotice(res);
+    ((Database*)((arg)))->receiveNotice(res);
 }
 
 Database::Database(const std::string& conninfo, bool synchr)
-    : conn(NULL)
+    : conn(NULL),
+      conn_synchr(synchr)
 {
     if (synchr)
     {
@@ -64,7 +66,7 @@ Database::Database(const std::string& conninfo, bool synchr)
 
     if (!async)
     {
-        PQsetNoticeReceiver(conn, noticeReceiver, (void*)(this));
+        PQsetNoticeReceiver(conn, noticeReceiver, (void*)((this)));
     }
 }
 
