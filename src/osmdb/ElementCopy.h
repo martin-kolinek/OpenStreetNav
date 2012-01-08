@@ -17,21 +17,21 @@ namespace osmdb
 class ElementCopy : public ElementImporter
 {
 public:
-	ElementCopy(OsmDatabase& db);
-	void start_copy();
-	void end_copy();
-	void insert_node(osm::Node const& nd);
-	void insert_way(osm::Way const& w);
-	void insert_relation(osm::Relation const& rel);
+    ElementCopy(OsmDatabase& db);
+    void start_copy();
+    void end_copy();
+    void insert_node(osm::Node const& nd);
+    void insert_way(osm::Way const& w);
+    void insert_relation(osm::Relation const& rel);
 
-	void insert_member_node(int64_t rel_id, std::string const& role, int64_t node_id);
-	void insert_member_way(int64_t rel_id, std::string const& role, int64_t way_id);
-	void insert_member_relation(int64_t parent_id, std::string const& role, int64_t child_id);
+    void insert_member_node(int64_t rel_id, std::string const& role, int64_t node_id);
+    void insert_member_way(int64_t rel_id, std::string const& role, int64_t way_id);
+    void insert_member_relation(int64_t parent_id, std::string const& role, int64_t child_id);
 
-	virtual ~ElementCopy();
+    virtual ~ElementCopy();
 private:
-	OsmDatabase& db;
-	psql::Statement<psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int, int64_t, int64_t, int, double, double, std::string, std::string> > copy;
+    OsmDatabase& db;
+    psql::Statement<psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int, int64_t, int64_t, int, double, double, std::string, std::string> > copy;
 };
 
 } /* namespace osmdb */
