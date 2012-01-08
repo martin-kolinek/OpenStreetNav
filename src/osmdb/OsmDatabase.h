@@ -37,12 +37,24 @@ public:
      * Creates indexes and keys, this does not happen right away for optimization purposes.
      * Call after inserting most of the data.
      */
+    void create_indexes_and_keys();
+
     void create_indexes();
+
+    void create_foreign_keys();
+
+    void create_primary_keys();
 
     /**
      * Drops all indexes and keys. Call before inserting large amounts of data
      */
+    void drop_indexes_and_keys();
+
     void drop_indexes();
+
+    void drop_foreign_keys();
+
+    void drop_primary_keys();
 
     /**
      * Creates needed tables in the database

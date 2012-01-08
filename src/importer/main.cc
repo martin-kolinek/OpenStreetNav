@@ -60,7 +60,7 @@ void import(std::string const& inp, std::string const& dbname, std::string const
     if (with_indexes)
     {
         std::cout << "Creating indexes" << std::endl;
-        db.create_indexes();
+        db.create_indexes_and_keys();
     }
     std::cout << "Success" << std::endl;
 }

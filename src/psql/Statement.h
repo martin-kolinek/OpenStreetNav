@@ -155,14 +155,14 @@ public:
         return 0;
     }
 
-    int affected_rows()
+    int64_t affected_rows()
     {
         if (res == NULL)
             return 0;
         std::string aff(PQcmdTuples(res));
         if (aff == "")
             return 0;
-        return util::parse<int>(aff);
+        return util::parse<int64_t>(aff);
     }
 
     bool copying()

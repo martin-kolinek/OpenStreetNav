@@ -111,6 +111,21 @@ It find(It first, It last, T const& value)
     return find<std::equal_to<T> >(first, last, value);
 }
 
+class All
+{
+public:
+	typedef bool result_type;
+	template<typename It> bool operator()(It first, It last) const
+	{
+		bool ret = true;
+		for(; first!=last; ++first)
+		{
+			ret= ret && *first;
+		}
+		return ret;
+	}
+};
+
 }
 
 #endif /* UTIL_H_ */

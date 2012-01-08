@@ -13,5 +13,7 @@
 #include "ElementInsertion.h"
 #include "WrongDBException.h"
 #include "PropertiesSelection.h"
+#include "ElementCopy.h"
+#include "ImportTableProcessor.h"
 
 #endif /* OSMDB_H_ */

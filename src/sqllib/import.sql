@@ -27,6 +27,8 @@ CREATE TABLE Import (
 --test-depend create_import_table
 --test-param
 
+COPY Import (EntryType, biginta, bigintb, inta, doublea, doubleb, stringa, stringb) FROM STDIN
+
 --name create_import_pkey
 --type psql::BindTypes<>, psql::RetTypes<>
 --test-depend create_import_seq
@@ -60,6 +62,31 @@ CREATE INDEX IX_Import_TypeBigintaID ON Import (EntryType, biginta, ID)
 --test-param
 
 DROP INDEX IX_Import_TypeBigintaID
+
+--name create_import_index_edge
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-param
+
+CREATE INDEX IX_Import_Edge ON Import(EntryType, biginta, (inta + 1))
+
+--name drop_import_index_edge
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-depend create_import_index_edge
+--test-param
+
+DROP INDEX IX_Import_Edge
+
+--name analyze_import
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-param
+
+ANALYZE Import
 
 --name delete_updated_nodes
 --type psql::BindTypes<>, psql::RetTypes<>
@@ -742,6 +769,28 @@ INSERT INTO MemberWays (RelationID, Role, WayID) SELECT biginta, stringa, bigint
 --test-param
 
 INSERT INTO MemberRelations (ParentID, Role, ChildID) SELECT biginta, stringa, bigintb FROM Import WHERE EntryType = 10
+
+--name do_import11
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-depend create_nodes_table
+--test-depend create_ways_table
+--test-depend create_edges_table
+--test-depend create_relations_table
+--test-depend create_node_attributes
+--test-depend create_node_members
+--test-depend create_waynodes_table
+--test-depend create_way_attributes
+--test-depend create_way_members_table
+--test-depend create_relation_members
+--test-depend create_relation_attributes
+--test-param
+
+INSERT INTO Edges (WayID, StartNodeID, EndNodeID, Location)
+    SELECT i.biginta, i.bigintb, i2.bigintb, ST_MakeLine(n1.Location::geometry, n2.Location::geometry)::geography FROM
+        Import i INNER JOIN Import i2 ON i2.biginta = i.biginta AND i.inta + 1 = i2.inta INNER JOIN Nodes n1 ON n1.ID = i.bigintb INNER JOIN Nodes n2 ON n2.ID = i2.bigintb    
+            WHERE i.EntryType=7 AND i2.EntryType=7
 
 --name clear_import_table
 --type psql::BindTypes<>, psql::RetTypes<>
