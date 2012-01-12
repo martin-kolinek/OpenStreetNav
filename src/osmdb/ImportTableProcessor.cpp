@@ -18,9 +18,6 @@ ImportTableProcessor::ImportTableProcessor(OsmDatabase& db):
 
 void ImportTableProcessor::process()
 {
-
-    db.get_db().begin_transaction();
-
     //indexes
     auto st = sqllib::get_create_import_pkey(db.get_db());
     st.execute();
@@ -133,6 +130,35 @@ void ImportTableProcessor::process()
     orp += st.affected_rows();
     action_signal(ImportTableAction::DELETE_IMPORT_ORPHANS, orp);
 
+    //duplicit other stuff
+    int64_t dup = 0;
+    st = sqllib::get_delete_duplicit_node_attrs(db.get_db());
+    st.execute();
+    dup += st.affected_rows();
+    st = sqllib::get_delete_duplicit_way_attrs(db.get_db());
+    st.execute();
+    dup += st.affected_rows();
+    st = sqllib::get_delete_duplicit_rel_attrs(db.get_db());
+    st.execute();
+    dup += st.affected_rows();
+    action_signal(ImportTableAction::DELETE_DUPLICIT_ATTR, dup);
+
+    st = sqllib::get_delete_duplicit_waynodes(db.get_db());
+    st.execute();
+    action_signal(ImportTableAction::DELETE_DUPLICIT_WAYNODE, st.affected_rows());
+
+    dup=0;
+    st = sqllib::get_delete_duplicit_node_members(db.get_db());
+    st.execute();
+    dup += st.affected_rows();
+    st = sqllib::get_delete_duplicit_way_members(db.get_db());
+    st.execute();
+    dup += st.affected_rows();
+    st = sqllib::get_delete_duplicit_rel_members(db.get_db());
+    st.execute();
+    dup += st.affected_rows();
+    action_signal(ImportTableAction::DELETE_DUPLICIT_MEMBER, dup);
+
     if (proceed_signal())
     {
         //import
@@ -179,11 +205,7 @@ void ImportTableProcessor::process()
         st = sqllib::get_clear_import_table(db.get_db());
         st.execute();
         action_signal(ImportTableAction::CLEAR_IMPORT, st.affected_rows());
-
-        db.get_db().commit_transaction();
     }
-    else
-        db.get_db().rollback_transaction();
 }
 
 ImportTableProcessor::~ImportTableProcessor()

@@ -31,8 +31,8 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef WAY_PSKEL_HXX
-#define WAY_PSKEL_HXX
+#ifndef RELATION_PSKEL_HXX
+#define RELATION_PSKEL_HXX
 
 // Begin prologue.
 //
@@ -49,7 +49,7 @@
 
 // Forward declarations
 //
-class way_pskel;
+class relation_pskel;
 
 #ifndef XSD_USE_CHAR
 #define XSD_USE_CHAR
@@ -60,11 +60,10 @@ class way_pskel;
 #endif
 
 #include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
 
 class tag_pskel;
-class nd_pskel;
-class way_pskel: public ::xml_schema::complex_content
+class member_pskel;
+class relation_pskel: public ::xml_schema::complex_content
 {
   public:
   // Parser callbacks. Override them in your implementation.
@@ -76,7 +75,7 @@ class way_pskel: public ::xml_schema::complex_content
   tag (const std::pair<std::string, std::string>&);
 
   virtual void
-  nd (int64_t);
+  member (const std::pair<std::string, std::shared_ptr<osm::Element> >&);
 
   virtual void
   id (long long);
@@ -99,8 +98,8 @@ class way_pskel: public ::xml_schema::complex_content
   virtual void
   visible (bool);
 
-  virtual osm::Way
-  post_way () = 0;
+  virtual osm::Relation
+  post_relation () = 0;
 
   // Parser construction API.
   //
@@ -108,7 +107,7 @@ class way_pskel: public ::xml_schema::complex_content
   tag_parser (::tag_pskel&);
 
   void
-  nd_parser (::nd_pskel&);
+  member_parser (::member_pskel&);
 
   void
   id_parser (::xml_schema::long_pskel&);
@@ -133,7 +132,7 @@ class way_pskel: public ::xml_schema::complex_content
 
   void
   parsers (::tag_pskel& /* tag */,
-           ::nd_pskel& /* nd */,
+           ::member_pskel& /* member */,
            ::xml_schema::long_pskel& /* id */,
            ::xml_schema::long_pskel& /* uid */,
            ::xml_schema::string_pskel& /* user */,
@@ -144,7 +143,7 @@ class way_pskel: public ::xml_schema::complex_content
 
   // Constructor.
   //
-  way_pskel ();
+  relation_pskel ();
 
   // Implementation.
   //
@@ -166,7 +165,7 @@ class way_pskel: public ::xml_schema::complex_content
 
   protected:
   ::tag_pskel* tag_parser_;
-  ::nd_pskel* nd_parser_;
+  ::member_pskel* member_parser_;
   ::xml_schema::long_pskel* id_parser_;
   ::xml_schema::long_pskel* uid_parser_;
   ::xml_schema::string_pskel* user_parser_;
@@ -178,7 +177,7 @@ class way_pskel: public ::xml_schema::complex_content
   protected:
   struct v_state_descr_
   {
-    void (::way_pskel::*func) (
+    void (::relation_pskel::*func) (
       unsigned long&,
       unsigned long&,
       const ::xml_schema::ro_string&,
@@ -235,4 +234,4 @@ class way_pskel: public ::xml_schema::complex_content
 //
 // End epilogue.
 
-#endif // WAY_PSKEL_HXX
+#endif // RELATION_PSKEL_HXX

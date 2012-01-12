@@ -289,7 +289,7 @@ std::vector<std::unique_ptr<osm::Element> > MapDrawingArea::get_selected(const g
         auto v(std::move(it->second->get_selected(p1, p2, zoom)));
         for (unsigned int i = 0; i < v.size(); ++i)
         {
-            if (util::find<decltype(util::get_dereferenced_equal_to(*ret.begin(), v[i]))>(ret.begin(), ret.end(), v[i]) == ret.end())
+            if (util::find<decltype(osm::deref_eq_by_id(v[i], v[i]))>(ret.begin(), ret.end(), v[i]) == ret.end())
                 ret.push_back(std::move(v[i]));
         }
     }

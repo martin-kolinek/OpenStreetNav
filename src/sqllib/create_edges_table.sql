@@ -5,5 +5,6 @@ CREATE TABLE Edges (
     WayID bigint, 
     StartNodeID bigint, 
     EndNodeID bigint, 
+    SequenceNo int,
     Location geography(LINESTRING, 4326)
     )

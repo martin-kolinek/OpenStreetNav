@@ -59,22 +59,6 @@ void concat_impl(std::ostringstream& os, Sep sep, Head h, Tail... t)
     concat_impl(os, sep, t...);
 }
 
-template<typename T1, typename T2>
-class dereferenced_equal_to : std::binary_function <T1, T2, bool>
-{
-public:
-    bool operator()(T1 const& a, T2 const& b)
-    {
-        return *a == *b;
-    }
-};
-
-template<typename T1, typename T2>
-dereferenced_equal_to<T1, T2> get_dereferenced_equal_to(T1 const&, T2 const&)
-{
-    return dereferenced_equal_to<T1, T2>();
-}
-
 template < typename Eq, typename K, typename V, typename Compare = std::less<K>, typename Allocator = std::allocator<std::pair<const K, V> > >
 bool multimap_eq(std::multimap<K, V, Compare, Allocator> const& a, std::multimap<K, V, Compare, Allocator> const& b)
 {
@@ -125,6 +109,62 @@ public:
         return ret;
     }
 };
+
+std::string replace(std::string const& input, std::map<char, std::string> const& repl);
+
+template<typename Less, typename Eq, typename A, typename B>
+bool greater_than_impl(A const& a, B const& b)
+{
+	Less l;
+	Eq e;
+	return !e(a, b) && !l(a, b);
+}
+
+template<typename Eq, typename A, typename B>
+bool not_eq_impl(A const& a, B const& b)
+{
+	Eq e;
+	return !e(a, b);
+}
+
+template<typename Less, typename A, typename B>
+bool greater_eq_impl(A const& a, B const& b)
+{
+	Less l;
+	return !l(a, b);
+}
+
+template<typename Less, typename Eq, typename A, typename B>
+bool less_eq_impl(A const& a, B const& b)
+{
+	Less l;
+	Eq e;
+	return e(a, b) || l(a, b);
+}
+
+template<typename A>
+bool greater_than_impl(A const& a, A const& b)
+{
+	return greater_than_impl<std::less<A>, std::equal_to<A>, A, A>(a, b);
+}
+
+template<typename A>
+bool not_eq_impl(A const& a, A const& b)
+{
+	return not_eq_impl<std::equal_to<A>, A, A>(a, b);
+}
+
+template<typename A>
+bool greater_eq_impl(A const& a, A const& b)
+{
+	return greater_eq_impl<std::less<A>, A, A>(a, b);
+}
+
+template<typename A>
+bool less_eq_impl(A const& a, A const& b)
+{
+	return less_eq_impl<std::less<A>, std::equal_to<A>, A, A>(a, b);
+}
 
 }
 

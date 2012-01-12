@@ -33,10 +33,9 @@ public:
     virtual ~Element();
     virtual boost::property_tree::ptree get_description() = 0;
     virtual osm::ObjectType get_type() const = 0;
-    virtual bool operator==(Element const& e) const = 0;
-    virtual bool operator!=(Element const& e) const;
     virtual void fill(osmdb::PropertiesSelection& db) = 0;
     virtual void add_to_relation(osmdb::ElementImporter& db, int64_t parentid, std::string const& role) = 0;
+    virtual int64_t get_id() const = 0;
 };
 
 } /* namespace osm */

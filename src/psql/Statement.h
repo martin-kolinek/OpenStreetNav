@@ -179,6 +179,12 @@ public:
             throw PgSqlException("Sorry copy for asynchronous connections is not implemented");
         if (result == -1)
             throw PgSqlException("Error sending end copy request: " + std::string(PQerrorMessage(conn)));
+        res = PQgetResult(conn);
+        if (res == NULL
+                || PQresultStatus(res) == PGRES_BAD_RESPONSE
+                || PQresultStatus(res) == PGRES_FATAL_ERROR)
+            throw PgSqlException("Error executing statement: " + std::string(PQerrorMessage(conn)));
+
     }
 
     template<typename... Args>

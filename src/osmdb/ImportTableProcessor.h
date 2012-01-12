@@ -43,7 +43,10 @@ enum class ImportTableAction
     IMPORT_MEMBER_WAY,
     IMPORT_MEMBER_REL,
     IMPORT_EDGES,
-    CLEAR_IMPORT
+    CLEAR_IMPORT,
+    DELETE_DUPLICIT_ATTR,
+    DELETE_DUPLICIT_MEMBER,
+    DELETE_DUPLICIT_WAYNODE
 };
 
 class ImportTableProcessor

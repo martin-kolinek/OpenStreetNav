@@ -6,3 +6,8 @@
  */
 
 #include "CopyTypes.h"
+
+namespace psql
+{
+
+}

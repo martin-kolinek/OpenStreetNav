@@ -11,17 +11,60 @@
 #include <string>
 #include "Database.h"
 #include "PgSqlException.h"
+#include "../util.h"
 
 namespace psql
 {
 
+namespace cptypes
+{
+
 template<typename... Args>
-class CopyTypes
+class sanitize
 {
 };
 
 template<>
-class CopyTypes<>
+class sanitize<>
+{
+public:
+    void operator()()
+    {
+    }
+};
+
+template<typename Head, typename... Tail>
+class sanitize<Head, Tail...>
+{
+public:
+    void operator()(Head&, Tail& ... t)
+    {
+        sanitize<Tail...>()(t...);
+    }
+};
+
+template<typename... Tail>
+class sanitize<std::string, Tail...>
+{
+public:
+    void operator()(std::string& s, Tail& ... t)
+    {
+        std::map<char, std::string> m
+        {
+            std::make_pair('\t', "\\t"),
+            std::make_pair('\r', "\\r"),
+            std::make_pair('\n', "\\n"),
+            std::make_pair('\\', "\\\\")
+        };
+        s = util::replace(s, m);
+        sanitize<Tail...>()(t...);
+    }
+};
+
+}
+
+template<typename... Args>
+class CopyTypes
 {
 public:
     CopyTypes(std::string const& row_sep = "\n", std::string const& col_sep = "\t"):
@@ -29,53 +72,11 @@ public:
         col_sep(col_sep)
     {
     }
-    virtual void copy(Database&)
+    void copy(Database& db, Args... a)
     {
-    }
-protected:
-    std::string row_sep, col_sep;
-};
-
-template<typename Head>
-class CopyTypes<Head> : protected CopyTypes<>
-{
-public:
-    CopyTypes(std::string const& row_sep = "\n", std::string const& col_sep = "\t"):
-        CopyTypes<>(row_sep, col_sep)
-    {
-    }
-    void copy(Database& db, Head h)
-    {
-        std::ostringstream str;
-        add_to_ostream(str, h);
+        cptypes::sanitize<Args...>()(a...);
+        auto s = util::concatenate("\t", a...) + "\n";
         auto conn = db.get_db();
-        auto result = PQputCopyData(conn, str.str().c_str(), str.str().size());
-        if (result == 0)
-            throw PgSqlException("Sorry copy for asynchronous connections is not implemented");
-        if (result == -1)
-            throw PgSqlException("Error sending copy data: " + std::string(PQerrorMessage(conn)));
-    }
-protected:
-    void add_to_ostream(std::ostream& ost, Head val)
-    {
-        ost << val << CopyTypes<>::row_sep;
-    }
-};
-
-template<typename Head, typename Head2, typename... Tail>
-class CopyTypes<Head, Head2, Tail...> : protected CopyTypes<Head2, Tail...>
-{
-public:
-    CopyTypes(std::string const& row_sep = "\n", std::string const& col_sep = "\t"):
-        CopyTypes<Head2, Tail...>(row_sep, col_sep)
-    {
-    }
-    void copy(Database& db, Head h, Head2 h2, Tail... t)
-    {
-        std::ostringstream str;
-        add_to_ostream(str, h, h2, t...);
-        auto conn = db.get_db();
-        auto s(str.str());
         auto result = PQputCopyData(conn, s.c_str(), s.size());
         if (result == 0)
             throw PgSqlException("Sorry copy for asynchronous connections is not implemented");
@@ -83,11 +84,7 @@ public:
             throw PgSqlException("Error sending copy data: " + std::string(PQerrorMessage(conn)));
     }
 protected:
-    void add_to_ostream(std::ostream& ost, Head h, Head2 h2, Tail... t)
-    {
-        ost << h << CopyTypes<>::col_sep;
-        CopyTypes<Head2, Tail...>::add_to_ostream(ost, h2, t...);
-    }
+    std::string row_sep, col_sep;
 };
 
 } /* namespace psql*/

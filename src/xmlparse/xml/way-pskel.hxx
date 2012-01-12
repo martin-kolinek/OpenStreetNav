@@ -60,7 +60,6 @@ class way_pskel;
 #endif
 
 #include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
 
 class tag_pskel;
 class nd_pskel;

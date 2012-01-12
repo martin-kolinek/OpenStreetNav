@@ -376,6 +376,135 @@ DELETE FROM Import WHERE EntryType = 2 AND EXISTS(SELECT i.biginta FROM Import i
 
 DELETE FROM Import WHERE EntryType = 3 AND EXISTS(SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=3 AND i.biginta = Import.biginta)
 
+--name delete_duplicit_node_attrs
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-depend create_nodes_table
+--test-depend create_ways_table
+--test-depend create_relations_table
+--test-depend create_node_attributes
+--test-depend create_node_members
+--test-depend create_waynodes_table
+--test-depend create_way_attributes
+--test-depend create_way_members_table
+--test-depend create_relation_members
+--test-depend create_relation_attributes
+--test-param
+
+DELETE FROM Import WHERE EntryType = 4 AND EXISTS(SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=4 AND i.biginta=Import.biginta AND i.stringa=Import.stringa)
+
+--name delete_duplicit_way_attrs
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-depend create_nodes_table
+--test-depend create_ways_table
+--test-depend create_relations_table
+--test-depend create_node_attributes
+--test-depend create_node_members
+--test-depend create_waynodes_table
+--test-depend create_way_attributes
+--test-depend create_way_members_table
+--test-depend create_relation_members
+--test-depend create_relation_attributes
+--test-param
+
+DELETE FROM Import WHERE EntryType = 5 AND EXISTS(SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=5 AND i.biginta=Import.biginta AND i.stringa=Import.stringa)
+
+--name delete_duplicit_rel_attrs
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-depend create_nodes_table
+--test-depend create_ways_table
+--test-depend create_relations_table
+--test-depend create_node_attributes
+--test-depend create_node_members
+--test-depend create_waynodes_table
+--test-depend create_way_attributes
+--test-depend create_way_members_table
+--test-depend create_relation_members
+--test-depend create_relation_attributes
+--test-param
+
+DELETE FROM Import WHERE EntryType = 6 AND EXISTS(SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=6 AND i.biginta=Import.biginta AND i.stringa=Import.stringa)
+
+--name delete_duplicit_waynodes
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-depend create_nodes_table
+--test-depend create_ways_table
+--test-depend create_relations_table
+--test-depend create_node_attributes
+--test-depend create_node_members
+--test-depend create_waynodes_table
+--test-depend create_way_attributes
+--test-depend create_way_members_table
+--test-depend create_relation_members
+--test-depend create_relation_attributes
+--test-param
+
+DELETE FROM Import WHERE EntryType = 7 AND EXISTS(SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=7 AND i.biginta=Import.biginta AND i.inta=Import.inta)
+
+--name delete_duplicit_node_members
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-depend create_nodes_table
+--test-depend create_ways_table
+--test-depend create_relations_table
+--test-depend create_node_attributes
+--test-depend create_node_members
+--test-depend create_waynodes_table
+--test-depend create_way_attributes
+--test-depend create_way_members_table
+--test-depend create_relation_members
+--test-depend create_relation_attributes
+--test-param
+
+DELETE FROM Import WHERE EntryType = 8 AND EXISTS
+    (SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=8 AND i.biginta=Import.biginta AND i.stringa=Import.stringa AND i.bigintb=Import.bigintb)
+
+--name delete_duplicit_way_members
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-depend create_nodes_table
+--test-depend create_ways_table
+--test-depend create_relations_table
+--test-depend create_node_attributes
+--test-depend create_node_members
+--test-depend create_waynodes_table
+--test-depend create_way_attributes
+--test-depend create_way_members_table
+--test-depend create_relation_members
+--test-depend create_relation_attributes
+--test-param
+
+DELETE FROM Import WHERE EntryType = 9 AND EXISTS
+    (SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=9 AND i.biginta=Import.biginta AND i.stringa=Import.stringa AND i.bigintb=Import.bigintb)
+
+--name delete_duplicit_rel_members
+--type psql::BindTypes<>, psql::RetTypes<>
+--test-depend create_import_seq
+--test-depend create_import_table
+--test-depend create_nodes_table
+--test-depend create_ways_table
+--test-depend create_relations_table
+--test-depend create_node_attributes
+--test-depend create_node_members
+--test-depend create_waynodes_table
+--test-depend create_way_attributes
+--test-depend create_way_members_table
+--test-depend create_relation_members
+--test-depend create_relation_attributes
+--test-param
+
+DELETE FROM Import WHERE EntryType = 10 AND EXISTS
+    (SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=10 AND i.biginta=Import.biginta AND i.stringa=Import.stringa AND i.bigintb=Import.bigintb)
+
 --name delete_incomplete_ways
 --type psql::BindTypes<>, psql::RetTypes<>
 --test-depend create_import_seq
@@ -787,8 +916,8 @@ INSERT INTO MemberRelations (ParentID, Role, ChildID) SELECT biginta, stringa, b
 --test-depend create_relation_attributes
 --test-param
 
-INSERT INTO Edges (WayID, StartNodeID, EndNodeID, Location)
-    SELECT i.biginta, i.bigintb, i2.bigintb, ST_MakeLine(n1.Location::geometry, n2.Location::geometry)::geography FROM
+INSERT INTO Edges (WayID, StartNodeID, EndNodeID, SequenceNo, Location)
+    SELECT i.biginta, i.bigintb, i2.bigintb, i.inta, ST_MakeLine(n1.Location::geometry, n2.Location::geometry)::geography FROM
         Import i INNER JOIN Import i2 ON i2.biginta = i.biginta AND i.inta + 1 = i2.inta INNER JOIN Nodes n1 ON n1.ID = i.bigintb INNER JOIN Nodes n2 ON n2.ID = i2.bigintb    
             WHERE i.EntryType=7 AND i2.EntryType=7
 

@@ -19,18 +19,21 @@ void osm_pimpl::
 node (const osm::Node& node)
 {
 	node_handler(node);
+	progress_handler();
 }
 
 void osm_pimpl::
 way (const osm::Way& way)
 {
 	way_handler(way);
+	progress_handler();
 }
 
 void osm_pimpl::
 relation (const osm::Relation& relation)
 {
 	relation_handler(relation);
+	progress_handler();
 }
 
 void osm_pimpl::

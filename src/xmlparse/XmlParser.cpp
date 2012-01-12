@@ -35,7 +35,6 @@ XmlParser::XmlParser():
     node_handler(empty_nd_hndl),
     way_handler(empty_w_hndl),
     relation_handler(empty_r_hndl),
-    warn_handler(empty_msg_hndl),
     progress_handler(empty_prog_hndl),
     doc_p(osm_p, "osm")
 {
@@ -43,9 +42,9 @@ XmlParser::XmlParser():
     member_p.parsers(mt_p, long_p, string_p);
     nd_p.parsers(long_p);
     tag_p.parsers(string_p, string_p);
-    node_p.parsers(tag_p, long_p, string_p, date_time_p, int_p, int_p, bool_p, decimal_p, decimal_p, string_p);
-    rel_p.parsers(tag_p, member_p, long_p, string_p, date_time_p, int_p, int_p, bool_p);
-    way_p.parsers(tag_p, nd_p, long_p, string_p, date_time_p, int_p, int_p, bool_p);
+    node_p.parsers(tag_p, long_p, long_p, string_p, date_time_p, int_p, int_p, bool_p, decimal_p, decimal_p, string_p);
+    rel_p.parsers(tag_p, member_p, long_p, long_p, string_p, date_time_p, int_p, int_p, bool_p);
+    way_p.parsers(tag_p, nd_p, long_p, long_p, string_p, date_time_p, int_p, int_p, bool_p);
     osm_p.parsers(bound_p, node_p, way_p, rel_p, string_p, string_p);
     osm_p.node_handler = [&](osm::Node const & n)
     {
@@ -58,6 +57,10 @@ XmlParser::XmlParser():
     osm_p.relation_handler = [&](osm::Relation const & r)
     {
         this->relation_handler(r);
+    };
+    osm_p.progress_handler = [&]()
+    {
+        this->progress_handler();
     };
 }
 

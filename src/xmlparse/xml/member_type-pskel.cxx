@@ -31,54 +31,17 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef MEMBER_TYPE_PSKEL_HXX
-#define MEMBER_TYPE_PSKEL_HXX
-
 // Begin prologue.
 //
 //
 // End prologue.
 
-#include <xsd/cxx/config.hxx>
+#include "member_type-pskel.hxx"
 
-#if (XSD_INT_VERSION != 3030000L)
-#error XSD runtime version mismatch
-#endif
-
-#include <xsd/cxx/pre.hxx>
-
-// Forward declarations
-//
-class member_type_pskel;
-
-#ifndef XSD_USE_CHAR
-#define XSD_USE_CHAR
-#endif
-
-#ifndef XSD_CXX_PARSER_USE_CHAR
-#define XSD_CXX_PARSER_USE_CHAR
-#endif
-
-#include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
-
-class member_type_pskel: public virtual ::xml_schema::string_pskel
-{
-  public:
-  // Parser callbacks. Override them in your implementation.
-  //
-  // virtual void
-  // pre ();
-
-  virtual osm::ObjectType
-  post_member_type () = 0;
-};
-
-#include <xsd/cxx/post.hxx>
+#include <cassert>
 
 // Begin epilogue.
 //
 //
 // End epilogue.
 
-#endif // MEMBER_TYPE_PSKEL_HXX

@@ -31,8 +31,8 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef MEMBER_TYPE_PSKEL_HXX
-#define MEMBER_TYPE_PSKEL_HXX
+#ifndef OSM_XML_PSKEL_HXX
+#define OSM_XML_PSKEL_HXX
 
 // Begin prologue.
 //
@@ -49,7 +49,6 @@
 
 // Forward declarations
 //
-class member_type_pskel;
 
 #ifndef XSD_USE_CHAR
 #define XSD_USE_CHAR
@@ -60,19 +59,24 @@ class member_type_pskel;
 #endif
 
 #include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
 
-class member_type_pskel: public virtual ::xml_schema::string_pskel
-{
-  public:
-  // Parser callbacks. Override them in your implementation.
-  //
-  // virtual void
-  // pre ();
+#include "member_type-pskel.hxx"
 
-  virtual osm::ObjectType
-  post_member_type () = 0;
-};
+#include "member-pskel.hxx"
+
+#include "nd-pskel.hxx"
+
+#include "node-pskel.hxx"
+
+#include "osm-pskel.hxx"
+
+#include "relation-pskel.hxx"
+
+#include "tag-pskel.hxx"
+
+#include "way-pskel.hxx"
+
+#include "bound-pskel.hxx"
 
 #include <xsd/cxx/post.hxx>
 
@@ -81,4 +85,4 @@ class member_type_pskel: public virtual ::xml_schema::string_pskel
 //
 // End epilogue.
 
-#endif // MEMBER_TYPE_PSKEL_HXX
+#endif // OSM_XML_PSKEL_HXX

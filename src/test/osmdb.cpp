@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(new_import)
     osm::Way w(341);
     w.nodes.push_back(123);
     w.nodes.push_back(124);
-    w.tags.insert(osm::Tag("wkey", "wval"));
+    w.tags.insert(osm::Tag("\r\n\twkey", "wval"));
     ins.insert_way(w);
     osm::Relation r(432);
     r.tags.insert(osm::Tag("rkey", "rval"));
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(new_import)
     };
     std::sort(waynodes.begin(), waynodes.end());
     std::vector<std::tuple<int64_t, std::string, std::string> > ndattrs {std::make_tuple(123, "nkey", "nval")};
-    std::vector<std::tuple<int64_t, std::string, std::string> > wattrs {std::make_tuple(341, "wkey", "wval")};
+    std::vector<std::tuple<int64_t, std::string, std::string> > wattrs {std::make_tuple(341, "\r\n\twkey", "wval")};
     std::vector<std::tuple<int64_t> > rels {std::make_tuple(432), std::make_tuple(433)};
     std::vector<std::tuple<int64_t, std::string, std::string> > rattrs {std::make_tuple(432, "rkey", "rval")};
     std::vector<std::tuple<int64_t, std::string, int64_t> > nmembers {std::make_tuple(433, "rnode", 124)};

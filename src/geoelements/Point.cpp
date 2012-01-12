@@ -8,6 +8,7 @@
 #include "Point.h"
 #include <cmath>
 #include <utility>
+#include "../util.h"
 
 namespace geo
 {
@@ -25,29 +26,36 @@ bool Point::operator ==(const Point& other) const
 
 bool Point::operator !=(const Point& other) const
 {
-    return !(*this == other);
+    return util::not_eq_impl(*this, other);
 }
 
 bool Point::operator <=(const Point& other) const
 {
-    return *this == other || *this < other;
+    return util::less_eq_impl(*this, other);
 }
 
 bool Point::operator >=(const Point& other) const
 {
-    return !(*this < other);
+    return util::greater_eq_impl(*this, other);
 }
 
 bool Point::operator >(const Point& other) const
 {
-    return *this != other && !(*this < other);
+    return util::greater_than_impl(*this, other);
 }
 
 bool Point::operator <(const Point& other) const
 {
-    std::pair<double, double> t(lat, lon);
-    std::pair<double, double> o(other.lat, other.lon);
-    return *this != other && t < o;
+	return before(other, 0.0000001);
+}
+
+bool Point::before(Point const& other, double tolerance) const
+{
+	if(std::abs(lat-other.lat) < tolerance)
+	{
+		return lon-other.lon < -tolerance;
+	}
+	return lat < other.lat;
 }
 
 bool Point::close(const Point& other, double tolerance) const

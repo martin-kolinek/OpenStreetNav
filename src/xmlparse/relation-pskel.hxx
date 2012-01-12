@@ -61,6 +61,8 @@ class relation_pskel;
 
 #include "xml_schema-pskel.hxx"
 #include "../elements/osmelements.h"
+#include <memory>
+#include <utility>
 
 class tag_pskel;
 class member_pskel;
@@ -80,6 +82,9 @@ class relation_pskel: public ::xml_schema::complex_content
 
   virtual void
   id (long long);
+
+  virtual void
+  uid (long long);
 
   virtual void
   user (const ::std::string&);
@@ -111,6 +116,9 @@ class relation_pskel: public ::xml_schema::complex_content
   id_parser (::xml_schema::long_pskel&);
 
   void
+  uid_parser (::xml_schema::long_pskel&);
+
+  void
   user_parser (::xml_schema::string_pskel&);
 
   void
@@ -129,6 +137,7 @@ class relation_pskel: public ::xml_schema::complex_content
   parsers (::tag_pskel& /* tag */,
            ::member_pskel& /* member */,
            ::xml_schema::long_pskel& /* id */,
+           ::xml_schema::long_pskel& /* uid */,
            ::xml_schema::string_pskel& /* user */,
            ::xml_schema::date_time_pskel& /* timestamp */,
            ::xml_schema::int_pskel& /* changeset */,
@@ -161,6 +170,7 @@ class relation_pskel: public ::xml_schema::complex_content
   ::tag_pskel* tag_parser_;
   ::member_pskel* member_parser_;
   ::xml_schema::long_pskel* id_parser_;
+  ::xml_schema::long_pskel* uid_parser_;
   ::xml_schema::string_pskel* user_parser_;
   ::xml_schema::date_time_pskel* timestamp_parser_;
   ::xml_schema::int_pskel* changeset_parser_;

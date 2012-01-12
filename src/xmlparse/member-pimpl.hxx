@@ -10,6 +10,8 @@
 
 #include "member-pskel.hxx"
 #include "../elements/osmelements.h"
+#include <utility>
+#include <memory>
 
 class member_pimpl: public virtual member_pskel
 {

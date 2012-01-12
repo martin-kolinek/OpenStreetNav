@@ -64,6 +64,11 @@ void Way::fill(osmdb::PropertiesSelection& db)
     }
 }
 
+int64_t Way::get_id() const
+{
+	return id;
+}
+
 void Way::add_to_relation(osmdb::ElementImporter& db, int64_t relation, const std::string& role)
 {
     db.insert_member_way(relation, role, id);
@@ -72,14 +77,6 @@ void Way::add_to_relation(osmdb::ElementImporter& db, int64_t relation, const st
 osm::ObjectType Way::get_type() const
 {
     return osm::ObjectType::Way;
-}
-
-bool Way::operator ==(const Element& e) const
-{
-    if (e.get_type() != osm::ObjectType::Way)
-        return false;
-    Way const& w = static_cast<Way const&>(e);
-    return id == w.id && w.tags == tags && w.nodes == nodes;
 }
 
 bool Way::operator !=(const Way& other) const

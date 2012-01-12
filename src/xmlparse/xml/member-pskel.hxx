@@ -31,8 +31,8 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef MEMBER_TYPE_PSKEL_HXX
-#define MEMBER_TYPE_PSKEL_HXX
+#ifndef MEMBER_PSKEL_HXX
+#define MEMBER_PSKEL_HXX
 
 // Begin prologue.
 //
@@ -49,7 +49,7 @@
 
 // Forward declarations
 //
-class member_type_pskel;
+class member_pskel;
 
 #ifndef XSD_USE_CHAR
 #define XSD_USE_CHAR
@@ -60,9 +60,9 @@ class member_type_pskel;
 #endif
 
 #include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
 
-class member_type_pskel: public virtual ::xml_schema::string_pskel
+class member_type_pskel;
+class member_pskel: public ::xml_schema::complex_content
 {
   public:
   // Parser callbacks. Override them in your implementation.
@@ -70,8 +70,67 @@ class member_type_pskel: public virtual ::xml_schema::string_pskel
   // virtual void
   // pre ();
 
-  virtual osm::ObjectType
-  post_member_type () = 0;
+  virtual void
+  type (const osm::ObjectType&);
+
+  virtual void
+  ref (long long);
+
+  virtual void
+  role (const ::std::string&);
+
+  virtual std::pair<std::string, std::shared_ptr<osm::Element> >
+  post_member () = 0;
+
+  // Parser construction API.
+  //
+  void
+  type_parser (::member_type_pskel&);
+
+  void
+  ref_parser (::xml_schema::long_pskel&);
+
+  void
+  role_parser (::xml_schema::string_pskel&);
+
+  void
+  parsers (::member_type_pskel& /* type */,
+           ::xml_schema::long_pskel& /* ref */,
+           ::xml_schema::string_pskel& /* role */);
+
+  // Constructor.
+  //
+  member_pskel ();
+
+  // Implementation.
+  //
+  protected:
+  virtual bool
+  _attribute_impl_phase_one (const ::xml_schema::ro_string&,
+                             const ::xml_schema::ro_string&,
+                             const ::xml_schema::ro_string&);
+
+
+  protected:
+  ::member_type_pskel* type_parser_;
+  ::xml_schema::long_pskel* ref_parser_;
+  ::xml_schema::string_pskel* role_parser_;
+
+  protected:
+  struct v_state_attr_
+  {
+    bool type;
+    bool ref;
+  };
+
+  v_state_attr_ v_state_attr_first_;
+  ::xsd::cxx::parser::pod_stack v_state_attr_stack_;
+
+  virtual void
+  _pre_a_validate ();
+
+  virtual void
+  _post_a_validate ();
 };
 
 #include <xsd/cxx/post.hxx>
@@ -81,4 +140,4 @@ class member_type_pskel: public virtual ::xml_schema::string_pskel
 //
 // End epilogue.
 
-#endif // MEMBER_TYPE_PSKEL_HXX
+#endif // MEMBER_PSKEL_HXX

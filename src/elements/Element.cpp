@@ -14,11 +14,6 @@ Element::~Element()
 {
 }
 
-bool Element::operator !=(const Element& e) const
-{
-    return !(*this == e);
-}
-
 /* namespace osm */
 }
 

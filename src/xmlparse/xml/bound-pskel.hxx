@@ -31,8 +31,8 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef MEMBER_TYPE_PSKEL_HXX
-#define MEMBER_TYPE_PSKEL_HXX
+#ifndef BOUND_PSKEL_HXX
+#define BOUND_PSKEL_HXX
 
 // Begin prologue.
 //
@@ -49,7 +49,7 @@
 
 // Forward declarations
 //
-class member_type_pskel;
+class bound_pskel;
 
 #ifndef XSD_USE_CHAR
 #define XSD_USE_CHAR
@@ -60,9 +60,8 @@ class member_type_pskel;
 #endif
 
 #include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
 
-class member_type_pskel: public virtual ::xml_schema::string_pskel
+class bound_pskel: public ::xml_schema::complex_content
 {
   public:
   // Parser callbacks. Override them in your implementation.
@@ -70,8 +69,43 @@ class member_type_pskel: public virtual ::xml_schema::string_pskel
   // virtual void
   // pre ();
 
-  virtual osm::ObjectType
-  post_member_type () = 0;
+  virtual void
+  box (const ::std::string&);
+
+  virtual void
+  origin (const ::std::string&);
+
+  virtual void
+  post_bound ();
+
+  // Parser construction API.
+  //
+  void
+  box_parser (::xml_schema::string_pskel&);
+
+  void
+  origin_parser (::xml_schema::uri_pskel&);
+
+  void
+  parsers (::xml_schema::string_pskel& /* box */,
+           ::xml_schema::uri_pskel& /* origin */);
+
+  // Constructor.
+  //
+  bound_pskel ();
+
+  // Implementation.
+  //
+  protected:
+  virtual bool
+  _attribute_impl_phase_one (const ::xml_schema::ro_string&,
+                             const ::xml_schema::ro_string&,
+                             const ::xml_schema::ro_string&);
+
+
+  protected:
+  ::xml_schema::string_pskel* box_parser_;
+  ::xml_schema::uri_pskel* origin_parser_;
 };
 
 #include <xsd/cxx/post.hxx>
@@ -81,4 +115,4 @@ class member_type_pskel: public virtual ::xml_schema::string_pskel
 //
 // End epilogue.
 
-#endif // MEMBER_TYPE_PSKEL_HXX
+#endif // BOUND_PSKEL_HXX

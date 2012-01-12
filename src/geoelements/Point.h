@@ -23,6 +23,7 @@ public:
     bool operator>=(Point const& other) const;
     bool operator>(Point const& other) const;
     bool operator<(Point const& other) const;
+    bool before(Point const& other, double tolerance) const;
     bool close(Point const& other, double tolerance) const;
 };
 

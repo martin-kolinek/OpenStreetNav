@@ -13,5 +13,6 @@
 #include "ObjectType.h"
 #include "Relation.h"
 #include "Edge.h"
+#include "CompByID.h"
 
 #endif /* OSMELEMENTS_H_ */

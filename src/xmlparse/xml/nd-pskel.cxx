@@ -31,54 +31,94 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef MEMBER_TYPE_PSKEL_HXX
-#define MEMBER_TYPE_PSKEL_HXX
-
 // Begin prologue.
 //
 //
 // End prologue.
 
-#include <xsd/cxx/config.hxx>
+#include "nd-pskel.hxx"
 
-#if (XSD_INT_VERSION != 3030000L)
-#error XSD runtime version mismatch
-#endif
-
-#include <xsd/cxx/pre.hxx>
-
-// Forward declarations
+// nd_pskel
 //
-class member_type_pskel;
 
-#ifndef XSD_USE_CHAR
-#define XSD_USE_CHAR
-#endif
-
-#ifndef XSD_CXX_PARSER_USE_CHAR
-#define XSD_CXX_PARSER_USE_CHAR
-#endif
-
-#include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
-
-class member_type_pskel: public virtual ::xml_schema::string_pskel
+void nd_pskel::
+ref_parser (::xml_schema::long_pskel& p)
 {
-  public:
-  // Parser callbacks. Override them in your implementation.
-  //
-  // virtual void
-  // pre ();
+  this->ref_parser_ = &p;
+}
 
-  virtual osm::ObjectType
-  post_member_type () = 0;
-};
+void nd_pskel::
+parsers (::xml_schema::long_pskel& ref)
+{
+  this->ref_parser_ = &ref;
+}
 
-#include <xsd/cxx/post.hxx>
+nd_pskel::
+nd_pskel ()
+: ref_parser_ (0),
+  v_state_attr_stack_ (sizeof (v_state_attr_), &v_state_attr_first_)
+{
+}
+
+// nd_pskel
+//
+
+void nd_pskel::
+ref (long long)
+{
+}
+
+#include <cassert>
+
+// Attribute validation and dispatch functions for nd_pskel.
+//
+bool nd_pskel::
+_attribute_impl_phase_one (const ::xml_schema::ro_string& ns,
+                           const ::xml_schema::ro_string& n,
+                           const ::xml_schema::ro_string& s)
+{
+  if (n == "ref" && ns.empty ())
+  {
+    if (this->ref_parser_)
+    {
+      this->ref_parser_->pre ();
+      this->ref_parser_->_pre_impl ();
+      this->ref_parser_->_characters (s);
+      this->ref_parser_->_post_impl ();
+      long long tmp (this->ref_parser_->post_long ());
+      this->ref (tmp);
+    }
+
+    static_cast< v_state_attr_* > (this->v_state_attr_stack_.top ())->ref = true;
+    return true;
+  }
+
+  return false;
+}
+
+void nd_pskel::
+_pre_a_validate ()
+{
+  this->v_state_attr_stack_.push ();
+  v_state_attr_& as = *static_cast< v_state_attr_* > (this->v_state_attr_stack_.top ());
+
+  as.ref = false;
+}
+
+void nd_pskel::
+_post_a_validate ()
+{
+  v_state_attr_& as = *static_cast< v_state_attr_* > (this->v_state_attr_stack_.top ());
+
+  if (!as.ref)
+    this->_expected_attribute (
+      "", "ref");
+
+  this->v_state_attr_stack_.pop ();
+}
 
 // Begin epilogue.
 //
 //
 // End epilogue.
 
-#endif // MEMBER_TYPE_PSKEL_HXX

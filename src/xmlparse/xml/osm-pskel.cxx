@@ -36,160 +36,127 @@
 //
 // End prologue.
 
+#include "osm-pskel.hxx"
+
+#include "bound-pskel.hxx"
+
+#include "node-pskel.hxx"
+
 #include "way-pskel.hxx"
 
-#include "tag-pskel.hxx"
+#include "relation-pskel.hxx"
 
-#include "nd-pskel.hxx"
-
-// way_pskel
+// osm_pskel
 //
 
-void way_pskel::
-tag_parser (::tag_pskel& p)
+void osm_pskel::
+bound_parser (::bound_pskel& p)
 {
-  this->tag_parser_ = &p;
+  this->bound_parser_ = &p;
 }
 
-void way_pskel::
-nd_parser (::nd_pskel& p)
+void osm_pskel::
+node_parser (::node_pskel& p)
 {
-  this->nd_parser_ = &p;
+  this->node_parser_ = &p;
 }
 
-void way_pskel::
-id_parser (::xml_schema::long_pskel& p)
+void osm_pskel::
+way_parser (::way_pskel& p)
 {
-  this->id_parser_ = &p;
+  this->way_parser_ = &p;
 }
 
-void way_pskel::
-uid_parser (::xml_schema::long_pskel& p)
+void osm_pskel::
+relation_parser (::relation_pskel& p)
 {
-  this->uid_parser_ = &p;
+  this->relation_parser_ = &p;
 }
 
-void way_pskel::
-user_parser (::xml_schema::string_pskel& p)
-{
-  this->user_parser_ = &p;
-}
-
-void way_pskel::
-timestamp_parser (::xml_schema::date_time_pskel& p)
-{
-  this->timestamp_parser_ = &p;
-}
-
-void way_pskel::
-changeset_parser (::xml_schema::int_pskel& p)
-{
-  this->changeset_parser_ = &p;
-}
-
-void way_pskel::
-version_parser (::xml_schema::int_pskel& p)
+void osm_pskel::
+version_parser (::xml_schema::string_pskel& p)
 {
   this->version_parser_ = &p;
 }
 
-void way_pskel::
-visible_parser (::xml_schema::boolean_pskel& p)
+void osm_pskel::
+generator_parser (::xml_schema::string_pskel& p)
 {
-  this->visible_parser_ = &p;
+  this->generator_parser_ = &p;
 }
 
-void way_pskel::
-parsers (::tag_pskel& tag,
-         ::nd_pskel& nd,
-         ::xml_schema::long_pskel& id,
-         ::xml_schema::long_pskel& uid,
-         ::xml_schema::string_pskel& user,
-         ::xml_schema::date_time_pskel& timestamp,
-         ::xml_schema::int_pskel& changeset,
-         ::xml_schema::int_pskel& version,
-         ::xml_schema::boolean_pskel& visible)
+void osm_pskel::
+parsers (::bound_pskel& bound,
+         ::node_pskel& node,
+         ::way_pskel& way,
+         ::relation_pskel& relation,
+         ::xml_schema::string_pskel& version,
+         ::xml_schema::string_pskel& generator)
 {
-  this->tag_parser_ = &tag;
-  this->nd_parser_ = &nd;
-  this->id_parser_ = &id;
-  this->uid_parser_ = &uid;
-  this->user_parser_ = &user;
-  this->timestamp_parser_ = &timestamp;
-  this->changeset_parser_ = &changeset;
+  this->bound_parser_ = &bound;
+  this->node_parser_ = &node;
+  this->way_parser_ = &way;
+  this->relation_parser_ = &relation;
   this->version_parser_ = &version;
-  this->visible_parser_ = &visible;
+  this->generator_parser_ = &generator;
 }
 
-way_pskel::
-way_pskel ()
-: tag_parser_ (0),
-  nd_parser_ (0),
-  id_parser_ (0),
-  uid_parser_ (0),
-  user_parser_ (0),
-  timestamp_parser_ (0),
-  changeset_parser_ (0),
+osm_pskel::
+osm_pskel ()
+: bound_parser_ (0),
+  node_parser_ (0),
+  way_parser_ (0),
+  relation_parser_ (0),
   version_parser_ (0),
-  visible_parser_ (0),
+  generator_parser_ (0),
   v_state_stack_ (sizeof (v_state_), &v_state_first_),
   v_state_attr_stack_ (sizeof (v_state_attr_), &v_state_attr_first_)
 {
 }
 
-// way_pskel
+// osm_pskel
 //
 
-void way_pskel::
-tag (const std::pair<std::string, std::string>&)
+void osm_pskel::
+bound ()
 {
 }
 
-void way_pskel::
-nd (int64_t)
+void osm_pskel::
+node (const osm::Node&)
 {
 }
 
-void way_pskel::
-id (long long)
+void osm_pskel::
+way (const osm::Way&)
 {
 }
 
-void way_pskel::
-uid (long long)
+void osm_pskel::
+relation (const osm::Relation&)
 {
 }
 
-void way_pskel::
-user (const ::std::string&)
+void osm_pskel::
+version (const ::std::string&)
 {
 }
 
-void way_pskel::
-timestamp (const ::xml_schema::date_time&)
+void osm_pskel::
+generator (const ::std::string&)
 {
 }
 
-void way_pskel::
-changeset (int)
-{
-}
-
-void way_pskel::
-version (int)
-{
-}
-
-void way_pskel::
-visible (bool)
+void osm_pskel::
+post_osm ()
 {
 }
 
 #include <cassert>
 
-// Element validation and dispatch functions for way_pskel.
+// Element validation and dispatch functions for osm_pskel.
 //
-bool way_pskel::
+bool osm_pskel::
 _start_element_impl (const ::xml_schema::ro_string& ns,
                      const ::xml_schema::ro_string& n,
                      const ::xml_schema::ro_string* t)
@@ -225,24 +192,31 @@ _start_element_impl (const ::xml_schema::ro_string& ns,
     {
       unsigned long s = ~0UL;
 
-      if (n == "tag" && ns.empty ())
+      if (n == "bound" && ns.empty ())
         s = 0UL;
-      else if (n == "nd" && ns.empty ())
+      else if ((n == "node" && ns.empty ()) ||
+               (n == "way" && ns.empty ()) ||
+               (n == "relation" && ns.empty ()))
         s = 1UL;
 
       if (s != ~0UL)
       {
         vd->count++;
+        vd->state = ~0UL;
 
         vd = vs.data + vs.size++;
-        vd->func = &way_pskel::choice_0;
+        vd->func = &osm_pskel::sequence_0;
         vd->state = s;
         vd->count = 0;
 
-        this->choice_0 (vd->state, vd->count, ns, n, t, true);
+        this->sequence_0 (vd->state, vd->count, ns, n, t, true);
       }
       else
       {
+        if (vd->count < 1UL)
+          this->_expected_element (
+            "", "bound",
+            ns, n);
         return false;
       }
     }
@@ -253,7 +227,7 @@ _start_element_impl (const ::xml_schema::ro_string& ns,
   return true;
 }
 
-bool way_pskel::
+bool osm_pskel::
 _end_element_impl (const ::xml_schema::ro_string& ns,
                    const ::xml_schema::ro_string& n)
 {
@@ -276,7 +250,7 @@ _end_element_impl (const ::xml_schema::ro_string& ns,
   return true;
 }
 
-void way_pskel::
+void osm_pskel::
 _pre_e_validate ()
 {
   this->v_state_stack_.push ();
@@ -290,7 +264,7 @@ _pre_e_validate ()
   vd.count = 0;
 }
 
-void way_pskel::
+void osm_pskel::
 _post_e_validate ()
 {
   v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
@@ -304,11 +278,102 @@ _post_e_validate ()
     vd = vs.data + (--vs.size - 1);
   }
 
+  if (vd->count < 1UL)
+    this->_expected_element (
+      "", "bound");
 
   this->v_state_stack_.pop ();
 }
 
-void way_pskel::
+void osm_pskel::
+sequence_0 (unsigned long& state,
+            unsigned long& count,
+            const ::xml_schema::ro_string& ns,
+            const ::xml_schema::ro_string& n,
+            const ::xml_schema::ro_string* t,
+            bool start)
+{
+  XSD_UNUSED (t);
+
+  switch (state)
+  {
+    case 0UL:
+    {
+      if (n == "bound" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->bound_parser_;
+
+          if (this->bound_parser_)
+            this->bound_parser_->pre ();
+        }
+        else
+        {
+          if (this->bound_parser_)
+          {
+            this->bound_parser_->post_bound ();
+            this->bound ();
+          }
+
+          count = 0;
+          state = 1UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        count = 0;
+        state = 1UL;
+        // Fall through.
+      }
+    }
+    case 1UL:
+    {
+      unsigned long s (~0UL);
+
+      if (n == "node" && ns.empty ())
+        s = 0UL;
+      else if (n == "way" && ns.empty ())
+        s = 1UL;
+      else if (n == "relation" && ns.empty ())
+        s = 2UL;
+
+      if (s != ~0UL)
+      {
+        assert (start);
+        count++;
+
+        v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
+        v_state_descr_& vd = vs.data[vs.size++];
+
+        vd.func = &osm_pskel::choice_0;
+        vd.state = s;
+        vd.count = 0;
+
+        this->choice_0 (vd.state, vd.count, ns, n, t, true);
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "node",
+            ns, n);
+        count = 0;
+        state = ~0UL;
+        // Fall through.
+      }
+    }
+    case ~0UL:
+      break;
+  }
+}
+
+void osm_pskel::
 choice_0 (unsigned long& state,
           unsigned long& count,
           const ::xml_schema::ro_string& ns,
@@ -327,17 +392,17 @@ choice_0 (unsigned long& state,
     {
       if (start)
       {
-        this->::xml_schema::complex_content::context_.top ().parser_ = this->tag_parser_;
+        this->::xml_schema::complex_content::context_.top ().parser_ = this->node_parser_;
 
-        if (this->tag_parser_)
-          this->tag_parser_->pre ();
+        if (this->node_parser_)
+          this->node_parser_->pre ();
       }
       else
       {
-        if (this->tag_parser_)
+        if (this->node_parser_)
         {
-          const std::pair<std::string, std::string>& tmp (this->tag_parser_->post_tag ());
-          this->tag (tmp);
+          const osm::Node& tmp (this->node_parser_->post_node ());
+          this->node (tmp);
         }
 
         state = ~0UL;
@@ -349,17 +414,39 @@ choice_0 (unsigned long& state,
     {
       if (start)
       {
-        this->::xml_schema::complex_content::context_.top ().parser_ = this->nd_parser_;
+        this->::xml_schema::complex_content::context_.top ().parser_ = this->way_parser_;
 
-        if (this->nd_parser_)
-          this->nd_parser_->pre ();
+        if (this->way_parser_)
+          this->way_parser_->pre ();
       }
       else
       {
-        if (this->nd_parser_)
+        if (this->way_parser_)
         {
-          int64_t tmp (this->nd_parser_->post_nd ());
-          this->nd (tmp);
+          const osm::Way& tmp (this->way_parser_->post_way ());
+          this->way (tmp);
+        }
+
+        state = ~0UL;
+      }
+
+      break;
+    }
+    case 2UL:
+    {
+      if (start)
+      {
+        this->::xml_schema::complex_content::context_.top ().parser_ = this->relation_parser_;
+
+        if (this->relation_parser_)
+          this->relation_parser_->pre ();
+      }
+      else
+      {
+        if (this->relation_parser_)
+        {
+          const osm::Relation& tmp (this->relation_parser_->post_relation ());
+          this->relation (tmp);
         }
 
         state = ~0UL;
@@ -370,89 +457,13 @@ choice_0 (unsigned long& state,
   }
 }
 
-// Attribute validation and dispatch functions for way_pskel.
+// Attribute validation and dispatch functions for osm_pskel.
 //
-bool way_pskel::
+bool osm_pskel::
 _attribute_impl_phase_one (const ::xml_schema::ro_string& ns,
                            const ::xml_schema::ro_string& n,
                            const ::xml_schema::ro_string& s)
 {
-  if (n == "id" && ns.empty ())
-  {
-    if (this->id_parser_)
-    {
-      this->id_parser_->pre ();
-      this->id_parser_->_pre_impl ();
-      this->id_parser_->_characters (s);
-      this->id_parser_->_post_impl ();
-      long long tmp (this->id_parser_->post_long ());
-      this->id (tmp);
-    }
-
-    static_cast< v_state_attr_* > (this->v_state_attr_stack_.top ())->id = true;
-    return true;
-  }
-
-  if (n == "uid" && ns.empty ())
-  {
-    if (this->uid_parser_)
-    {
-      this->uid_parser_->pre ();
-      this->uid_parser_->_pre_impl ();
-      this->uid_parser_->_characters (s);
-      this->uid_parser_->_post_impl ();
-      long long tmp (this->uid_parser_->post_long ());
-      this->uid (tmp);
-    }
-
-    return true;
-  }
-
-  if (n == "user" && ns.empty ())
-  {
-    if (this->user_parser_)
-    {
-      this->user_parser_->pre ();
-      this->user_parser_->_pre_impl ();
-      this->user_parser_->_characters (s);
-      this->user_parser_->_post_impl ();
-      const ::std::string& tmp (this->user_parser_->post_string ());
-      this->user (tmp);
-    }
-
-    return true;
-  }
-
-  if (n == "timestamp" && ns.empty ())
-  {
-    if (this->timestamp_parser_)
-    {
-      this->timestamp_parser_->pre ();
-      this->timestamp_parser_->_pre_impl ();
-      this->timestamp_parser_->_characters (s);
-      this->timestamp_parser_->_post_impl ();
-      const ::xml_schema::date_time& tmp (this->timestamp_parser_->post_date_time ());
-      this->timestamp (tmp);
-    }
-
-    return true;
-  }
-
-  if (n == "changeset" && ns.empty ())
-  {
-    if (this->changeset_parser_)
-    {
-      this->changeset_parser_->pre ();
-      this->changeset_parser_->_pre_impl ();
-      this->changeset_parser_->_characters (s);
-      this->changeset_parser_->_post_impl ();
-      int tmp (this->changeset_parser_->post_int ());
-      this->changeset (tmp);
-    }
-
-    return true;
-  }
-
   if (n == "version" && ns.empty ())
   {
     if (this->version_parser_)
@@ -461,23 +472,24 @@ _attribute_impl_phase_one (const ::xml_schema::ro_string& ns,
       this->version_parser_->_pre_impl ();
       this->version_parser_->_characters (s);
       this->version_parser_->_post_impl ();
-      int tmp (this->version_parser_->post_int ());
+      const ::std::string& tmp (this->version_parser_->post_string ());
       this->version (tmp);
     }
 
+    static_cast< v_state_attr_* > (this->v_state_attr_stack_.top ())->version = true;
     return true;
   }
 
-  if (n == "visible" && ns.empty ())
+  if (n == "generator" && ns.empty ())
   {
-    if (this->visible_parser_)
+    if (this->generator_parser_)
     {
-      this->visible_parser_->pre ();
-      this->visible_parser_->_pre_impl ();
-      this->visible_parser_->_characters (s);
-      this->visible_parser_->_post_impl ();
-      bool tmp (this->visible_parser_->post_boolean ());
-      this->visible (tmp);
+      this->generator_parser_->pre ();
+      this->generator_parser_->_pre_impl ();
+      this->generator_parser_->_characters (s);
+      this->generator_parser_->_post_impl ();
+      const ::std::string& tmp (this->generator_parser_->post_string ());
+      this->generator (tmp);
     }
 
     return true;
@@ -486,23 +498,23 @@ _attribute_impl_phase_one (const ::xml_schema::ro_string& ns,
   return false;
 }
 
-void way_pskel::
+void osm_pskel::
 _pre_a_validate ()
 {
   this->v_state_attr_stack_.push ();
   v_state_attr_& as = *static_cast< v_state_attr_* > (this->v_state_attr_stack_.top ());
 
-  as.id = false;
+  as.version = false;
 }
 
-void way_pskel::
+void osm_pskel::
 _post_a_validate ()
 {
   v_state_attr_& as = *static_cast< v_state_attr_* > (this->v_state_attr_stack_.top ());
 
-  if (!as.id)
+  if (!as.version)
     this->_expected_attribute (
-      "", "id");
+      "", "version");
 
   this->v_state_attr_stack_.pop ();
 }

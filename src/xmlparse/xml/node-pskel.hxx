@@ -31,8 +31,8 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef WAY_PSKEL_HXX
-#define WAY_PSKEL_HXX
+#ifndef NODE_PSKEL_HXX
+#define NODE_PSKEL_HXX
 
 // Begin prologue.
 //
@@ -49,7 +49,7 @@
 
 // Forward declarations
 //
-class way_pskel;
+class node_pskel;
 
 #ifndef XSD_USE_CHAR
 #define XSD_USE_CHAR
@@ -60,11 +60,9 @@ class way_pskel;
 #endif
 
 #include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
 
 class tag_pskel;
-class nd_pskel;
-class way_pskel: public ::xml_schema::complex_content
+class node_pskel: public ::xml_schema::complex_content
 {
   public:
   // Parser callbacks. Override them in your implementation.
@@ -74,9 +72,6 @@ class way_pskel: public ::xml_schema::complex_content
 
   virtual void
   tag (const std::pair<std::string, std::string>&);
-
-  virtual void
-  nd (int64_t);
 
   virtual void
   id (long long);
@@ -99,16 +94,22 @@ class way_pskel: public ::xml_schema::complex_content
   virtual void
   visible (bool);
 
-  virtual osm::Way
-  post_way () = 0;
+  virtual void
+  lat (double);
+
+  virtual void
+  lon (double);
+
+  virtual void
+  action (const ::std::string&);
+
+  virtual osm::Node
+  post_node () = 0;
 
   // Parser construction API.
   //
   void
   tag_parser (::tag_pskel&);
-
-  void
-  nd_parser (::nd_pskel&);
 
   void
   id_parser (::xml_schema::long_pskel&);
@@ -132,19 +133,30 @@ class way_pskel: public ::xml_schema::complex_content
   visible_parser (::xml_schema::boolean_pskel&);
 
   void
+  lat_parser (::xml_schema::decimal_pskel&);
+
+  void
+  lon_parser (::xml_schema::decimal_pskel&);
+
+  void
+  action_parser (::xml_schema::string_pskel&);
+
+  void
   parsers (::tag_pskel& /* tag */,
-           ::nd_pskel& /* nd */,
            ::xml_schema::long_pskel& /* id */,
            ::xml_schema::long_pskel& /* uid */,
            ::xml_schema::string_pskel& /* user */,
            ::xml_schema::date_time_pskel& /* timestamp */,
            ::xml_schema::int_pskel& /* changeset */,
            ::xml_schema::int_pskel& /* version */,
-           ::xml_schema::boolean_pskel& /* visible */);
+           ::xml_schema::boolean_pskel& /* visible */,
+           ::xml_schema::decimal_pskel& /* lat */,
+           ::xml_schema::decimal_pskel& /* lon */,
+           ::xml_schema::string_pskel& /* action */);
 
   // Constructor.
   //
-  way_pskel ();
+  node_pskel ();
 
   // Implementation.
   //
@@ -166,7 +178,6 @@ class way_pskel: public ::xml_schema::complex_content
 
   protected:
   ::tag_pskel* tag_parser_;
-  ::nd_pskel* nd_parser_;
   ::xml_schema::long_pskel* id_parser_;
   ::xml_schema::long_pskel* uid_parser_;
   ::xml_schema::string_pskel* user_parser_;
@@ -174,11 +185,14 @@ class way_pskel: public ::xml_schema::complex_content
   ::xml_schema::int_pskel* changeset_parser_;
   ::xml_schema::int_pskel* version_parser_;
   ::xml_schema::boolean_pskel* visible_parser_;
+  ::xml_schema::decimal_pskel* lat_parser_;
+  ::xml_schema::decimal_pskel* lon_parser_;
+  ::xml_schema::string_pskel* action_parser_;
 
   protected:
   struct v_state_descr_
   {
-    void (::way_pskel::*func) (
+    void (::node_pskel::*func) (
       unsigned long&,
       unsigned long&,
       const ::xml_schema::ro_string&,
@@ -205,17 +219,19 @@ class way_pskel: public ::xml_schema::complex_content
   _post_e_validate ();
 
   void
-  choice_0 (unsigned long& state,
-            unsigned long& count,
-            const ::xml_schema::ro_string& ns,
-            const ::xml_schema::ro_string& n,
-            const ::xml_schema::ro_string* t,
-            bool start);
+  sequence_0 (unsigned long& state,
+              unsigned long& count,
+              const ::xml_schema::ro_string& ns,
+              const ::xml_schema::ro_string& n,
+              const ::xml_schema::ro_string* t,
+              bool start);
 
   protected:
   struct v_state_attr_
   {
     bool id;
+    bool lat;
+    bool lon;
   };
 
   v_state_attr_ v_state_attr_first_;
@@ -235,4 +251,4 @@ class way_pskel: public ::xml_schema::complex_content
 //
 // End epilogue.
 
-#endif // WAY_PSKEL_HXX
+#endif // NODE_PSKEL_HXX

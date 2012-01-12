@@ -19,6 +19,7 @@ public:
 	std::function<void (osm::Node const&)> node_handler;
 	std::function<void (osm::Way const&)> way_handler;
 	std::function<void (osm::Relation const&)> relation_handler;
+	std::function<void ()> progress_handler;
 
 	virtual void
 	pre ();

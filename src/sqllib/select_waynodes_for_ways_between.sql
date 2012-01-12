@@ -8,7 +8,7 @@
 --test-depend insert_way 20
 --test-depend insert_way_node 20, 21, 1
 --test-depend insert_way_node 20, 22, 2
---test-depend insert_edge 20, 21, 22
+--test-depend insert_edge 20, 21, 22, 0
 --test-param 10, 30
 --test-result 0
 --test-result 1

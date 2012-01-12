@@ -60,7 +60,6 @@ class member_type_pskel;
 #endif
 
 #include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
 
 class member_type_pskel: public virtual ::xml_schema::string_pskel
 {

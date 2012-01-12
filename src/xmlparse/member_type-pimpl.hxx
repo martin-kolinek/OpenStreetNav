@@ -9,6 +9,7 @@
 #define MEMBER_TYPE_PIMPL_HXX
 
 #include "member_type-pskel.hxx"
+#include "../elements/osmelements.h"
 
 class member_type_pimpl: public virtual member_type_pskel,
   public ::xml_schema::string_pimpl

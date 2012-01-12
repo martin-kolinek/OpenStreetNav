@@ -31,54 +31,105 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef MEMBER_TYPE_PSKEL_HXX
-#define MEMBER_TYPE_PSKEL_HXX
-
 // Begin prologue.
 //
 //
 // End prologue.
 
-#include <xsd/cxx/config.hxx>
+#include "bound-pskel.hxx"
 
-#if (XSD_INT_VERSION != 3030000L)
-#error XSD runtime version mismatch
-#endif
-
-#include <xsd/cxx/pre.hxx>
-
-// Forward declarations
+// bound_pskel
 //
-class member_type_pskel;
 
-#ifndef XSD_USE_CHAR
-#define XSD_USE_CHAR
-#endif
-
-#ifndef XSD_CXX_PARSER_USE_CHAR
-#define XSD_CXX_PARSER_USE_CHAR
-#endif
-
-#include "xml_schema-pskel.hxx"
-#include "../elements/osmelements.h"
-
-class member_type_pskel: public virtual ::xml_schema::string_pskel
+void bound_pskel::
+box_parser (::xml_schema::string_pskel& p)
 {
-  public:
-  // Parser callbacks. Override them in your implementation.
-  //
-  // virtual void
-  // pre ();
+  this->box_parser_ = &p;
+}
 
-  virtual osm::ObjectType
-  post_member_type () = 0;
-};
+void bound_pskel::
+origin_parser (::xml_schema::uri_pskel& p)
+{
+  this->origin_parser_ = &p;
+}
 
-#include <xsd/cxx/post.hxx>
+void bound_pskel::
+parsers (::xml_schema::string_pskel& box,
+         ::xml_schema::uri_pskel& origin)
+{
+  this->box_parser_ = &box;
+  this->origin_parser_ = &origin;
+}
+
+bound_pskel::
+bound_pskel ()
+: box_parser_ (0),
+  origin_parser_ (0)
+{
+}
+
+// bound_pskel
+//
+
+void bound_pskel::
+box (const ::std::string&)
+{
+}
+
+void bound_pskel::
+origin (const ::std::string&)
+{
+}
+
+void bound_pskel::
+post_bound ()
+{
+}
+
+#include <cassert>
+
+// Attribute validation and dispatch functions for bound_pskel.
+//
+bool bound_pskel::
+_attribute_impl_phase_one (const ::xml_schema::ro_string& ns,
+                           const ::xml_schema::ro_string& n,
+                           const ::xml_schema::ro_string& s)
+{
+  if (n == "box" && ns.empty ())
+  {
+    if (this->box_parser_)
+    {
+      this->box_parser_->pre ();
+      this->box_parser_->_pre_impl ();
+      this->box_parser_->_characters (s);
+      this->box_parser_->_post_impl ();
+      const ::std::string& tmp (this->box_parser_->post_string ());
+      this->box (tmp);
+    }
+
+    return true;
+  }
+
+  if (n == "origin" && ns.empty ())
+  {
+    if (this->origin_parser_)
+    {
+      this->origin_parser_->pre ();
+      this->origin_parser_->_pre_impl ();
+      this->origin_parser_->_characters (s);
+      this->origin_parser_->_post_impl ();
+      const ::std::string& tmp (this->origin_parser_->post_uri ());
+      this->origin (tmp);
+    }
+
+    return true;
+  }
+
+  return false;
+}
 
 // Begin epilogue.
 //
 //
 // End epilogue.
 
-#endif // MEMBER_TYPE_PSKEL_HXX

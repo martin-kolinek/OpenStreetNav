@@ -27,6 +27,9 @@ public:
     void rollback_transaction();
     void savepoint(std::string const& name);
     void rollback_to_savepoint(std::string const& name);
+    void analyze();
+    void set_schema(std::string const& schema);
+    void create_schema(std::string const& schema);
     PGconn* get_db();
     boost::signal<void (PGresult const&)>& notice_signal();
     virtual ~Database();

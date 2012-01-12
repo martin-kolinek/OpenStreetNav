@@ -59,7 +59,7 @@ std::string get_els_text(std::vector<std::unique_ptr<osm::Element> > const& els)
     str << "clicked" << std::endl;
     for (unsigned int i = 0; i < els.size(); ++i)
     {
-        if (util::find<decltype(util::get_dereferenced_equal_to(*used.begin(), els[i]))>(used.begin(), used.end(), els[i]) == used.end())
+        if (util::find<decltype(osm::deref_eq_by_id(*used.begin(), els[i]))>(used.begin(), used.end(), els[i]) == used.end())
         {
             used.push_back(els[i].get());
             write_ptree(els[i]->get_description(), str, 0);

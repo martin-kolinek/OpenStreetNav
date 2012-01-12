@@ -25,6 +25,7 @@
 			<xs:element name="tag" type="tag" maxOccurs="unbounded" minOccurs="0"></xs:element>
 		</xs:sequence>
         <xs:attribute name="id" type="xs:long" use="required" />
+        <xs:attribute name="uid" type="xs:long" use="optional" />
 		<xs:attribute name="user" type="xs:string"></xs:attribute>
 		<xs:attribute name="timestamp" type="xs:dateTime" use="optional" />
 		<xs:attribute name="changeset" type="xs:int" use="optional" />
@@ -62,6 +63,7 @@
 			<xs:element name="member" type="member" />
 		</xs:choice>
         <xs:attribute name="id" type="xs:long" use="required" />
+        <xs:attribute name="uid" type="xs:long" use="optional" />
 		<xs:attribute name="user" type="xs:string"></xs:attribute>
 		<xs:attribute name="timestamp" type="xs:dateTime" use="optional" />
 		<xs:attribute name="changeset" type="xs:int" use="optional" />
@@ -80,6 +82,7 @@
 		    <xs:element name="nd" type="nd" />
 	    </xs:choice>
         <xs:attribute name="id" type="xs:long" use="required" />
+        <xs:attribute name="uid" type="xs:long" use="optional" />
         <xs:attribute name="user" type="xs:string"></xs:attribute>
         <xs:attribute name="timestamp" type="xs:dateTime" use="optional" />
         <xs:attribute name="changeset" type="xs:int" use="optional" />

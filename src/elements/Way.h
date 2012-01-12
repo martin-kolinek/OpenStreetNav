@@ -28,11 +28,11 @@ public:
     std::multimap<std::string, std::string> tags;
     boost::property_tree::ptree get_description();
     osm::ObjectType get_type() const;
-    bool operator==(Element const& e) const;
+    bool operator==(Way const& e) const;
+    bool operator!=(Way const& e) const;
     void fill(osmdb::PropertiesSelection& db);
+    virtual int64_t get_id() const;
     void add_to_relation(osmdb::ElementImporter& db, int64_t relation, std::string const& role);
-    bool operator==(Way const& other) const;
-    bool operator!=(Way const& other) const;
 };
 
 }

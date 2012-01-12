@@ -5,7 +5,7 @@
 --test-depend insert_way 41
 --test-depend insert_node 10, 25, 40
 --test-depend insert_node 11, 20, 30
---test-depend insert_edge 41, 10, 11
+--test-depend insert_edge 41, 10, 11, 0
 --test-depend create_toshow_table
 --test-depend create_way_attributes
 --test-depend insert_way_attr 41, "asdf", "asdf"

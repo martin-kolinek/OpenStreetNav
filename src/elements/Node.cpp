@@ -63,17 +63,14 @@ osm::ObjectType Node::get_type() const
     return osm::ObjectType::Node;
 }
 
-bool Node::operator ==(const Element& e) const
-{
-    if (e.get_type() != osm::ObjectType::Node)
-        return false;
-    Node const& n = static_cast<Node const&>(e);
-    return n.id == id && position.close(n.position, 0.0000000001) && n.tags == tags;
-}
-
 bool Node::operator !=(const Node& other) const
 {
     return !(*this == other);
+}
+
+int64_t Node::get_id() const
+{
+	return id;
 }
 
 }
