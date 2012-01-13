@@ -167,7 +167,7 @@ void copy_to_db(std::string const& filename, osmdb::OsmDatabase& db)
 	std::cout << "Done copying" << std::endl;
 }
 
-bool process_import_table(osmdb::OsmDatabase& db, bool quiet)
+bool process_import_table(osmdb::OsmDatabase& db, bool quiet, bool recreate)
 {
 	osmdb::ImportTableProcessor proc(db);
 	bool status=false;
@@ -177,7 +177,7 @@ bool process_import_table(osmdb::OsmDatabase& db, bool quiet)
 			status = true;
 		else
 			status = proceed_handler();
-		if(status)
+		if(status && recreate)
 			db.drop_primary_keys();
 		return status;
 	});
@@ -216,7 +216,7 @@ int import(std::string const& inp, std::string const& dbname, std::string const&
 		if(copy)
 			copy_to_db(inp, db);
 		if(import)
-			status = process_import_table(db, quiet);
+			status = process_import_table(db, quiet, recreate);
 		if (recreate)
 		{
 			std::cout << "Recreating indexes and keys" << std::endl;
