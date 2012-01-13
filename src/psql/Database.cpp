@@ -2,8 +2,8 @@
 
 #include <poll.h>
 #include <libpqtypes.h>
-#include "PgSqlException.h"
 #include "psql.h"
+#include "PgSqlException.h"
 
 namespace psql
 {
@@ -17,12 +17,14 @@ void Database::commit_transaction()
 {
 	savepoints.clear();
 	execute_sql(*this, "COMMIT TRANSACTION");
+	cursors.clear();
 }
 
 void Database::rollback_transaction()
 {
 	savepoints.clear();
 	execute_sql(*this, "ROLLBACK TRANSACTION");
+	cursors.clear();
 }
 
 void Database::savepoint(const std::string& name)
@@ -45,17 +47,46 @@ void Database::analyze()
 
 void Database::set_schema(const std::string & schema)
 {
-	psql::execute_sql(*this, "SET search_path TO " + schema + ", public");
+	execute_sql(*this, "SET search_path TO " + schema + ", public");
 }
 
 void Database::create_schema(const std::string & schema)
 {
-	psql::execute_sql(*this, "CREATE SCHEMA " + schema);
+	execute_sql(*this, "CREATE SCHEMA " + schema);
+}
+
+bool Database::in_transaction()
+{
+	auto c = get_db();
+	auto res = PQtransactionStatus(c);
+	return res == PQTRANS_INTRANS;
+}
+
+bool Database::in_failed_transaction()
+{
+	auto c = get_db();
+	auto res = PQtransactionStatus(c);
+	return res == PQTRANS_INERROR;
+}
+
+void Database::add_cursor(ICursor *curs)
+{
+	cursors.insert(curs);
+}
+
+void Database::remove_cursor(ICursor *curs)
+{
+	cursors.erase(curs);
+}
+
+bool Database::is_cursor(ICursor *curs) const
+{
+	return cursors.find(curs)!=cursors.end();
 }
 
 void noticeReceiver(void *arg, const PGresult *res)
 {
-	((Database*)((((arg)))))->receiveNotice(res);
+	((Database*)arg)->receiveNotice(res);
 }
 
 Database::Database(const std::string & conninfo, bool synchr)
@@ -76,7 +107,7 @@ Database::Database(const std::string & conninfo, bool synchr)
 		throw PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
 
 	if(!async){
-		PQsetNoticeReceiver(conn, noticeReceiver, (void*)((((this)))));
+		PQsetNoticeReceiver(conn, noticeReceiver, (void*)((((((this)))))));
 	}
 }
 
@@ -110,22 +141,21 @@ PGconn* Database::get_db()
 				throw PgSqlException("Connection to server lost: " + std::string(PQerrorMessage(conn)));
 		}
 	}
-	while (to_dealloc.size() > 0)
+	unsigned int dealloc_target = 0;
+	while (to_dealloc.size() > dealloc_target)
 	{
-		std::string name(to_dealloc.back());
-		to_dealloc.pop_back();
+		std::string name(to_dealloc[dealloc_target]);
 		auto res = PQexec(conn, ("DEALLOCATE " + name).c_str());
-		if (res == NULL)
+		if (res == NULL || PQresultStatus(res) != PGRES_COMMAND_OK)
 		{
-			throw PgSqlException("Error deallocating prepared statement which had to be deallocated " + std::string(PQerrorMessage(conn)));
+			dealloc_target++;
 		}
-		if (PQresultStatus(res) != PGRES_COMMAND_OK)
+		else
 		{
-			std::string str(PQresultErrorMessage(res));
+			to_dealloc.erase(to_dealloc.begin()+dealloc_target);
+		}
+		if(res!=NULL)
 			PQclear(res);
-			throw PgSqlException("Error deallocating prepared statement which had to be deallocated " + str);
-		}
-		PQclear(res);
 	}
 	return conn;
 }

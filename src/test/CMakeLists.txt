@@ -1,7 +1,12 @@
-add_executable(tests test.cpp sqlite.cpp osmdb.cpp xml.cpp projection.cpp util.cpp psql.cpp sqllib2.cpp sqllib.cpp osmelements.cpp)
+add_executable(tests test.cpp sqlite.cpp osmdb.cpp xml.cpp projection.cpp util.cpp psql.cpp sqllib2.cpp sqllib.cpp osmelements.cpp wayreduction_test.cpp)
 SET(TOSHOW_TEST_PATH ${CMAKE_BINARY_DIR}/share/toshow/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/testtoshow DESTINATION ${TOSHOW_TEST_PATH})
+
+SET(REDUCT_TEST_PATH ${CMAKE_BINARY_DIR}/share/reduction)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_reduction DESTINATION ${REDUCT_TEST_PATH})
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/testconf.h.in ${CMAKE_BINARY_DIR}/include/test_config.h)
+
 target_link_libraries(tests util projection wkb psql xmlparse sqllib sqlitewrap osmdb ${Boost_TEST_EXEC_MONITOR_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY})
 
 add_custom_target(test_to_show ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/testtoshow ${TOSHOW_TEST_PATH}/testtoshow)  

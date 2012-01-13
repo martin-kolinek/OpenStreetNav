@@ -20,11 +20,13 @@ public:
         st.execute();
         st = psql::Statement<psql::BindTypes<>, psql::RetTypes<> >("SET search_path TO testing, public", db);
         st.execute();
+        db.begin_transaction();
     }
     ~SqlLibFixture()
     {
         try
         {
+        	db.rollback_transaction();
             psql::Statement<psql::BindTypes<>, psql::RetTypes<> > st("DROP SCHEMA testing CASCADE", db);
             st.execute();
         }
