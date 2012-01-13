@@ -24,12 +24,7 @@ WayLister::WayLister(OsmDatabase& db, std::string const& way_attribute_xml, unsi
     get_way_descr.open();
 }
 
-const std::vector<osm::Way> & WayLister::get_current_ways()
-{
-    return current_ways;
-}
-
-const std::multimap<osm::Node, osm::Way, osm::LtByID> & WayLister::get_current_connected_ways()
+std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> const& WayLister::get_current_connected_ways() const
 {
     return current_connected_ways;
 }
@@ -44,7 +39,7 @@ void WayLister::next()
     std::vector<osm::Way> cross_ways;
     osm::Way last_cross_way(-1);
     auto const& buf = get_way_descr.get_buffer();
-    std::vector<std::pair<osm::Node, osm::Way> > conn_ways_for_way;
+    std::multimap<osm::Node, osm::Way, osm::LtByID> conn_ways_for_way;
 
     osm::Node last_node(-1);
 
@@ -72,11 +67,17 @@ void WayLister::next()
         {
             if (way.id != -1)
             {
+                if (last_cross_way.id != -1)
+                {
+                    cross_ways.push_back(last_cross_way);
+                }
                 if (last_node.id != -1)
+                {
+                    for (unsigned int j = 0; j < cross_ways.size(); ++j)
+                        conn_ways_for_way.insert(std::pair<osm::Node, osm::Way>(last_node, cross_ways[j]));
                     way.nodes.push_back(last_node);
-                current_ways.push_back(way);
-                for (unsigned int i = 0; i < conn_ways_for_way.size(); ++i)
-                    current_connected_ways.insert(conn_ways_for_way[i]);
+                }
+                current_connected_ways.insert(std::make_pair(way, conn_ways_for_way));
             }
             conn_ways_for_way.clear();
             way.id = wid;
@@ -94,7 +95,7 @@ void WayLister::next()
                 if (last_cross_way.id != -1)
                     cross_ways.push_back(last_cross_way);
                 for (unsigned int j = 0; j < cross_ways.size(); ++j)
-                    conn_ways_for_way.push_back(std::pair<osm::Node, osm::Way>(last_node, cross_ways[j]));
+                    conn_ways_for_way.insert(std::pair<osm::Node, osm::Way>(last_node, cross_ways[j]));
             }
             last_node.id = nid;
             last_node.position.lon = lon;

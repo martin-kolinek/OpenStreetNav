@@ -16,46 +16,46 @@ namespace osm
 class EqByID
 {
 public:
-    bool operator()(Element const& a, Element const& b);
+    bool operator()(Element const& a, Element const& b) const;
 
 };
 
 class NeByID
 {
 public:
-    bool operator()(Element const& a, Element const& b);
+    bool operator()(Element const& a, Element const& b) const;
 
 };
 
 class LtByID
 {
 public:
-    bool operator()(Element const& a, Element const& b);
+    bool operator()(Element const& a, Element const& b) const;
 };
 
 class GtByID
 {
 public:
-    bool operator()(Element const& a, Element const& b);
+    bool operator()(Element const& a, Element const& b) const;
 };
 
 class GeByID
 {
 public:
-    bool operator()(Element const& a, Element const& b);
+    bool operator()(Element const& a, Element const& b) const;
 };
 
 class LeByID
 {
 public:
-    bool operator()(Element const& a, Element const& b);
+    bool operator()(Element const& a, Element const& b) const;
 };
 
 template<typename A, typename B>
 class DerefEqByID
 {
 public:
-    bool operator()(A const& a, B const& b)
+    bool operator()(A const& a, B const& b) const
     {
         return EqByID()(*a, *b);
     }

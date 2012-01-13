@@ -11,6 +11,7 @@
 #include "../osmdb/osmdb.h"
 #include "../sqllib/sqllib.h"
 #include <test_config.h>
+#include <algorithm>
 
 class OsmDBFixture
 {
@@ -328,45 +329,77 @@ BOOST_AUTO_TEST_CASE(waylister)
     ins.insert_node(osm::Node(3, 0.4, 0.8));
     ins.insert_node(osm::Node(4, 0.4, 0.8));
     ins.insert_node(osm::Node(5, 0.4, 0.8));
+    ins.insert_node(osm::Node(6, 0.4, 0.8));
+    ins.insert_node(osm::Node(7, 0.4, 0.8));
+    ins.insert_node(osm::Node(8, 0.4, 0.8));
     osm::Way w(1);
     w.nodes.push_back(osm::Node(2, 0.4, 0.4));
     w.nodes.push_back(osm::Node(3, 0.4, 0.8));
     w.nodes.push_back(osm::Node(4, 0.4, 0.8));
     w.tags.insert(osm::Tag("key", "val"));
     ins.insert_way(w);
-    w.tags.clear();
-    std::vector<osm::Way> exp {w};
-    w.id = 2;
-    w.nodes.clear();
-    w.nodes.push_back(3);
-    w.nodes.push_back(5);
-    w.tags.clear();
-    w.tags.insert(osm::Tag("asdf", "bsdf"));
-    w.tags.insert(osm::Tag("fcda", "gas"));
-    ins.insert_way(w);
+    osm::Way w2(2);
+    w2.nodes.push_back(3);
+    w2.nodes.push_back(5);
+    w2.tags.insert(osm::Tag("asdf", "bsdf"));
+    w2.tags.insert(osm::Tag("fcda", "gas"));
+    ins.insert_way(w2);
+    osm::Way w3(3);
+    w3.tags.insert(osm::Tag("key", "val"));
+    w3.nodes.push_back(osm::Node(4, 0.4, 0.8));
+    w3.nodes.push_back(osm::Node(5, 0.4, 0.8));
+    w3.nodes.push_back(osm::Node(6, 0.4, 0.8));
+    ins.insert_way(w3);
+    osm::Way w4(4);
+    w4.nodes.push_back(5);
+    w4.nodes.push_back(7);
+    ins.insert_way(w4);
+    osm::Way w5(5);
+    w5.nodes.push_back(6);
+    w5.nodes.push_back(8);
+    ins.insert_way(w5);
+    std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> exp;
+    std::multimap<osm::Node, osm::Way, osm::LtByID> mp;
+    mp.insert(std::make_pair(osm::Node(3, 0.4, 0.8), w2));
+    mp.insert(std::make_pair(osm::Node(4, 0.4, 0.8), w3));
+    exp[w] = mp;
+    mp.clear();
+    mp.insert(std::make_pair(osm::Node(4, 0.4, 0.8), w));
+    mp.insert(std::make_pair(osm::Node(5, 0.4, 0.8), w4));
+    mp.insert(std::make_pair(osm::Node(5, 0.4, 0.8), w2));
+    mp.insert(std::make_pair(osm::Node(6, 0.4, 0.8), w5));
+    exp[w3] = mp;
     pdb.commit_transaction();
     pdb.begin_transaction();
+    std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> got;
     osmdb::WayLister wl(odb, TEST_REDUCT_PATH, 2);
-    w.nodes.clear();
-    std::multimap<osm::Node, osm::Way, osm::LtByID> exp_mp;
-    exp_mp.insert(std::make_pair(osm::Node(3, 0.4, 0.8), w));
-    std::multimap<osm::Node, osm::Way, osm::LtByID> got_mp;
-    std::vector<osm::Way> got;
     while (!wl.end())
     {
         wl.next();
         for (auto it = wl.get_current_connected_ways().begin(); it != wl.get_current_connected_ways().end(); ++it)
         {
-            got_mp.insert(*it);
-        }
-        for (unsigned int i = 0; i < wl.get_current_ways().size(); ++i)
-        {
-            got.push_back(wl.get_current_ways()[i]);
+            got.insert(*it);
         }
     }
     pdb.commit_transaction();
-    BOOST_CHECK(exp == got);
-    BOOST_CHECK(exp_mp == got_mp);
+    class WayCmpIgnNd
+    {
+    public:
+        bool operator()(osm::Way const& w1, osm::Way const& w2)
+        {
+            return w1.id == w2.id && util::multimap_eq(w1.tags, w2.tags);
+        }
+    };
+    class Comp
+    {
+    public:
+        bool operator()(decltype(*got.begin()) p1, decltype(*got.begin()) p2)
+        {
+            return osm::EqByID()(p1.first, p2.first) && util::multimap_eq<WayCmpIgnNd>(p1.second, p2.second);
+        }
+    } cmp;
+    bool b = std::equal(got.begin(), got.end(), exp.begin(), cmp);
+    BOOST_CHECK(b);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
