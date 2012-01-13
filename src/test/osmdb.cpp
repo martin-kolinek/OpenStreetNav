@@ -24,8 +24,8 @@ public:
     }
     ~OsmDBFixture()
     {
-    	if(pdb.in_transaction() || pdb.in_failed_transaction())
-    		pdb.rollback_transaction();
+        if (pdb.in_transaction() || pdb.in_failed_transaction())
+            pdb.rollback_transaction();
         psql::execute_sql(pdb, "DROP SCHEMA testing CASCADE");
     }
     psql::Database pdb;
@@ -232,39 +232,39 @@ BOOST_AUTO_TEST_CASE(simple)
 
 BOOST_AUTO_TEST_CASE(wayred_cursor)
 {
-	osmdb::OsmDatabase odb(pdb);
-	odb.create_tables();
-	odb.create_indexes_and_keys();
-	osmdb::ElementInsertion ins(odb);
-	pdb.begin_transaction();
-	osm::Node nd(1, 0.5, 0.5);
-	nd.tags.insert(osm::Tag("key", "val"));
-	ins.insert_node(nd);
-	ins.insert_node(osm::Node(2, 0.4, 0.4));
-	ins.insert_node(osm::Node(3, 0.4, 0.8));
-	osm::Way w(1);
-	w.nodes.push_back(2);
-	w.nodes.push_back(3);
-	w.tags.insert(osm::Tag("key", "val"));
-	ins.insert_way(w);
-	w=osm::Way(2);
-	nd.id = 4;
-	nd.position.lat = 1.5;
-	nd.position.lon = 0.5;
-	ins.insert_node(nd);
-	ins.insert_node(osm::Node(5, 0.6, 0.4));
-	pdb.commit_transaction();
-	boost::property_tree::ptree entries;
-	boost::property_tree::xml_parser::read_xml(TEST_REDUCT_PATH, entries, boost::property_tree::xml_parser::trim_whitespace);
-	auto st(sqllib::get_decl_wayred_crs(entries, pdb));
-	auto crs(psql::make_cursor(pdb, "wayred_crs", st));
-	pdb.begin_transaction();
-	crs.open();
-	crs.fetch(10);
-	auto vect(crs.get_buffer());
-	BOOST_CHECK(vect.size()==2);
-	crs.close();
-	pdb.rollback_transaction();
+    osmdb::OsmDatabase odb(pdb);
+    odb.create_tables();
+    odb.create_indexes_and_keys();
+    osmdb::ElementInsertion ins(odb);
+    pdb.begin_transaction();
+    osm::Node nd(1, 0.5, 0.5);
+    nd.tags.insert(osm::Tag("key", "val"));
+    ins.insert_node(nd);
+    ins.insert_node(osm::Node(2, 0.4, 0.4));
+    ins.insert_node(osm::Node(3, 0.4, 0.8));
+    osm::Way w(1);
+    w.nodes.push_back(2);
+    w.nodes.push_back(3);
+    w.tags.insert(osm::Tag("key", "val"));
+    ins.insert_way(w);
+    w = osm::Way(2);
+    nd.id = 4;
+    nd.position.lat = 1.5;
+    nd.position.lon = 0.5;
+    ins.insert_node(nd);
+    ins.insert_node(osm::Node(5, 0.6, 0.4));
+    pdb.commit_transaction();
+    boost::property_tree::ptree entries;
+    boost::property_tree::xml_parser::read_xml(TEST_REDUCT_PATH, entries, boost::property_tree::xml_parser::trim_whitespace);
+    auto st(sqllib::get_decl_wayred_crs(entries, pdb));
+    auto crs(psql::make_cursor(pdb, "wayred_crs", st));
+    pdb.begin_transaction();
+    crs.open();
+    crs.fetch(10);
+    auto vect(crs.get_buffer());
+    BOOST_CHECK(vect.size() == 2);
+    crs.close();
+    pdb.rollback_transaction();
 }
 
 BOOST_AUTO_TEST_CASE(properties)
@@ -319,54 +319,54 @@ BOOST_AUTO_TEST_CASE(properties)
 
 BOOST_AUTO_TEST_CASE(waylister)
 {
-	osmdb::OsmDatabase odb(pdb);
-	odb.create_tables();
-	odb.create_indexes_and_keys();
-	osmdb::ElementInsertion ins(odb);
-	pdb.begin_transaction();
-	ins.insert_node(osm::Node(2, 0.4, 0.4));
-	ins.insert_node(osm::Node(3, 0.4, 0.8));
-	ins.insert_node(osm::Node(4, 0.4, 0.8));
-	ins.insert_node(osm::Node(5, 0.4, 0.8));
-	osm::Way w(1);
-	w.nodes.push_back(osm::Node(2, 0.4, 0.4));
-	w.nodes.push_back(osm::Node(3, 0.4, 0.8));
-	w.nodes.push_back(osm::Node(4, 0.4, 0.8));
-	w.tags.insert(osm::Tag("key", "val"));
-	ins.insert_way(w);
-	w.tags.clear();
-	std::vector<osm::Way> exp{w};
-	w.id = 2;
-	w.nodes.clear();
-	w.nodes.push_back(3);
-	w.nodes.push_back(5);
-	w.tags.clear();
-	w.tags.insert(osm::Tag("asdf", "bsdf"));
-	w.tags.insert(osm::Tag("fcda", "gas"));
-	ins.insert_way(w);
-	pdb.commit_transaction();
-	pdb.begin_transaction();
-	osmdb::WayLister wl(odb, TEST_REDUCT_PATH, 2);
-	w.nodes.clear();
-	std::multimap<osm::Node, osm::Way, osm::LtByID> exp_mp;
-	exp_mp.insert(std::make_pair(osm::Node(3, 0.4, 0.8), w));
-	std::multimap<osm::Node, osm::Way, osm::LtByID> got_mp;
-	std::vector<osm::Way> got;
-	while(!wl.end())
-	{
-		wl.next();
-		for(auto it = wl.get_current_connected_ways().begin(); it!=wl.get_current_connected_ways().end(); ++it)
-		{
-			got_mp.insert(*it);
-		}
-		for(unsigned int i = 0; i<wl.get_current_ways().size(); ++i)
-		{
-			got.push_back(wl.get_current_ways()[i]);
-		}
-	}
-	pdb.commit_transaction();
-	BOOST_CHECK(exp==got);
-	BOOST_CHECK(exp_mp == got_mp);
+    osmdb::OsmDatabase odb(pdb);
+    odb.create_tables();
+    odb.create_indexes_and_keys();
+    osmdb::ElementInsertion ins(odb);
+    pdb.begin_transaction();
+    ins.insert_node(osm::Node(2, 0.4, 0.4));
+    ins.insert_node(osm::Node(3, 0.4, 0.8));
+    ins.insert_node(osm::Node(4, 0.4, 0.8));
+    ins.insert_node(osm::Node(5, 0.4, 0.8));
+    osm::Way w(1);
+    w.nodes.push_back(osm::Node(2, 0.4, 0.4));
+    w.nodes.push_back(osm::Node(3, 0.4, 0.8));
+    w.nodes.push_back(osm::Node(4, 0.4, 0.8));
+    w.tags.insert(osm::Tag("key", "val"));
+    ins.insert_way(w);
+    w.tags.clear();
+    std::vector<osm::Way> exp {w};
+    w.id = 2;
+    w.nodes.clear();
+    w.nodes.push_back(3);
+    w.nodes.push_back(5);
+    w.tags.clear();
+    w.tags.insert(osm::Tag("asdf", "bsdf"));
+    w.tags.insert(osm::Tag("fcda", "gas"));
+    ins.insert_way(w);
+    pdb.commit_transaction();
+    pdb.begin_transaction();
+    osmdb::WayLister wl(odb, TEST_REDUCT_PATH, 2);
+    w.nodes.clear();
+    std::multimap<osm::Node, osm::Way, osm::LtByID> exp_mp;
+    exp_mp.insert(std::make_pair(osm::Node(3, 0.4, 0.8), w));
+    std::multimap<osm::Node, osm::Way, osm::LtByID> got_mp;
+    std::vector<osm::Way> got;
+    while (!wl.end())
+    {
+        wl.next();
+        for (auto it = wl.get_current_connected_ways().begin(); it != wl.get_current_connected_ways().end(); ++it)
+        {
+            got_mp.insert(*it);
+        }
+        for (unsigned int i = 0; i < wl.get_current_ways().size(); ++i)
+        {
+            got.push_back(wl.get_current_ways()[i]);
+        }
+    }
+    pdb.commit_transaction();
+    BOOST_CHECK(exp == got);
+    BOOST_CHECK(exp_mp == got_mp);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

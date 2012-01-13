@@ -21,21 +21,21 @@ namespace osmdb
 class WayLister
 {
 public:
-	WayLister(OsmDatabase& db, std::string const& way_attribute_xml, unsigned int fetch_size=100000);
-	std::vector<osm::Way> const& get_current_ways();
-	std::multimap<osm::Node, osm::Way, osm::LtByID> const& get_current_connected_ways();
-	void next();
-	void reset();
-	bool end();
-	virtual ~WayLister();
+    WayLister(OsmDatabase& db, std::string const& way_attribute_xml, unsigned int fetch_size = 100000);
+    std::vector<osm::Way> const& get_current_ways();
+    std::multimap<osm::Node, osm::Way, osm::LtByID> const& get_current_connected_ways();
+    void next();
+    void reset();
+    bool end();
+    virtual ~WayLister();
 private:
-	OsmDatabase& db;
-	psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string> > get_way_descr;
-	std::vector<std::tuple<int64_t, int64_t, double, double, int64_t, std::string, std::string> > rest;
-	std::vector<osm::Way> current_ways;
-	std::multimap<osm::Node, osm::Way, osm::LtByID> current_connected_ways;
-	bool done;
-	unsigned int fetch_size;
+    OsmDatabase& db;
+    psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string> > get_way_descr;
+    std::vector<std::tuple<int64_t, int64_t, double, double, int64_t, std::string, std::string> > rest;
+    std::vector<osm::Way> current_ways;
+    std::multimap<osm::Node, osm::Way, osm::LtByID> current_connected_ways;
+    bool done;
+    unsigned int fetch_size;
 };
 
 } /* namespace osmdb */

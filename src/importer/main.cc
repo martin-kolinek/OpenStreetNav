@@ -108,13 +108,13 @@ void action_handler(osmdb::ImportTableAction act, int64_t amount)
             std::cout << "Imported " << amount << " way nodes" << std::endl;
             break;
         case ImportTableAction::DELETE_DUPLICIT_ATTR:
-        	std::cout << "Deleted " << amount << " duplicit attributes in import" << std::endl;
-        	break;
+            std::cout << "Deleted " << amount << " duplicit attributes in import" << std::endl;
+            break;
         case ImportTableAction::DELETE_DUPLICIT_WAYNODE:
-        	std::cout << "Deleted " << amount << " duplicit waynodes in import" << std::endl;
-        	break;
+            std::cout << "Deleted " << amount << " duplicit waynodes in import" << std::endl;
+            break;
         case ImportTableAction::DELETE_DUPLICIT_MEMBER:
-        	std::cout << "Deleted " << amount << " duplicit member elements in import" << std::endl;
+            std::cout << "Deleted " << amount << " duplicit member elements in import" << std::endl;
             break;
     }
 }
@@ -141,114 +141,114 @@ bool proceed_handler()
 
 void copy_to_db(std::string const& filename, osmdb::OsmDatabase& db)
 {
-	osmdb::ElementCopy ins(db);
-	osmxml::XmlParser pars;
-	int done = 0;
-	pars.node_handler = [&ins](osm::Node const & n)
-	{
-		ins.insert_node(n);
-	};
-	pars.way_handler = [&ins](osm::Way const & w)
-	{
-		ins.insert_way(w);
-	};
-	pars.relation_handler = [&ins](osm::Relation const & r)
-	{
-		ins.insert_relation(r);
-	};
-	pars.progress_handler = [&done]()
-	{
-		progress(done);
-	};
-	std::cout << "Starting copy" << std::endl;
-	ins.start_copy();
-	pars.parse_file(filename);
-	ins.end_copy();
-	std::cout << "Done copying" << std::endl;
+    osmdb::ElementCopy ins(db);
+    osmxml::XmlParser pars;
+    int done = 0;
+    pars.node_handler = [&ins](osm::Node const & n)
+    {
+        ins.insert_node(n);
+    };
+    pars.way_handler = [&ins](osm::Way const & w)
+    {
+        ins.insert_way(w);
+    };
+    pars.relation_handler = [&ins](osm::Relation const & r)
+    {
+        ins.insert_relation(r);
+    };
+    pars.progress_handler = [&done]()
+    {
+        progress(done);
+    };
+    std::cout << "Starting copy" << std::endl;
+    ins.start_copy();
+    pars.parse_file(filename);
+    ins.end_copy();
+    std::cout << "Done copying" << std::endl;
 }
 
 bool process_import_table(osmdb::OsmDatabase& db, bool quiet, bool recreate)
 {
-	osmdb::ImportTableProcessor proc(db);
-	bool status=false;
-	proc.proceed_signal.connect([&]()
-	{
-		if(quiet)
-			status = true;
-		else
-			status = proceed_handler();
-		if(status && recreate)
-			db.drop_primary_keys();
-		return status;
-	});
-	proc.action_signal.connect(action_handler);
-	proc.process();
-	return status;
+    osmdb::ImportTableProcessor proc(db);
+    bool status = false;
+    proc.proceed_signal.connect([&]()
+    {
+        if (quiet)
+            status = true;
+        else
+            status = proceed_handler();
+        if (status && recreate)
+            db.drop_primary_keys();
+        return status;
+    });
+    proc.action_signal.connect(action_handler);
+    proc.process();
+    return status;
 }
 
 int import(std::string const& inp, std::string const& dbname, std::string const& schema, bool init, bool recreate, bool copy, bool import, bool quiet, bool analyze)
 {
-	try
-	{
-		std::string connstr;
-		if(dbname!="")
-			connstr="dbname=" + dbname;
-		psql::Database pdb(connstr, true);
-		if(init && schema!="")
-			pdb.create_schema(schema);
-		if(schema!="")
-			pdb.set_schema(schema);
-		osmdb::OsmDatabase db(pdb);
-		if (init)
-		{
-			db.create_tables();
-			db.create_indexes_and_keys();
-		}
-		pdb.begin_transaction();
-		if (recreate)
-		{
-			std::cout << "Dropping foreign keys and indexes" << std::endl;
-			db.drop_foreign_keys();
-			db.drop_indexes();
-		}
-		std::cout << "Starting import" << std::endl;
-		bool status = true;
-		if(copy)
-			copy_to_db(inp, db);
-		if(import)
-			status = process_import_table(db, quiet, recreate);
-		if (recreate)
-		{
-			std::cout << "Recreating indexes and keys" << std::endl;
-			db.create_indexes_and_keys();
-		}
-		if(status)
-		{
-			pdb.commit_transaction();
-			if(analyze)
-			{
-				std::cout<<"Running analyze"<<std::endl;
-				pdb.analyze();
-			}
-			std::cout << "Success" << std::endl;
-		}
-		else
-		{
-			std::cout <<"Cancelling changes"<<std::endl;
-			pdb.rollback_transaction();
-		}
-	}
-	catch(xml_schema::parsing& p)
-	{
-		std::cout<<"Error parsing input document"<<std::endl<<p;
-		return 1;
-	}
-	catch(std::exception& ex)
-	{
-		std::cout<<"Error occured"<<std::endl<<ex.what()<<std::endl;
-		return 1;
-	}
-	return 0;
+    try
+    {
+        std::string connstr;
+        if (dbname != "")
+            connstr = "dbname=" + dbname;
+        psql::Database pdb(connstr, true);
+        if (init && schema != "")
+            pdb.create_schema(schema);
+        if (schema != "")
+            pdb.set_schema(schema);
+        osmdb::OsmDatabase db(pdb);
+        if (init)
+        {
+            db.create_tables();
+            db.create_indexes_and_keys();
+        }
+        pdb.begin_transaction();
+        if (recreate)
+        {
+            std::cout << "Dropping foreign keys and indexes" << std::endl;
+            db.drop_foreign_keys();
+            db.drop_indexes();
+        }
+        std::cout << "Starting import" << std::endl;
+        bool status = true;
+        if (copy)
+            copy_to_db(inp, db);
+        if (import)
+            status = process_import_table(db, quiet, recreate);
+        if (recreate)
+        {
+            std::cout << "Recreating indexes and keys" << std::endl;
+            db.create_indexes_and_keys();
+        }
+        if (status)
+        {
+            pdb.commit_transaction();
+            if (analyze)
+            {
+                std::cout << "Running analyze" << std::endl;
+                pdb.analyze();
+            }
+            std::cout << "Success" << std::endl;
+        }
+        else
+        {
+            std::cout << "Cancelling changes" << std::endl;
+            pdb.rollback_transaction();
+        }
+    }
+    catch (xml_schema::parsing& p)
+    {
+        std::cout << "Error parsing input document" << std::endl << p;
+        return 1;
+    }
+    catch (std::exception& ex)
+    {
+        std::cout << "Error occured" << std::endl << ex.what() << std::endl;
+        return 1;
+    }
+    return 0;
 }
 
 int main(int argc, char** argv)
@@ -272,31 +272,31 @@ int main(int argc, char** argv)
         std::cout << desc << std::endl;
         return 0;
     }
-    bool proc_inp=false;
+    bool proc_inp = false;
     std::string inp;
     if (vm.count("input"))
     {
-        inp=vm["input"].as<std::string>();
-        proc_inp=true;
+        inp = vm["input"].as<std::string>();
+        proc_inp = true;
     }
     std::string db;
     if (vm.count("output-db"))
     {
-        db=vm["output-db"].as<std::string>();
+        db = vm["output-db"].as<std::string>();
     }
     std::string sch;
     if (vm.count("output-schema"))
-    	sch = vm["output-schema"].as<std::string>();
+        sch = vm["output-schema"].as<std::string>();
     bool init = vm.count("initialize");
     bool recreate = vm.count("recreate-indexes");
     bool quiet = vm.count("no-questions");
     bool process = vm.count("do-import");
     bool analyze = vm.count("analyze");
-    if(!init && !analyze && !process && !proc_inp)
+    if (!init && !analyze && !process && !proc_inp)
     {
-    	std::cout<<"No action to be done"<<std::endl;
-    	std::cout<<desc<<std::endl;
-    	return 0;
+        std::cout << "No action to be done" << std::endl;
+        std::cout << desc << std::endl;
+        return 0;
     }
     return import(inp, db, sch, init, recreate, proc_inp, process, quiet, analyze);
 

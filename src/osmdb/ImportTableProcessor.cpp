@@ -147,7 +147,7 @@ void ImportTableProcessor::process()
     st.execute();
     action_signal(ImportTableAction::DELETE_DUPLICIT_WAYNODE, st.affected_rows());
 
-    dup=0;
+    dup = 0;
     st = sqllib::get_delete_duplicit_node_members(db.get_db());
     st.execute();
     dup += st.affected_rows();

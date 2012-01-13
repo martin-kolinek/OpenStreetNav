@@ -115,55 +115,55 @@ std::string replace(std::string const& input, std::map<char, std::string> const&
 template<typename Less, typename Eq, typename A, typename B>
 bool greater_than_impl(A const& a, B const& b)
 {
-	Less l;
-	Eq e;
-	return !e(a, b) && !l(a, b);
+    Less l;
+    Eq e;
+    return !e(a, b) && !l(a, b);
 }
 
 template<typename Eq, typename A, typename B>
 bool not_eq_impl(A const& a, B const& b)
 {
-	Eq e;
-	return !e(a, b);
+    Eq e;
+    return !e(a, b);
 }
 
 template<typename Less, typename A, typename B>
 bool greater_eq_impl(A const& a, B const& b)
 {
-	Less l;
-	return !l(a, b);
+    Less l;
+    return !l(a, b);
 }
 
 template<typename Less, typename Eq, typename A, typename B>
 bool less_eq_impl(A const& a, B const& b)
 {
-	Less l;
-	Eq e;
-	return e(a, b) || l(a, b);
+    Less l;
+    Eq e;
+    return e(a, b) || l(a, b);
 }
 
 template<typename A>
 bool greater_than_impl(A const& a, A const& b)
 {
-	return greater_than_impl<std::less<A>, std::equal_to<A>, A, A>(a, b);
+    return greater_than_impl<std::less<A>, std::equal_to<A>, A, A>(a, b);
 }
 
 template<typename A>
 bool not_eq_impl(A const& a, A const& b)
 {
-	return not_eq_impl<std::equal_to<A>, A, A>(a, b);
+    return not_eq_impl<std::equal_to<A>, A, A>(a, b);
 }
 
 template<typename A>
 bool greater_eq_impl(A const& a, A const& b)
 {
-	return greater_eq_impl<std::less<A>, A, A>(a, b);
+    return greater_eq_impl<std::less<A>, A, A>(a, b);
 }
 
 template<typename A>
 bool less_eq_impl(A const& a, A const& b)
 {
-	return less_eq_impl<std::less<A>, std::equal_to<A>, A, A>(a, b);
+    return less_eq_impl<std::less<A>, std::equal_to<A>, A, A>(a, b);
 }
 
 }

@@ -46,16 +46,16 @@ bool Point::operator >(const Point& other) const
 
 bool Point::operator <(const Point& other) const
 {
-	return before(other, 0.0000001);
+    return before(other, 0.0000001);
 }
 
 bool Point::before(Point const& other, double tolerance) const
 {
-	if(std::abs(lat-other.lat) < tolerance)
-	{
-		return lon-other.lon < -tolerance;
-	}
-	return lat < other.lat;
+    if (std::abs(lat - other.lat) < tolerance)
+    {
+        return lon - other.lon < -tolerance;
+    }
+    return lat < other.lat;
 }
 
 bool Point::close(const Point& other, double tolerance) const

@@ -66,7 +66,7 @@ void Way::fill(osmdb::PropertiesSelection& db)
 
 int64_t Way::get_id() const
 {
-	return id;
+    return id;
 }
 
 void Way::add_to_relation(osmdb::ElementImporter& db, int64_t relation, const std::string& role)
