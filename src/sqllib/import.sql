@@ -392,7 +392,8 @@ DELETE FROM Import WHERE EntryType = 3 AND EXISTS(SELECT i.biginta FROM Import i
 --test-depend create_relation_attributes
 --test-param
 
-DELETE FROM Import WHERE EntryType = 4 AND EXISTS(SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=4 AND i.biginta=Import.biginta AND i.stringa=Import.stringa)
+DELETE FROM Import WHERE EntryType = 4 AND EXISTS
+    (SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=4 AND i.biginta=Import.biginta AND i.bigintb=Import.bigintb AND i.stringa=Import.stringa)
 
 --name delete_duplicit_way_attrs
 --type psql::BindTypes<>, psql::RetTypes<>
@@ -410,7 +411,8 @@ DELETE FROM Import WHERE EntryType = 4 AND EXISTS(SELECT i.biginta FROM Import i
 --test-depend create_relation_attributes
 --test-param
 
-DELETE FROM Import WHERE EntryType = 5 AND EXISTS(SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=5 AND i.biginta=Import.biginta AND i.stringa=Import.stringa)
+DELETE FROM Import WHERE EntryType = 5 AND EXISTS
+    (SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=5 AND i.biginta=Import.biginta AND i.bigintb=Import.bigintb AND i.stringa=Import.stringa)
 
 --name delete_duplicit_rel_attrs
 --type psql::BindTypes<>, psql::RetTypes<>
@@ -428,7 +430,8 @@ DELETE FROM Import WHERE EntryType = 5 AND EXISTS(SELECT i.biginta FROM Import i
 --test-depend create_relation_attributes
 --test-param
 
-DELETE FROM Import WHERE EntryType = 6 AND EXISTS(SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=6 AND i.biginta=Import.biginta AND i.stringa=Import.stringa)
+DELETE FROM Import WHERE EntryType = 6 AND EXISTS
+    (SELECT i.biginta FROM Import i WHERE i.ID<Import.ID AND i.EntryType=6 AND i.biginta=Import.biginta AND i.bigintb=Import.bigintb AND i.stringa=Import.stringa)
 
 --name delete_duplicit_waynodes
 --type psql::BindTypes<>, psql::RetTypes<>

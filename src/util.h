@@ -166,6 +166,19 @@ bool less_eq_impl(A const& a, A const& b)
     return less_eq_impl<std::less<A>, std::equal_to<A>, A, A>(a, b);
 }
 
+template<typename Eq, typename Col1, typename Col2>
+bool equal_collection(Col1 c1, Col2 c2)
+{
+    return std::equal<decltype(c1.begin()), decltype(c2.begin()), Eq>(c1.begin(), c1.end(), c2.begin(), Eq());
+}
+
+template<typename Col1, typename Col2>
+bool equal_collection(Col1 c1, Col2 c2)
+{
+    typedef decltype(*c1.begin()) Elem;
+    return equal_collection<Col1, Col2, std::equal_to<Elem> >(c1, c2);
+}
+
 }
 
 #endif /* UTIL_H_ */

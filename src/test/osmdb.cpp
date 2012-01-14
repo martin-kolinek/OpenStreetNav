@@ -191,6 +191,19 @@ BOOST_AUTO_TEST_CASE(new_import)
     BOOST_CHECK(rels == rels2);
 }
 
+BOOST_AUTO_TEST_CASE(import_proc_dis)
+{
+    osmdb::OsmDatabase db(pdb);
+    osmdb::ImportTableProcessor proc(db);
+    proc.disable_all();
+    proc.action_signal.connect(
+        [&](osmdb::ImportTableAction, int64_t)
+    {
+        BOOST_CHECK(false);
+    });
+
+}
+
 BOOST_AUTO_TEST_CASE(empty_displaydb)
 {
     osmdb::OsmDatabase odb(pdb);

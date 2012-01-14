@@ -49,16 +49,31 @@ enum class ImportTableAction
     DELETE_DUPLICIT_WAYNODE
 };
 
+class AllImportActions
+{
+public:
+    static std::vector<ImportTableAction> const& get();
+private:
+    static std::vector<ImportTableAction> vect;
+};
+
 class ImportTableProcessor
 {
 public:
     ImportTableProcessor(OsmDatabase& db);
     boost::signal<void (ImportTableAction, int64_t)> action_signal;
+    void set(ImportTableAction act, bool val);
+    void enable(ImportTableAction act);
+    void disable(ImportTableAction act);
+    void enable_all();
+    void disable_all();
+    void set_all(bool val);
     boost::signal<bool (), util::All> proceed_signal;
     void process();
     virtual ~ImportTableProcessor();
 private:
     OsmDatabase& db;
+    std::map<ImportTableAction, bool> enabled;
 };
 
 } /* namespace osmdb */

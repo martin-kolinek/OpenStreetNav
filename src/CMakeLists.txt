@@ -54,4 +54,6 @@ add_subdirectory(sqlitetest)
 
 add_subdirectory(displayer)
 
+add_subdirectory(wayreduction)
+
 add_subdirectory(test)

@@ -2,5 +2,5 @@
 --test-depend create_way_attributes
 --test-param
 
-ALTER TABLE WayAttributes ADD CONSTRAINT PK_WayAttributes PRIMARY KEY (WayID, Key)
+ALTER TABLE WayAttributes ADD CONSTRAINT PK_WayAttributes PRIMARY KEY (WayID, Key, Value)
 

@@ -2,5 +2,5 @@
 --test-depend create_relation_attributes
 --test-param
 
-ALTER TABLE RelationAttributes ADD CONSTRAINT PK_RelationAttributes PRIMARY KEY (RelationID, Key)
+ALTER TABLE RelationAttributes ADD CONSTRAINT PK_RelationAttributes PRIMARY KEY (RelationID, Key, Value)
 

@@ -20,7 +20,6 @@ set(SQLFILES
     create_nodes_table.sql
     create_relationattributes_pkey.sql
     create_relationattributes_relation_fkey.sql
-    create_relationattributess_pkey.sql
     create_relation_attributes.sql
     create_relation_members.sql
     create_relations_pkey.sql
