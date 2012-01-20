@@ -9,7 +9,7 @@
 #define NODE_H_
 
 #include <stdint.h>
-#include <map>
+#include <set>
 #include "Element.h"
 #include "../geoelements/geoelements.h"
 
@@ -24,7 +24,7 @@ public:
     virtual ~Node();
     int64_t id;
     geo::Point position;
-    std::multimap<std::string, std::string> tags;
+    std::set<osm::Tag> tags;
     boost::property_tree::ptree get_description();
     osm::ObjectType get_type() const;
     void fill(osmdb::PropertiesSelection& db);

@@ -35,7 +35,7 @@ class node_pimpl: public virtual node_pskel
   private:
   double lt, ln;
   int64_t _id;
-  std::multimap<std::string, std::string> tags;
+  std::set<osm::Tag> tags;
 };
 
 #endif // NODE_PIMPL_HXX

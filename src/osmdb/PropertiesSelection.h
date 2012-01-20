@@ -18,9 +18,9 @@ class PropertiesSelection
 {
 public:
     PropertiesSelection(OsmDatabase& db);
-    std::multimap<std::string, std::string> get_node_tags(int64_t id);
-    std::multimap<std::string, std::string> get_way_tags(int64_t id);
-    std::multimap<std::string, std::string> get_relation_tags(int64_t id);
+    std::set<std::pair<std::string, std::string> > get_node_tags(int64_t id);
+    std::set<std::pair<std::string, std::string> > get_way_tags(int64_t id);
+    std::set<std::pair<std::string, std::string> > get_relation_tags(int64_t id);
     std::vector<int64_t> get_waynodes(int64_t way_id);
     std::multimap<std::string, int64_t> get_node_members(int64_t rel_id);
     std::multimap<std::string, int64_t> get_way_members(int64_t rel_id);
@@ -37,17 +37,15 @@ private:
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<std::string, int64_t> > get_way_members_st;
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<std::string, int64_t> > get_rel_members_st;
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<double, double> > get_node_pos_st;
-    template <typename K, typename V, typename... Args>
-    std::multimap<K, V> get_multimap(psql::Statement<psql::BindTypes<Args...>, psql::RetTypes<K, V> >& st, Args... a)
+    template <typename Cont, typename K, typename V, typename... Args>
+    Cont get_multimap(psql::Statement<psql::BindTypes<Args...>, psql::RetTypes<K, V> >& st, Args... a)
     {
         st.execute(a...);
-        std::multimap<K, V> ret;
+        Cont ret;
         for (int i = 0; i < st.row_count(); ++i)
         {
-            K k;
-            V v;
-            std::tie(k, v) = st.get_row(i);
-            ret.insert(std::pair<K, V>(k, v));
+            auto const& r = st.get_row(i);
+            ret.insert(std::make_pair(std::get<0>(r), std::get<1>(r)));
         }
         return ret;
     }

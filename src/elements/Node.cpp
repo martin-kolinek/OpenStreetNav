@@ -28,7 +28,7 @@ Node::~Node()
 
 bool Node::operator==(const Node& other) const
 {
-    return id == other.id && position == other.position && util::multimap_eq(tags, other.tags);
+    return id == other.id && position == other.position && tags == other.tags;
 }
 
 boost::property_tree::ptree Node::get_description()

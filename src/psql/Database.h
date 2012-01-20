@@ -30,7 +30,7 @@ public:
     void savepoint(std::string const& name);
     void rollback_to_savepoint(std::string const& name);
     void analyze();
-    void set_schema(std::string const& schema);
+    void set_schema(std::string schema);
     void create_schema(std::string const& schema);
     bool in_transaction();
     bool in_failed_transaction();

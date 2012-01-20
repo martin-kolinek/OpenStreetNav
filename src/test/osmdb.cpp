@@ -269,7 +269,10 @@ BOOST_AUTO_TEST_CASE(wayred_cursor)
     ins.insert_node(osm::Node(5, 0.6, 0.4));
     pdb.commit_transaction();
     boost::property_tree::ptree entries;
-    boost::property_tree::xml_parser::read_xml(TEST_REDUCT_PATH, entries, boost::property_tree::xml_parser::trim_whitespace);
+    boost::property_tree::ptree kv;
+    kv.put("key", "key");
+    kv.put("value", "val");
+    entries.put_child("entries.entry.elements.el", kv);
     auto st(sqllib::get_decl_wayred_crs(entries, pdb));
     auto crs(psql::make_cursor(pdb, "wayred_crs", st));
     pdb.begin_transaction();
@@ -304,13 +307,13 @@ BOOST_AUTO_TEST_CASE(properties)
     r.add_rel("rrel", osm::Relation(433));
     ins.insert_relation(r);
     osmdb::PropertiesSelection db(odb);
-    BOOST_CHECK(db.get_node_tags(123).count("nkey") == 1);
+    BOOST_CHECK(db.get_node_tags(123).count(osm::Tag("nkey", "nval")) == 1);
     geo::Point p(1, 2);
     BOOST_CHECK(db.get_position(123).close(p, 0.0001));
-    BOOST_CHECK(db.get_way_tags(341).count("wkey") == 1);
+    BOOST_CHECK(db.get_way_tags(341).count(osm::Tag("wkey", "wval")) == 1);
     BOOST_CHECK(db.get_waynodes(341).size() == 2);
     BOOST_CHECK(db.get_waynodes(341)[0] == 123);
-    BOOST_CHECK(db.get_relation_tags(432).count("rkey") == 1);
+    BOOST_CHECK(db.get_relation_tags(432).count(osm::Tag("rkey", "rval")) == 1);
     BOOST_CHECK(db.get_node_members(432).count("rnode") == 1);
     BOOST_CHECK(db.get_way_members(432).count("rway") == 1);
     BOOST_CHECK(db.get_relation_members(432).count("rrel") == 1);
@@ -385,7 +388,7 @@ BOOST_AUTO_TEST_CASE(waylister)
     pdb.commit_transaction();
     pdb.begin_transaction();
     std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> got;
-    osmdb::WayLister wl(odb, TEST_REDUCT_PATH, 2);
+    osmdb::WayLister wl(odb, std::multimap<std::string, std::string> {std::make_pair("key", "val")}, 2);
     while (!wl.end())
     {
         wl.next();
@@ -400,7 +403,7 @@ BOOST_AUTO_TEST_CASE(waylister)
     public:
         bool operator()(osm::Way const& w1, osm::Way const& w2)
         {
-            return w1.id == w2.id && util::multimap_eq(w1.tags, w2.tags);
+            return w1.id == w2.id && w1.tags == w2.tags;
         }
     };
     class Comp

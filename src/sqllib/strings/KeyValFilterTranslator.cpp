@@ -29,7 +29,9 @@ boost::property_tree::ptree KeyValFilterTranslator::translate(const boost::prope
     {
         boost::property_tree::ptree const& entry = it->second;
         boost::property_tree::ptree chld;
-        boost::property_tree::ptree add = entry.get_child("add");
+        boost::property_tree::ptree add;
+        if (entry.find("add") != entry.not_found())
+            add = entry.get_child("add");
         chld.put("type", "intersect");
         boost::property_tree::ptree chldrn;
         for (auto it2 = entry.get_child("elements").begin(); it2 != entry.get_child("elements").end(); ++it2)

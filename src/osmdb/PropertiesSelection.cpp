@@ -25,19 +25,19 @@ PropertiesSelection::PropertiesSelection(OsmDatabase& osmdb):
 {
 }
 
-std::multimap<std::string, std::string> PropertiesSelection::get_node_tags(int64_t id)
+std::set<std::pair<std::string, std::string> > PropertiesSelection::get_node_tags(int64_t id)
 {
-    return get_multimap(get_node_attrs_st, id);
+    return get_multimap<std::set<std::pair<std::string, std::string> > >(get_node_attrs_st, id);
 }
 
-std::multimap<std::string, std::string> PropertiesSelection::get_way_tags(int64_t id)
+std::set<std::pair<std::string, std::string> > PropertiesSelection::get_way_tags(int64_t id)
 {
-    return get_multimap(get_way_attrs_st, id);
+    return get_multimap<std::set<std::pair<std::string, std::string> > >(get_way_attrs_st, id);
 }
 
-std::multimap<std::string, std::string> PropertiesSelection::get_relation_tags(int64_t id)
+std::set<std::pair<std::string, std::string> > PropertiesSelection::get_relation_tags(int64_t id)
 {
-    return get_multimap(get_rel_attrs_st, id);
+    return get_multimap<std::set<std::pair<std::string, std::string> > >(get_rel_attrs_st, id);
 }
 
 std::vector<int64_t> PropertiesSelection::get_waynodes(int64_t way_id)
@@ -47,17 +47,17 @@ std::vector<int64_t> PropertiesSelection::get_waynodes(int64_t way_id)
 
 std::multimap<std::string, int64_t> PropertiesSelection::get_node_members(int64_t rel_id)
 {
-    return get_multimap(get_node_members_st, rel_id);
+    return get_multimap<std::multimap<std::string, int64_t> >(get_node_members_st, rel_id);
 }
 
 std::multimap<std::string, int64_t> PropertiesSelection::get_way_members(int64_t rel_id)
 {
-    return get_multimap(get_way_members_st, rel_id);
+    return get_multimap<std::multimap<std::string, int64_t> >(get_way_members_st, rel_id);
 }
 
 std::multimap<std::string, int64_t> PropertiesSelection::get_relation_members(int64_t rel_id)
 {
-    return get_multimap(get_rel_members_st, rel_id);
+    return get_multimap<std::multimap<std::string, int64_t> >(get_rel_members_st, rel_id);
 }
 
 geo::Point PropertiesSelection::get_position(int64_t node_id)

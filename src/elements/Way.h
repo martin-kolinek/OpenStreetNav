@@ -12,7 +12,7 @@
 #include "Element.h"
 #include "Node.h"
 #include <vector>
-#include <map>
+#include <set>
 
 namespace osm
 {
@@ -25,7 +25,7 @@ public:
     virtual ~Way();
     int64_t id;
     std::vector<osm::Node> nodes;
-    std::multimap<std::string, std::string> tags;
+    std::set<osm::Tag> tags;
     boost::property_tree::ptree get_description();
     osm::ObjectType get_type() const;
     bool operator==(Way const& e) const;

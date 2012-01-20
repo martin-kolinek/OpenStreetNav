@@ -24,7 +24,7 @@ public:
     osm::Way process_way(osm::Way const& w, std::multimap<osm::Node, osm::Way, osm::LtByID> const& ndmap);
     void add_important(std::string const& key, std::string const& val);
 private:
-    std::multimap<std::string, std::string> important;
+    std::set<std::pair<std::string, std::string> > important;
     bool has_important_ways(osm::Node const& n, std::multimap<osm::Node, osm::Way, osm::LtByID> const& ndmap);
 };
 

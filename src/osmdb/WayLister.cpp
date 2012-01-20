@@ -13,14 +13,13 @@
 namespace osmdb
 {
 
-WayLister::WayLister(OsmDatabase& db, std::string const& way_attribute_xml, unsigned int fetch_size):
+WayLister::WayLister(OsmDatabase& db, std::multimap<std::string, std::string> const& attributes, unsigned int fetch_size):
     db(db),
     done(false),
     fetch_size(fetch_size)
 {
-    boost::property_tree::ptree ptree;
-    boost::property_tree::xml_parser::read_xml(way_attribute_xml, ptree, boost::property_tree::xml_parser::trim_whitespace);
-    get_way_descr = psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string> >(db.get_db(), "wayred_crs", sqllib::get_decl_wayred_crs(ptree, db.get_db()));
+    boost::property_tree::ptree ptree = get_entries(attributes);
+    get_way_descr = psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> >(db.get_db(), "wayred_crs", sqllib::get_decl_wayred_crs(ptree, db.get_db()));
     get_way_descr.open();
 }
 
@@ -31,6 +30,7 @@ std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID>
 
 void WayLister::next()
 {
+    current_connected_ways.clear();
     get_way_descr.fetch(fetch_size);
     if (get_way_descr.get_buffer().size() < fetch_size)
     {
@@ -56,12 +56,13 @@ void WayLister::next()
         int64_t wid, cwid, nid;
         double lon, lat;
         std::string key, val;
+        int sqno;
         if (i < rest_size)
-            std::tie(wid, nid, lon, lat, cwid, key, val) = rest[i];
+            std::tie(wid, nid, lon, lat, cwid, key, val, sqno) = rest[i];
         else if (i < buf.size() + rest_size)
-            std::tie(wid, nid, lon, lat, cwid, key, val) = buf[i-rest_size];
+            std::tie(wid, nid, lon, lat, cwid, key, val, sqno) = buf[i-rest_size];
         else
-            std::tie(wid, nid, lon, lat, cwid, key, val) = std::make_tuple(-1, -1, 0, 0, -1, "", "");
+            std::tie(wid, nid, lon, lat, cwid, key, val, sqno) = std::make_tuple(-1, -1, 0, 0, -1, "", "", 0);
         //new way
         if (way.id != wid)
         {
@@ -134,6 +135,23 @@ void WayLister::reset()
 bool WayLister::end()
 {
     return done;
+}
+
+boost::property_tree::ptree WayLister::get_entries(std::multimap<std::string, std::string> const& attributes)
+{
+    boost::property_tree::ptree ret;
+    boost::property_tree::ptree entries;
+    for (auto it = attributes.begin(); it != attributes.end(); ++it)
+    {
+        boost::property_tree::ptree entry;
+        boost::property_tree::ptree kv;
+        kv.put("key", it->first);
+        kv.put("value", it->second);
+        entry.put_child("elements.el", kv);
+        entries.add_child("entry", entry);
+    }
+    ret.add_child("entries", entries);
+    return ret;
 }
 
 WayLister::~WayLister()

@@ -26,7 +26,7 @@ Way::~Way()
 
 bool Way::operator==(const Way& other) const
 {
-    return id == other.id && nodes == other.nodes && util::multimap_eq(tags, other.tags);
+    return id == other.id && nodes == other.nodes && tags == other.tags;
 }
 
 boost::property_tree::ptree Way::get_description()

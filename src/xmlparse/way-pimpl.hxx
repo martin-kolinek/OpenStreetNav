@@ -31,7 +31,7 @@ public:
 private:
 	std::vector<osm::Node> nodes;
 	int64_t _id;
-	std::multimap<std::string, std::string> tags;
+	std::set<osm::Tag> tags;
 };
 
 #endif // WAY_PIMPL_HXX

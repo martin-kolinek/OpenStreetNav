@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <map>
+#include <set>
 #include "Element.h"
 
 namespace osm
@@ -26,7 +27,7 @@ public:
     virtual ~Relation();
     int64_t id;
     std::multimap<std::string, std::shared_ptr<osm::Element> > members;
-    std::multimap<std::string, std::string> tags;
+    std::set<osm::Tag> tags;
     boost::property_tree::ptree get_description();
     osm::ObjectType get_type() const;
     bool operator==(Relation const& r) const;

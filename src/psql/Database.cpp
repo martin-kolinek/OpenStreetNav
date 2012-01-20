@@ -45,9 +45,11 @@ void Database::analyze()
     execute_sql(*this, "ANALYZE");
 }
 
-void Database::set_schema(const std::string& schema)
+void Database::set_schema(std::string schema)
 {
-    execute_sql(*this, "SET search_path TO " + schema + ", public");
+    if (schema != "")
+        schema += ",";
+    execute_sql(*this, "SET search_path TO " + schema + "public");
 }
 
 void Database::create_schema(const std::string& schema)

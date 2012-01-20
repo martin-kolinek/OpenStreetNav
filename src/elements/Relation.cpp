@@ -33,7 +33,7 @@ osm::ObjectType Relation::get_type() const
 
 bool Relation::operator==(const Relation& r) const
 {
-    return r.id == id && util::multimap_eq(tags, r.tags) &&
+    return r.id == id && tags == r.tags &&
            util::multimap_eq < decltype(deref_eq_by_id(members.begin()->second, members.begin()->second)) > (members, r.members);
 }
 

@@ -30,7 +30,7 @@ public:
 	virtual osm::Relation
 	post_relation ();
 private:
-	std::multimap<std::string, std::string> tags;
+	std::set<osm::Tag> tags;
 	std::multimap<std::string, std::shared_ptr<osm::Element> > members;
 	int64_t _id;
 };
