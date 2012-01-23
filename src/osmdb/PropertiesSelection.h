@@ -14,6 +14,10 @@
 namespace osmdb
 {
 
+/**
+ * \class PropertiesSelection
+ * Class used by osm elements to fill their internal information.
+ */
 class PropertiesSelection
 {
 public:

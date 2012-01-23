@@ -16,14 +16,30 @@
 namespace osm
 {
 
+/**
+ * \class Node
+ * Represents Node in OpenStreetMap (a point on map)
+ */
 class Node : public Element
 {
 public:
     Node();
+    /**
+     * Constructs a node with given id and position
+     * @param id
+     * @param lat latitude
+     * @param lon longitude
+     */
     Node(int64_t id, double lat = 0, double lon = 0);
     virtual ~Node();
     int64_t id;
+    /**
+     * Position of this Node.
+     */
     geo::Point position;
+    /**
+     * Attributes of this Node.
+     */
     std::set<osm::Tag> tags;
     boost::property_tree::ptree get_description();
     osm::ObjectType get_type() const;

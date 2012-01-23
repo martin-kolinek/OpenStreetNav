@@ -15,10 +15,22 @@ class ICursor
 {
 };
 
+/**
+ * \class Cursor
+ *
+ * Represents a server side cursor. BTypes and RTypes specify types of arguments to statement execution and
+ * types of rows returned respectively.
+ */
 template<typename BTypes, typename RTypes>
 class Cursor : ICursor
 {
 public:
+    /**
+     * Construct a cursor for given statement
+     * @param db database connection to use
+     * @param name name of the cursor
+     * @param s statement to use
+     */
     Cursor(Database& db, std::string const& name, Statement<BTypes, RTypes> const& s):
         db(&db),
         name(name),
@@ -27,6 +39,11 @@ public:
         opened(false)
     {
     }
+    /**
+     * Opens a cursor.
+     * Args have to correspond to BTypes
+     * @param a arguments to query
+     */
     template<typename... Args>
     void open(Args... a)
     {
@@ -36,10 +53,20 @@ public:
         db->add_cursor(this);
         opened = true;
     }
+
+    /**
+     *
+     * @return std::vector of last rows fetched
+     */
     std::vector<typename RTypes::RowType> const& get_buffer()
     {
         return buffer;
     }
+
+    /**
+     * Fetch next count rows from cursor.
+     * @param count
+     */
     void fetch(int count)
     {
         if (!opened)
@@ -53,17 +80,29 @@ public:
     }
     Cursor(Cursor const&) = delete;
     Cursor& operator=(Cursor const&) = delete;
+    /**
+     * Constructs an empty cursor.
+     */
     Cursor():
         db(NULL),
         opened(false)
     {
     }
+    /**
+     * Move constructs a Cursor from other Cursor
+     * @param other
+     */
     Cursor(Cursor && other):
         db(NULL),
         opened(false)
     {
         *this = std::move(other);
     }
+    /**
+     * Move assigns from other Cursor
+     * @param other
+     * @return *this
+     */
     Cursor& operator=(Cursor && other)
     {
         if (this == &other)
@@ -79,6 +118,9 @@ public:
         return *this;
     }
 
+    /**
+     * Closes the cursor.
+     */
     void close()
     {
         if (db != NULL && opened && db->in_transaction() && db->is_cursor(this))
@@ -97,6 +139,14 @@ private:
     bool opened;
 };
 
+/**
+ * Crates a cursor from a statement. This is a utility function which saves you from specifying BTypes and RTypes
+ * to Cursor constructor.
+ * @param db database connection
+ * @param name cursor name
+ * @param st statement
+ * @return Cursor for st
+ */
 template<typename BTypes, typename RTypes>
 Cursor<BTypes, RTypes> make_cursor(Database& db, std::string const& name, Statement<BTypes, RTypes> const& st)
 {

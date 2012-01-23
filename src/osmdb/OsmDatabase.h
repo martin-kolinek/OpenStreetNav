@@ -16,14 +16,14 @@ namespace osmdb
 
 /**
  * \class OsmDatabase
- * Database connection which automatically creates tables for storing osm objects
+ * Class responsible for creating database schema.
  */
 class OsmDatabase
 {
 public:
     /**
-     *
-     * @param file filename where to store sqlite database
+     * Constructor
+     * @param db underlying database connection
      */
     OsmDatabase(psql::Database& db);
     virtual ~OsmDatabase();

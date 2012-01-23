@@ -17,14 +17,28 @@
 namespace osm
 {
 
+/**
+ * \class Way
+ * Represents a way in OpenStreetMap (a sequence of Nodes)
+ */
 class Way : public Element
 {
 public:
     Way();
+    /**
+     * Constructs a Way with given id.
+     * @param id
+     */
     Way(int64_t id);
     virtual ~Way();
     int64_t id;
+    /**
+     * Member nodes - from first to last.
+     */
     std::vector<osm::Node> nodes;
+    /**
+     * Way attributes.
+     */
     std::set<osm::Tag> tags;
     boost::property_tree::ptree get_description();
     osm::ObjectType get_type() const;

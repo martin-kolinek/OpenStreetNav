@@ -18,16 +18,55 @@
 namespace display
 {
 
+/**
+ * \class MapDrawingArea
+ * Responsible for drawing data provided by DisplayProviders.
+ */
 class MapDrawingArea : public Gtk::DrawingArea
 {
 public:
+    /**
+     * Constructs a MapDrawingArea
+     * @param cobject
+     * @param
+     */
     MapDrawingArea(BaseObjectType* cobject, Glib::RefPtr<Gtk::Builder> const&);
+    /**
+     * Adds a DisplayProvider to considered DisplayProviders. Priority determines order. Lower priorities go first
+     * and DisplayElements are not drawn over.
+     * @param priority
+     * @param dp
+     */
     void add_dp(int priority, std::shared_ptr<DisplayProvider> dp);
+    /**
+     * Sets latitude to look at.
+     * @param lat
+     */
     void set_latitude(double lat);
+    /**
+     * Sets longitude to look at.
+     * @param lon
+     */
     void set_longitude(double lon);
+    /**
+     * Sets zoom level.
+     * @param zoom
+     * @return zoom level afterwards
+     */
     int set_zoom(int zoom);
+    /**
+     *
+     * @return current zoom level
+     */
     int get_zoom();
+    /**
+     * This signal gets signalled when zoom level is changed. The parameter is new zoom level.
+     */
     boost::signal<void (int)> zoom_changed;
+    /**
+     * This signal gets signalled when element is clicked. The parameter is a vector of displayed elements
+     * that are in the vicinity of point clicked.
+     */
     boost::signal<void (std::vector<std::unique_ptr<osm::Element> > const& elem)> element_clicked;
     virtual ~MapDrawingArea();
 protected:

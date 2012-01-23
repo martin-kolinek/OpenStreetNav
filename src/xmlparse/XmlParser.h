@@ -16,17 +16,46 @@
 namespace osmxml
 {
 
+/**
+ * \class XmlParser
+ * Responsible for reading osm xml exports and converting them to osm::Element. Reads input and calls
+ * registered callbacks as elements are encoutered.
+ */
 class XmlParser
 {
 public:
     XmlParser();
     virtual ~XmlParser();
+    /**
+     * Node callback
+     */
     std::function<void (osm::Node const&)> node_handler;
+    /**
+     * Way callback
+     */
     std::function<void (osm::Way const&)> way_handler;
+    /**
+     * Relation callback
+     */
     std::function<void (osm::Relation const&)> relation_handler;
+    /**
+     * This gets called after every element - to notify that progress is being made
+     */
     std::function<void ()> progress_handler;
+    /**
+     * Process xml file
+     * @param filename name of the file
+     */
     void parse_file(std::string const& filename);
+    /**
+     * Process xml in std::string
+     * @param mem std::string containing xml to be processed
+     */
     void parse_memory(std::string const& mem);
+    /**
+     * Process xml from stream
+     * @param stream
+     */
     void parse_stream(std::istream& stream);
 private:
     bound_pimpl bound_p;

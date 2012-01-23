@@ -18,13 +18,38 @@
 namespace osmdb
 {
 
+/**
+ * \class WayLister
+ * Responsible for retrieving ways for the purpose of filtering member nodes.
+ */
 class WayLister
 {
 public:
+    /**
+     * Constructor
+     * @param db underlying OsmDatabase
+     * @param attributes ways containing these attributes will be fetchet
+     * @param fetch_size amount of rows to fetch in one chunk
+     */
     WayLister(OsmDatabase& db, std::multimap<std::string, std::string> const& attributes, unsigned int fetch_size = 100000);
+    /**
+     *
+     * @return current buffer of fetched ways in the format used by wayred::WayNodeFilter
+     */
     std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> const& get_current_connected_ways() const;
+    /**
+     * Fetch next chunk of data from database.
+     */
     void next();
+    /**
+     * Return to beginning
+     */
     void reset();
+    /**
+     * End retrieval and close underlying connection (no need to call this if you do not need to close cursor
+     * before this object gets destroyed.
+     * @return
+     */
     bool end();
     virtual ~WayLister();
 private:

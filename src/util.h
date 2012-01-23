@@ -15,6 +15,11 @@
 namespace util
 {
 
+/**
+ * Parse type from std::string using istringstream
+ * @param str string to parse
+ * @return parsed value
+ */
 template<typename T>
 T parse(std::string const& str)
 {
@@ -32,6 +37,12 @@ double parse<double>(std::string const& str);
 template<>
 int64_t parse<int64_t>(std::string const& str);
 
+/**
+ * Concatenate args, inserting sep in between using std::ostringstream
+ * @param sep
+ * @param args
+ * @return concatenated string
+ */
 template<typename Sep, typename... Args>
 std::string concatenate(Sep sep, Args... args)
 {
@@ -40,6 +51,11 @@ std::string concatenate(Sep sep, Args... args)
     return ss.str();
 }
 
+/**
+ * Simple conversion to string using std::ostringstream
+ * @param val
+ * @return
+ */
 template<typename T>
 std::string to_str(T val)
 {
@@ -59,6 +75,12 @@ void concat_impl(std::ostringstream& os, Sep sep, Head h, Tail... t)
     concat_impl(os, sep, t...);
 }
 
+/**
+ * Determines whether all elements of std::multimap a are in b and if they have equal sizes using Eq as element comparer.
+ * @param a
+ * @param b
+ * @return true if equal
+ */
 template < typename Eq, typename K, typename V, typename Compare = std::less<K>, typename Allocator = std::allocator<std::pair<const K, V> > >
 bool multimap_eq(std::multimap<K, V, Compare, Allocator> const& a, std::multimap<K, V, Compare, Allocator> const& b)
 {
@@ -76,12 +98,25 @@ bool multimap_eq(std::multimap<K, V, Compare, Allocator> const& a, std::multimap
     return true;
 }
 
+/**
+ * Determines whether all elements of std::multimap a are in b and if they have equal sizes.
+ * @param a
+ * @param b
+ * @return
+ */
 template < typename K, typename V, typename Compare = std::less<K>, typename Allocator = std::allocator<std::pair<const K, V> > >
 bool multimap_eq(std::multimap<K, V, Compare, Allocator> const& a, std::multimap<K, V, Compare, Allocator> const& b)
 {
     return multimap_eq<std::equal_to<K> >(a, b);
 }
 
+/**
+ * Determines if value is in the range [first,last) using Eq as comparer
+ * @param first
+ * @param last
+ * @param value
+ * @return true if value is in [first,last)
+ */
 template <typename Eq, typename It, typename T>
 It find(It first, It last, T const& value)
 {
@@ -89,16 +124,33 @@ It find(It first, It last, T const& value)
     return first;
 }
 
+/**
+ * Determines if value is in the range [first,last) (same as std::find)
+ * @param first
+ * @param last
+ * @param value
+ * @return true if value is in [first,last)
+ */
 template <typename It, typename T>
 It find(It first, It last, T const& value)
 {
     return find<std::equal_to<T> >(first, last, value);
 }
 
+/**
+ * \class All
+ * Functor which determines if all values in range evaluate to true.
+ */
 class All
 {
 public:
     typedef bool result_type;
+    /**
+     *
+     * @param first
+     * @param last
+     * @return true if all elements in [first,last) are true
+     */
     template<typename It> bool operator()(It first, It last) const
     {
         bool ret = true;
@@ -110,6 +162,12 @@ public:
     }
 };
 
+/**
+ * Replaces all occurences of keys from repl in input with their respective values
+ * @param input
+ * @param repl
+ * @return input with replacement in place
+ */
 std::string replace(std::string const& input, std::map<char, std::string> const& repl);
 
 template<typename Less, typename Eq, typename A, typename B>
@@ -166,12 +224,24 @@ bool less_eq_impl(A const& a, A const& b)
     return less_eq_impl<std::less<A>, std::equal_to<A>, A, A>(a, b);
 }
 
+/**
+ * Simplified version of std::equal which takes collections instead of ranges, uses Eq as comparer.
+ * @param c1 first collection
+ * @param c2 second collection
+ * @return true if collections contain elements which are equal according to Eq
+ */
 template<typename Eq, typename Col1, typename Col2>
 bool equal_collection(Col1 c1, Col2 c2)
 {
     return std::equal<decltype(c1.begin()), decltype(c2.begin()), Eq>(c1.begin(), c1.end(), c2.begin(), Eq());
 }
 
+/**
+ * Simplified version of std::equal which takes collections instead of ranges.
+ * @param c1 first collection
+ * @param c2 second collection
+ * @return
+ */
 template<typename Col1, typename Col2>
 bool equal_collection(Col1 c1, Col2 c2)
 {

@@ -14,9 +14,17 @@
 namespace osmdb
 {
 
+/**
+ * \class ElementCopy
+ * Handles copying into the Import table of the database.
+ */
 class ElementCopy : public ElementImporter
 {
 public:
+    /**
+     * Constructor
+     * @param db underlying OsmDatabase to use.
+     */
     ElementCopy(OsmDatabase& db);
     void start_copy();
     void end_copy();

@@ -7,6 +7,10 @@
 namespace psql
 {
 
+/**
+ * \class PgSqlException
+ * Exceptions of this type are thrown from inside the psql namespace to indicate problem with database interface.
+ */
 class PgSqlException : public std::exception
 {
 public:

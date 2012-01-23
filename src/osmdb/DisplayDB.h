@@ -16,9 +16,20 @@
 namespace osmdb
 {
 
+/**
+ * \class DisplayDB
+ * Class that allows for drawing of data from database. Uses xml files to specify what to draw.
+ */
 class DisplayDB : public display::DisplayProvider
 {
 public:
+    /**
+     * Constructs a DisplayDB
+     * @param db underlying OsmDatabase
+     * @param path_base path to xml files specifying what to draw, this should be a directory containing files <min_zoom>.xml to <max_zoom>.xml
+     * @param min_zoom minimum zoom level to draw
+     * @param max_zoom maximum zoom level to draw
+     */
     DisplayDB(OsmDatabase& db, std::string const& path_base, int min_zoom, int max_zoom);
     virtual ~DisplayDB();
     std::vector<std::unique_ptr<display::DisplayElement> > const& get_display_elements();

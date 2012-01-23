@@ -13,6 +13,11 @@
 namespace psql
 {
 
+/**
+ * Utility function which constructs a Statement with no arguments and executes it.
+ * @param db database connection to use
+ * @param sql sql query to execute
+ */
 void execute_sql(Database& db, std::string const& sql);
 template<typename... Types>
 std::vector<std::tuple<Types...> > query_sql(Database& db, std::string const& sql)
@@ -27,6 +32,12 @@ std::vector<std::tuple<Types...> > query_sql(Database& db, std::string const& sq
     return ret;
 }
 
+/**
+ * Wrapper which calls execute on a Statement and aggregates rows into a std::vector
+ * @param st statement to execute
+ * @param bvs arguments to supply to execute
+ * @return std::vector of rows
+ */
 template<typename... BTypes, typename... RTypes>
 std::vector<std::tuple<RTypes...> > exec_statement(psql::Statement<psql::BindTypes<BTypes...>, psql::RetTypes<RTypes...> >& st, BTypes... bvs)
 {
@@ -41,7 +52,7 @@ std::vector<std::tuple<RTypes...> > exec_statement(psql::Statement<psql::BindTyp
 }
 
 /**
- *
+ * Wrapper which extracts a column from Statement results.
  * @param st
  * @param bvs
  * @return vector of values in column Col after executing statement st with parameters bvs

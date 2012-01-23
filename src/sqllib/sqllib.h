@@ -6,6 +6,10 @@
 #include <sqllib_gen.h>
 #include <boost/property_tree/ptree.hpp>
 
+/**
+ * \namespace sqllib
+ * Contains functions that create various sql statements as psql::Statement
+ */
 namespace sqllib
 {
 

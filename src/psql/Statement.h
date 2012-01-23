@@ -40,6 +40,13 @@ PGresult* execPrepBT(PGconn* conn, PGparam* param, std::string const& name)
 template<>
 PGresult* execPrepBT<BindTypes<> >(PGconn* conn, PGparam*, std::string const& name);
 
+
+/**
+ * \class Statement
+ * Class representing an executable sql statement. BindTypes, RetTypes and CopyTypes specify types to be used as
+ * arguments to the query, the types of rows returned and types of rows to copy into database if the query
+ * initiates copying respectively.
+ */
 template < typename BindTypes, typename RetTypes, typename CopyTypes = CopyTypes<> >
 class Statement : IStatement
 {
@@ -50,6 +57,9 @@ private:
             throw PgSqlException("Error creating PGparam object: " + std::string(PQgeterror()));
     }
 public:
+    /**
+     * Constructs an empty statement
+     */
     Statement():
         db(NULL),
         param(NULL),
@@ -58,6 +68,11 @@ public:
     {
     }
 
+    /**
+     * Constructs a statement representing sql query
+     * @param sql query to execute
+     * @param db connection to use
+     */
     Statement(std::string const& sql, Database& db):
         db(&db),
         sql(sql),
@@ -68,6 +83,12 @@ public:
     {
         check_param();
     }
+    /**
+     * Constructs a server side prepared statement
+     * @param name name of the statement
+     * @param sql query to execute
+     * @param db connection to use
+     */
     Statement(std::string const& name, std::string const& sql, Database& db):
         db(&db),
         name(name),
@@ -95,6 +116,11 @@ public:
 
     Statement& operator=(Statement const&) = delete;
     Statement(Statement<BindTypes, RetTypes, CopyTypes> const&) = delete;
+    /**
+     * Move assignment
+     * @param other
+     * @return *this
+     */
     Statement& operator=(Statement && other)
     {
         if (db != NULL)
@@ -114,6 +140,10 @@ public:
         cp = other.cp;
         return *this;
     }
+    /**
+     * Move construction
+     * @param other
+     */
     Statement(Statement && other):
         db(NULL),
         param(NULL),
@@ -122,6 +152,11 @@ public:
         *this = std::move(other);
     }
 
+    /**
+     * Execute the query.
+     * Args need to correspond to supplied BindTypes
+     * @param args arguments to query
+     */
     template<typename... Args>
     void execute(Args... args)
     {
@@ -139,6 +174,11 @@ public:
             cp = true;
     }
 
+    /**
+     *
+     * @param row zero based index of row to retrieve
+     * @return row from result with given index
+     */
     typename RetTypes::RowType get_row(int row)
     {
         if (res == NULL)
@@ -146,6 +186,10 @@ public:
         return rt.get_values(res, row);
     }
 
+    /**
+     *
+     * @return number of rows in result set
+     */
     int row_count()
     {
         if (res == NULL)
@@ -155,6 +199,10 @@ public:
         return 0;
     }
 
+    /**
+     *
+     * @return number of rows affected by executing the statement
+     */
     int64_t affected_rows()
     {
         if (res == NULL)
@@ -165,11 +213,18 @@ public:
         return util::parse<int64_t>(aff);
     }
 
+    /**
+     *
+     * @return whether statement execution started data copying into the database
+     */
     bool copying()
     {
         return cp;
     }
 
+    /**
+     * Finish copying into the database.
+     */
     void end_copy()
     {
         auto conn = db->get_db();
@@ -187,12 +242,20 @@ public:
 
     }
 
+    /**
+     * Copy row into database. The statement has to be executed before this is called and it has to initiate copying.
+     * @param args
+     */
     template<typename... Args>
     void copy_data(Args... args)
     {
         ct.copy(*db, args...);
     }
 
+    /**
+     *
+     * @return sql query used to initialize this Statement
+     */
     std::string get_sql() const
     {
         return sql;

@@ -253,7 +253,7 @@ int import(std::string const& inp, std::string const& dbname, std::string const&
 
 int main(int argc, char** argv)
 {
-    boost::program_options::options_description desc("Allowed options");
+    boost::program_options::options_description desc("Utility to import data from xml file and do related tasks. Allowed options");
     desc.add_options()
     ("help,h", "print this help")
     ("input,i", boost::program_options::value<std::string>(), "input xml file")

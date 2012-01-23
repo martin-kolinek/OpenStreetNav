@@ -18,6 +18,12 @@ namespace osmdb
 class ToShowEdgesSelector
 {
 public:
+    /**
+     * Transforms st results into DisplayElements
+     * @param st Statement returned by ToShowSelectCollection
+     * @param args
+     * @return vector of DisplayElements
+     */
     template<typename... Args>
     static std::vector<std::unique_ptr<display::DisplayElement> > get_edges(psql::Statement < psql::BindTypes<Args...>,
             psql::RetTypes<double, double, double, double, double, double, double, double, double, int, int> > & st,

@@ -19,14 +19,28 @@ namespace osm
 class Node;
 class Way;
 
+/**
+ * \class Relation
+ * Represents a relation in OpenStreetMap.
+ */
 class Relation : public Element
 {
 public:
     Relation();
+    /**
+     * Constructs a Relation with given id.
+     * @param id
+     */
     Relation(int64_t id);
     virtual ~Relation();
     int64_t id;
+    /**
+     * Member elements of this relation.
+     */
     std::multimap<std::string, std::shared_ptr<osm::Element> > members;
+    /**
+     * Attributes of this relation.
+     */
     std::set<osm::Tag> tags;
     boost::property_tree::ptree get_description();
     osm::ObjectType get_type() const;
