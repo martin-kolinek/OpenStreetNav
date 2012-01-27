@@ -249,6 +249,17 @@ bool equal_collection(Col1 c1, Col2 c2)
     return equal_collection<Col1, Col2, std::equal_to<Elem> >(c1, c2);
 }
 
+template < typename A, typename B, typename Comp = std::less<A> >
+class CompareFirst
+{
+public:
+    typedef bool result_type;
+    bool operator()(std::pair<A, B> const& a, std::pair<A, B> const& b) const
+    {
+        return Comp()(a.first, b.first);
+    }
+};
+
 }
 
 #endif /* UTIL_H_ */

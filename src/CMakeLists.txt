@@ -56,4 +56,6 @@ add_subdirectory(displayer)
 
 add_subdirectory(wayreduction)
 
+add_subdirectory(pathfinding)
+
 add_subdirectory(test)
