@@ -46,9 +46,7 @@ public:
      */
     void reset();
     /**
-     * End retrieval and close underlying connection (no need to call this if you do not need to close cursor
-     * before this object gets destroyed.
-     * @return
+     * @return Whether reading was done
      */
     bool end();
     virtual ~WayLister();
