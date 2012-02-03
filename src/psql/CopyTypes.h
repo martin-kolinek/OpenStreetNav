@@ -11,7 +11,7 @@
 #include <string>
 #include "Database.h"
 #include "PgSqlException.h"
-#include "../util.h"
+#include "../util/util.h"
 
 namespace psql
 {

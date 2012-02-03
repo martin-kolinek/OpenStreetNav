@@ -6,7 +6,7 @@
  */
 
 #include "CompByID.h"
-#include "../util.h"
+#include "../util/util.h"
 
 namespace osm
 {

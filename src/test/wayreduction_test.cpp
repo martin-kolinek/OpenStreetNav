@@ -7,7 +7,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include "../wayreduction/wayreduction.h"
-#include "../util.h"
+#include "../util/util.h"
 
 BOOST_AUTO_TEST_SUITE(wayreduction)
 

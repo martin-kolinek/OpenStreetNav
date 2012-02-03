@@ -8,7 +8,7 @@
 #include "Point.h"
 #include <cmath>
 #include <utility>
-#include "../util.h"
+#include "../util/util.h"
 
 namespace geo
 {

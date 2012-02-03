@@ -6,7 +6,7 @@
  */
 
 #include "Node.h"
-#include "../util.h"
+#include "../util/util.h"
 #include "../osmdb/osmdb.h"
 
 namespace osm

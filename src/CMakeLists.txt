@@ -28,7 +28,7 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/share)
 SET(GENSRC ${CMAKE_BINARY_DIR}/generated)
 file(MAKE_DIRECTORY ${GENSRC})
                     
-add_library(util util.cpp)
+add_subdirectory(util)
 
 add_subdirectory(sqlite)
 

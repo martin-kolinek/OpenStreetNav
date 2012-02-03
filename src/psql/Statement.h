@@ -7,7 +7,7 @@
 #include "BindTypes.h"
 #include <libpqtypes.h>
 #include <tuple>
-#include "../util.h"
+#include "../util/util.h"
 
 namespace psql
 {

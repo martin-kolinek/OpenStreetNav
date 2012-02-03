@@ -8,7 +8,7 @@
 #include "MapDrawingArea.h"
 #include <cmath>
 #include <iostream>
-#include "../util.h"
+#include "../util/util.h"
 #include <set>
 
 namespace display

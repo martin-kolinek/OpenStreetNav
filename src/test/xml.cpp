@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include "../xmlparse/xmlparse.h"
 #include <iostream>
-#include "../util.h"
+#include "../util/util.h"
 
 BOOST_AUTO_TEST_SUITE(xml)
 

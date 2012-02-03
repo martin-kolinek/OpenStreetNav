@@ -19,7 +19,7 @@
 #include <glibmm/optiongroup.h>
 #include <glibmm/optionentry.h>
 #include <osmdisp_config.h>
-#include "../util.h"
+#include "../util/util.h"
 
 class ZoomerDrawAreaConnector
 {
