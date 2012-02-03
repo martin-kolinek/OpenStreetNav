@@ -33,7 +33,7 @@ psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<
         return psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int, int> >(cr->create_sql(), db);
 }
 
-psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> > get_decl_wayred_crs(boost::property_tree::ptree const& entries, psql::Database& db, bool named, std::string name)
+psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> > get_wayreduction_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named, std::string name)
 {
     KeyValFilterTranslator tr("wn.WayID as CurWayID, n.ID as NdID, ST_X(n.Location::geometry), ST_Y(n.Location::geometry), COALESCE(wn2.WayID, -1) AS CrossWayID, COALESCE(a2.Key, '') as CrossWayKey, COALESCE(a2.Value, ''), wn.SequenceNo as SeqNo",
                               "WayNodes wn INNER JOIN Nodes n ON wn.NodeID = n.ID INNER JOIN WayAttributes a ON a.WayID = wn.WayID LEFT JOIN WayNodes wn2 ON wn2.WayID != wn.WayID AND wn.NodeID = wn2.NodeID LEFT JOIN WayAttributes a2 ON a2.WayID = wn2.WayID",

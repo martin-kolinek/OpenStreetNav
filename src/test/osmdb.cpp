@@ -273,7 +273,7 @@ BOOST_AUTO_TEST_CASE(wayred_cursor)
     kv.put("key", "key");
     kv.put("value", "val");
     entries.put_child("entries.entry.elements.el", kv);
-    auto st(sqllib::get_decl_wayred_crs(entries, pdb));
+    auto st(sqllib::get_wayreduction_select(entries, pdb));
     auto crs(psql::make_cursor(pdb, "wayred_crs", st));
     pdb.begin_transaction();
     crs.open();

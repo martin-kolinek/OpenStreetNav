@@ -19,7 +19,7 @@ WayLister::WayLister(OsmDatabase& db, std::multimap<std::string, std::string> co
     fetch_size(fetch_size)
 {
     boost::property_tree::ptree ptree = get_entries(attributes);
-    get_way_descr = psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> >(db.get_db(), "wayred_crs", sqllib::get_decl_wayred_crs(ptree, db.get_db()));
+    get_way_descr = psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> >(db.get_db(), "wayred_crs", sqllib::get_wayreduction_select(ptree, db.get_db()));
     get_way_descr.open();
 }
 
