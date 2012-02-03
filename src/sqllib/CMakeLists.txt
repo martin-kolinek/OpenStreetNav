@@ -88,6 +88,7 @@ set(SQLFILES
     select_ways.sql
     test_select.sql
     import.sql
+    road_network.sql
     )
 
 set(TEMPL ${CMAKE_BINARY_DIR}/templ)
