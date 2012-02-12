@@ -7,155 +7,127 @@
 
 #include "WayLister.h"
 #include <boost/property_tree/xml_parser.hpp>
+#include <boost/range.hpp>
+#include <boost/range/join.hpp>
 #include "../sqllib/sqllib.h"
+#include "../util/RowDataDeserializer.h"
+#include <functional>
 #include <cmath>
+#include "../util/func.h"
 
 namespace osmdb
 {
 
-WayLister::WayLister(OsmDatabase& db, std::multimap<std::string, std::string> const& attributes, unsigned int fetch_size):
-    db(db),
-    done(false),
-    fetch_size(fetch_size)
+void test_changed(int64_t , int64_t , double , double , int64_t , const std::string & , const std::string & , int )
 {
-    boost::property_tree::ptree ptree = get_entries(attributes);
-    get_way_descr = psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> >(db.get_db(), "wayred_crs", sqllib::get_wayreduction_select(ptree, db.get_db()));
-    get_way_descr.open();
 }
 
-std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> const& WayLister::get_current_connected_ways() const
+WayLister::WayLister(OsmDatabase& db, const std::multimap<std::string,std::string> & attributes, unsigned int fetch_size)
+:db(db), done(false), fetch_size(fetch_size)
 {
-    return current_connected_ways;
+	boost::property_tree::ptree ptree = get_entries(attributes);
+	get_way_descr = psql::Cursor < psql::BindTypes<>, psql::RetTypes<int64_t,int64_t,double,double,int64_t,std::string,std::string,int> > (db.get_db(), "wayred_crs", sqllib::get_wayreduction_select(ptree, db.get_db()));
+	get_way_descr.open();
+}
+
+const std::map<osm::Way,std::multimap<osm::Node,osm::Way,osm::LtByID> ,osm::LtByID> & WayLister::get_current_connected_ways() const
+{
+	return current_connected_ways;
 }
 
 void WayLister::next()
 {
-    current_connected_ways.clear();
-    get_way_descr.fetch(fetch_size);
-    if (get_way_descr.get_buffer().size() < fetch_size)
-    {
-        done = true;
-    }
-    std::vector<osm::Way> cross_ways;
-    osm::Way last_cross_way(-1);
-    auto const& buf = get_way_descr.get_buffer();
-    std::multimap<osm::Node, osm::Way, osm::LtByID> conn_ways_for_way;
+	current_connected_ways.clear();
+	get_way_descr.fetch(fetch_size);
+	if(get_way_descr.get_buffer().size() < fetch_size){
+		done = true;
+	}
 
-    osm::Node last_node(-1);
+	auto coll = boost::join(rest, get_way_descr.get_buffer());
+	auto it = util::deserialize_collection(
+			coll.begin(),
+			coll.end(),
+			done,
+			util::bind1st(&WayLister::way_changed, this),
+			util::bind1st(&WayLister::node_changed, this),
+			util::bind1st(&WayLister::empty, this),
+			util::bind1st(&WayLister::empty, this),
+			util::bind1st(&WayLister::cross_way_changed, this),
+			util::bind1st(&WayLister::attr_changed, this),
+			util::bind1st(&WayLister::attr_changed, this),
+			util::bind1st(&WayLister::empty, this));
 
-    osm::Way way(-1);
-    unsigned int max = buf.size() + rest.size();
-    if (done)
-        max++;
-    unsigned int last_wayid_change = 0;
-    unsigned int rest_size = rest.size();
+	std::vector<std::tuple<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> > new_rest(coll.end()-it);
 
-    //loop through returned rows and fill current_ways and current_connected_ways
-    for (unsigned int i = 0; i < max; ++i)
-    {
-        int64_t wid, cwid, nid;
-        double lon, lat;
-        std::string key, val;
-        int sqno;
-        if (i < rest_size)
-            std::tie(wid, nid, lon, lat, cwid, key, val, sqno) = rest[i];
-        else if (i < buf.size() + rest_size)
-            std::tie(wid, nid, lon, lat, cwid, key, val, sqno) = buf[i-rest_size];
-        else
-            std::tie(wid, nid, lon, lat, cwid, key, val, sqno) = std::make_tuple(-1, -1, 0, 0, -1, "", "", 0);
-        //new way
-        if (way.id != wid)
-        {
-            if (way.id != -1)
-            {
-                if (last_cross_way.id != -1)
-                {
-                    cross_ways.push_back(last_cross_way);
-                }
-                if (last_node.id != -1)
-                {
-                    for (unsigned int j = 0; j < cross_ways.size(); ++j)
-                        conn_ways_for_way.insert(std::pair<osm::Node, osm::Way>(last_node, cross_ways[j]));
-                    way.nodes.push_back(last_node);
-                }
-                current_connected_ways.insert(std::make_pair(way, conn_ways_for_way));
-            }
-            conn_ways_for_way.clear();
-            way.id = wid;
-            way.nodes.clear();
-            last_node.id = -1;
-            last_cross_way.id = -1;
-            last_wayid_change = i;
-        }
-        //new node
-        if (last_node.id != nid)
-        {
-            if (last_node.id != -1)
-            {
-                way.nodes.push_back(last_node);
-                if (last_cross_way.id != -1)
-                    cross_ways.push_back(last_cross_way);
-                for (unsigned int j = 0; j < cross_ways.size(); ++j)
-                    conn_ways_for_way.insert(std::pair<osm::Node, osm::Way>(last_node, cross_ways[j]));
-            }
-            last_node.id = nid;
-            last_node.position.lon = lon;
-            last_node.position.lat = lat;
-            cross_ways.clear();
-            last_cross_way.id = -1;
+	std::copy(it, coll.end(), new_rest.begin());
 
-        }
-        //new cross way
-        if (last_cross_way.id != cwid)
-        {
-            if (last_cross_way.id != -1)
-                cross_ways.push_back(last_cross_way);
-            last_cross_way.tags.clear();
-            last_cross_way.id = cwid;
-        }
-        if (key != "")
-            last_cross_way.tags.insert(osm::Tag(key, val));
-    }
-
-    //fix rest
-    if (last_wayid_change != 0)
-        rest.clear();
-    for (unsigned int i = (unsigned int)std::max(0, (int)last_wayid_change - (int)rest_size); i < buf.size(); ++i)
-    {
-        rest.push_back(buf[i]);
-    }
+	rest=std::move(new_rest);
 }
 
 void WayLister::reset()
 {
-    get_way_descr.close();
-    get_way_descr.open();
+	get_way_descr.close();
+	get_way_descr.open();
 }
 
 bool WayLister::end()
 {
-    return done;
+	return done;
 }
 
-boost::property_tree::ptree WayLister::get_entries(std::multimap<std::string, std::string> const& attributes)
+boost::property_tree::ptree WayLister::get_entries(const std::multimap<std::string,std::string> & attributes)
 {
-    boost::property_tree::ptree ret;
-    boost::property_tree::ptree entries;
-    for (auto it = attributes.begin(); it != attributes.end(); ++it)
-    {
-        boost::property_tree::ptree entry;
-        boost::property_tree::ptree kv;
-        kv.put("key", it->first);
-        kv.put("value", it->second);
-        entry.put_child("elements.el", kv);
-        entries.add_child("entry", entry);
-    }
-    ret.add_child("entries", entries);
-    return ret;
+	boost::property_tree::ptree ret;
+	boost::property_tree::ptree entries;
+	for(auto it = attributes.begin();it != attributes.end();++it){
+		boost::property_tree::ptree entry;
+		boost::property_tree::ptree kv;
+		kv.put("key", it->first);
+		kv.put("value", it->second);
+		entry.put_child("elements.el", kv);
+		entries.add_child("entry", entry);
+	}
+	ret.add_child("entries", entries);
+	return ret;
 }
 
 WayLister::~WayLister()
 {
+}
+
+void WayLister::empty(int64_t, int64_t , double , double , int64_t, std::string const&, std::string const&, int)
+{
+}
+
+void WayLister::attr_changed(int64_t, int64_t, double, double, int64_t, const std::string & k, const std::string & v, int)
+{
+	if(key!=k || val!=v)
+	{
+		last_cross_way.tags.insert(osm::Tag(k, v));
+		key=k;
+		val=v;
+	}
+}
+
+void WayLister::cross_way_changed(int64_t, int64_t , double , double, int64_t cwid, const std::string &, const std::string &, int)
+{
+	cross_ways.push_back(last_cross_way);
+	last_cross_way=osm::Way(cwid);
+}
+
+void WayLister::node_changed(int64_t, int64_t nid, double lon, double lat, int64_t , const std::string & , const std::string & , int )
+{
+	for(unsigned int j = 0;j < cross_ways.size();++j)
+		conn_ways_for_way.insert(std::pair<osm::Node,osm::Way>(last_node, cross_ways[j]));
+	last_node = osm::Node(nid, lat, lon);
+	cross_ways.clear();
+}
+
+void WayLister::way_changed(int64_t wid, int64_t , double , double , int64_t , const std::string & , const std::string & , int )
+{
+	current_connected_ways.insert(std::make_pair(way, conn_ways_for_way));
+	way = osm::Way(wid);
+	conn_ways_for_way.clear();
 }
 
 } /* namespace osmdb */

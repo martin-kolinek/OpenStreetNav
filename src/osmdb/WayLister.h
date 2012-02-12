@@ -56,6 +56,17 @@ private:
     std::vector<std::tuple<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> > rest;
     std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> current_connected_ways;
     boost::property_tree::ptree get_entries(std::multimap<std::string, std::string> const& attributes);
+    std::vector<osm::Way> cross_ways;
+    osm::Way last_cross_way;
+    osm::Node last_node;
+    std::multimap<osm::Node, osm::Way, osm::LtByID> conn_ways_for_way;
+    osm::Way way;
+    std::string key, val;
+    void attr_changed(int64_t, int64_t, double, double, int64_t, std::string const& key, std::string const& val, int);
+    void cross_way_changed(int64_t, int64_t, double, double, int64_t cwid, std::string const&, std::string const&, int);
+    void node_changed(int64_t, int64_t nid, double lon, double lat, int64_t, std::string const&, std::string const&, int);
+    void way_changed(int64_t wid, int64_t, double, double, int64_t, std::string const&, std::string const&, int);
+    void empty(int64_t, int64_t , double , double , int64_t, std::string const&, std::string const&, int);
     bool done;
     unsigned int fetch_size;
 };
