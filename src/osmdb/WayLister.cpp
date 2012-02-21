@@ -43,7 +43,11 @@ void WayLister::next()
 		done = true;
 	}
 
-	auto coll = boost::join(rest, get_way_descr.get_buffer());
+    //boost::join behaves strangely if given non const reference as first argument and
+    //const reference as second argument in boost 1.46
+    std::vector<std::tuple<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> > const& v = rest; 
+    
+	auto coll = boost::join(v, get_way_descr.get_buffer());
 	auto it = util::deserialize_collection(
 			coll.begin(),
 			coll.end(),
