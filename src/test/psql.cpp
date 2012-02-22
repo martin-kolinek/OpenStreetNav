@@ -2,6 +2,7 @@
 
 #include "../psql/psql.h"
 #include "../sqllib/sqllib.h"
+#include <boost/range/algorithm.hpp>
 #include <tuple>
 
 class PSqlFixture
@@ -149,6 +150,46 @@ BOOST_AUTO_TEST_CASE(cursor)
             std::make_tuple(37, "asdfd", 52341093)
         };
         BOOST_CHECK(curs.get_buffer() == exp);
+        curs.close();
+        db.rollback_transaction();
+    }
+    catch (...)
+    {
+        try
+        {
+            db.rollback_transaction();
+        }
+        catch (...)
+        {
+            std::cout << "WARNING: Failed to rollback" << std::endl;
+        }
+        throw;
+    }
+}
+
+BOOST_AUTO_TEST_CASE(cursor_rng)
+{
+    auto st1(sqllib::get_create_test_table(db));
+    st1.execute();
+    auto st2(sqllib::get_insert_test_table(db));
+    st2.execute(32, "asdf", 52341093);
+    st2.execute(34, "asdfa", 52341093);
+    st2.execute(35, "asdfb", 52341093);
+    st2.execute(36, "asdfc", 52341093);
+    st2.execute(37, "asdfd", 52341093);
+    auto st3(sqllib::get_test_select_gt(db));
+    db.begin_transaction();
+    try
+    {
+        auto curs = psql::make_cursor(db, "test_crs", st3);
+        curs.open(34);
+        std::vector<std::tuple<int, std::string, int64_t> > exp
+        {
+            std::make_tuple(35, "asdfb", 52341093),
+            std::make_tuple(36, "asdfc", 52341093),
+            std::make_tuple(37, "asdfd", 52341093)
+        };
+        BOOST_CHECK(boost::equal(psql::make_cursor_range(curs), exp));
         curs.close();
         db.rollback_transaction();
     }

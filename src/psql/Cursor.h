@@ -31,12 +31,13 @@ public:
      * @param name name of the cursor
      * @param s statement to use
      */
-    Cursor(Database& db, std::string const& name, Statement<BTypes, RTypes> const& s):
+    Cursor(Database& db, std::string const& name, Statement<BTypes, RTypes> const& s, int default_fetch_size = 100000):
         db(&db),
         name(name),
         decl_curs("DECLARE " + name + " CURSOR FOR " + s.get_sql(), db),
         close_curs("CLOSE " + name, db),
-        opened(false)
+        opened(false),
+        default_fetch_size(default_fetch_size)
     {
     }
     /**
@@ -74,6 +75,12 @@ public:
         Statement<BindTypes<>, RTypes > st(util::concatenate(" ", "FETCH", count, "FROM", name), *db);
         buffer = exec_statement(st);
     }
+
+    void fetch()
+    {
+        fetch(default_fetch_size);
+    }
+
     virtual ~Cursor()
     {
         close();
@@ -115,6 +122,7 @@ public:
         other.db = NULL;
         opened = other.opened;
         buffer = std::move(other.buffer);
+        default_fetch_size = other.default_fetch_size;
         return *this;
     }
 
@@ -137,6 +145,7 @@ private:
     Statement<BindTypes<>, RetTypes<> > close_curs;
     std::vector<typename RTypes::RowType> buffer;
     bool opened;
+    int default_fetch_size;
 };
 
 /**

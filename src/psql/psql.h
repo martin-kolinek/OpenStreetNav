@@ -7,6 +7,7 @@
 #include "RetTypes.h"
 #include "BindTypes.h"
 #include "Cursor.h"
+#include "CursorIterator.h"
 #include <type_traits>
 #include <tuple>
 
