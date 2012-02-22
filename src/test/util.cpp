@@ -6,6 +6,8 @@
 #include "../util/RowDataDeserializer.h"
 #include "../util/func.h"
 #include <algorithm>
+#include "../util/groupingiterator.h"
+#include "../util/sortedcombiterator.h"
 
 BOOST_AUTO_TEST_SUITE(util)
 
@@ -107,6 +109,50 @@ BOOST_AUTO_TEST_CASE(bind1st_unpack_call)
 	auto f = bind1st(&A::test, &a);
 	int b = unpack_call<bind_class<single_mem_fn<int, A, int> >, int>(f, std::make_tuple(3));
 	BOOST_CHECK(b==3);
+}
+
+bool grp_eq(int a, int b)
+{
+	return b-a<2;
+}
+void comb(int& a, int b)
+{
+	a+=b;
+}
+
+BOOST_AUTO_TEST_CASE(groupingiterator)
+{
+	std::vector<int> v{1, 2, 3, 7, 8, 9, 13, 14};
+	std::vector<int> exp{6, 24, 27};
+
+	auto grp_begin = make_grouping_iterator(v.begin(), v.end(), grp_eq, comb, 0);
+	auto grp_end = make_grouping_iterator(v.end(), v.end(), grp_eq, comb, 0);
+	std::vector<int> got;
+	for(; grp_begin!=grp_end; ++grp_begin)
+	{
+		got.push_back(*grp_begin);
+	}
+	BOOST_CHECK(got==exp);
+}
+
+int sort_comb(int a, int)
+{
+	return a;
+}
+
+BOOST_AUTO_TEST_CASE(sortedcombiterator)
+{
+	std::vector<int> v1{1, 2, 3, 4};
+	std::vector<int> v2{2, 4, 5};
+	auto sc_begin = make_sorted_combinator(v1.begin(), v1.end(), v2.begin(), v2.end(), sort_comb);
+	auto sc_end = make_sorted_combinator(v1.end(), v1.end(), v2.end(), v2.end(), sort_comb);
+	std::vector<int> exp{2, 4};
+	std::vector<int> got;
+	for(; sc_begin!=sc_end; ++sc_begin)
+	{
+		got.push_back(*sc_begin);
+	}
+	BOOST_CHECK(got==exp);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
