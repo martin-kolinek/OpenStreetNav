@@ -132,7 +132,16 @@ BOOST_AUTO_TEST_CASE(groupingiterator)
     {
         got.push_back(*grp_begin);
     }
+
     BOOST_CHECK(got == exp);
+}
+
+BOOST_AUTO_TEST_CASE(grouppedrange)
+{
+    std::vector<int> v {1, 2, 3, 7, 8, 9, 13, 14};
+    std::vector<int> exp {6, 24, 27};
+    auto got = v | groupped(grp_eq, comb, 0);
+    BOOST_CHECK(std::equal(got.begin(), got.end(), exp.begin()));
 }
 
 int sort_comb(int a, int)
@@ -153,6 +162,15 @@ BOOST_AUTO_TEST_CASE(sortedcombiterator)
         got.push_back(*sc_begin);
     }
     BOOST_CHECK(got == exp);
+}
+
+BOOST_AUTO_TEST_CASE(sortedcombine)
+{
+    std::vector<int> v1 {1, 2, 3, 4};
+    std::vector<int> v2 {2, 4, 5};
+    std::vector<int> exp {2, 4};
+    auto cmbined = util::sorted_combine(v1, v2, sort_comb);
+    BOOST_CHECK(boost::equal(exp, cmbined));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
