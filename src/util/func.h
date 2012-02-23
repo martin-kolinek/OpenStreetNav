@@ -1,5 +1,5 @@
 #ifndef UTIL_FUNC_H_
-#define UTIL_FUNC_H
+#define UTIL_FUNC_H_
 
 #include <tuple>
 

@@ -14,6 +14,7 @@
 #include <functional>
 #include <cmath>
 #include "../util/func.h"
+#include "../util/SqlLibEntriesToPtree.h"
 
 namespace osmdb
 {
@@ -25,7 +26,7 @@ void test_changed(int64_t , int64_t , double , double , int64_t , const std::str
 WayLister::WayLister(OsmDatabase& db, const std::multimap<std::string, std::string> & attributes, unsigned int fetch_size)
     : db(db), done(false), fetch_size(fetch_size)
 {
-    boost::property_tree::ptree ptree = get_entries(attributes);
+    boost::property_tree::ptree ptree = util::get_entries(attributes);
     get_way_descr = psql::Cursor < psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> > (db.get_db(), "wayred_crs", sqllib::get_wayreduction_select(ptree, db.get_db()));
     get_way_descr.open();
 }
@@ -80,22 +81,7 @@ bool WayLister::end()
     return done;
 }
 
-boost::property_tree::ptree WayLister::get_entries(const std::multimap<std::string, std::string> & attributes)
-{
-    boost::property_tree::ptree ret;
-    boost::property_tree::ptree entries;
-    for (auto it = attributes.begin(); it != attributes.end(); ++it)
-    {
-        boost::property_tree::ptree entry;
-        boost::property_tree::ptree kv;
-        kv.put("key", it->first);
-        kv.put("value", it->second);
-        entry.put_child("elements.el", kv);
-        entries.add_child("entry", entry);
-    }
-    ret.add_child("entries", entries);
-    return ret;
-}
+
 
 WayLister::~WayLister()
 {

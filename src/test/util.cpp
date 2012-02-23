@@ -49,8 +49,16 @@ BOOST_AUTO_TEST_CASE(unpack_call_test)
     BOOST_CHECK(i == 6);
 }
 
+BOOST_AUTO_TEST_CASE(uncurry_test)
+{
+    auto tup = std::make_tuple(1, 2, 3);
+    auto f = uncurry(test);
+    BOOST_CHECK(f(tup)==6);
+}
+
 void test1(int a)
 {
+    a++;
     a = 2;
 }
 
