@@ -9,6 +9,7 @@
 #define SORTEDCOMBITERATOR_H_
 
 #include "make_ref.h"
+#include <boost/range/iterator_range.hpp>
 
 namespace util
 {
@@ -16,7 +17,7 @@ namespace util
 template <typename It1, typename It2, typename Combinator, typename Less>
 class sorted_comb_iterator : public boost::iterator_facade<sorted_comb_iterator<It1, It2, Combinator, Less>, const decltype(make_ref<Combinator>()(*make_ref<It1>(), *make_ref<It2>())), boost::forward_traversal_tag>
 {
-public:
+private:
     It1 start1;
     It1 end1;
     It2 start2;
@@ -81,11 +82,7 @@ public:
 template < typename It1, typename It2, typename Combinator, typename Less = std::less<decltype(*(make_ref<It1>()))> >
 sorted_comb_iterator<It1, It2, Combinator, Less> make_sorted_combinator(It1 const& start1, It1 const& end1, It2 const& start2, It2 const& end2, Combinator comb = Combinator(), Less less = Less())
 {
-    auto s1 = start1;
-    auto s2 = start2;
-    auto e1 = end1;
-    auto e2 = end2;
-    return sorted_comb_iterator<It1, It2, Combinator, Less>(s1, e1, s2, e2, comb, less);
+    return sorted_comb_iterator<It1, It2, Combinator, Less>(start1, end1, start2, end2, comb, less);
 }
 
 template<typename Rng1, typename Rng2, typename Combinator, typename Less>

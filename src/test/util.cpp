@@ -8,6 +8,7 @@
 #include <algorithm>
 #include "../util/groupingiterator.h"
 #include "../util/sortedcombiterator.h"
+#include "../util/tuple_sub_eq.h"
 
 BOOST_AUTO_TEST_SUITE(util)
 
@@ -179,6 +180,16 @@ BOOST_AUTO_TEST_CASE(sortedcombine)
     std::vector<int> exp {2, 4};
     auto cmbined = util::sorted_combine(v1, v2, sort_comb);
     BOOST_CHECK(boost::equal(exp, cmbined));
+}
+
+BOOST_AUTO_TEST_CASE(tupleeq)
+{
+	auto f = get_tuple_comparer<0, 2 >();
+	auto t1 = std::make_tuple(1, 2, 3);
+	auto t2 = std::make_tuple(1, 5, 3);
+	auto t3 = std::make_tuple(1, 5, 6);
+	BOOST_CHECK(f(t1, t2));
+	BOOST_CHECK(!f(t1, t3));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

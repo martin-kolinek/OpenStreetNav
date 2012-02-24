@@ -50,8 +50,8 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, doub
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, std::string, std::string> > get_way_attributes_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named, std::string name)
     {
-        KeyValFilterTranslator tr("a.WayID, a.Key, a.Value",
-                                  "WayAttributes a INNER JOIN WayAttributes a2 ON a.WayID = a2.WayID",
+        KeyValFilterTranslator tr("a.WayID, COALESCE(a.Key, '') as Key, COALESCE(a.Value, '')",
+                                  "WayAttributes a LEFT JOIN WayAttributes a2 ON a.WayID = a2.WayID",
                                   "",
                                   "a2",
                                   std::vector<std::string>(),
@@ -65,8 +65,8 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, std::string, std::str
     
 psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, std::string, std::string> > get_way_node_attributes_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named, std::string name)
     {
-        KeyValFilterTranslator tr("wn.WayID, wn.NodeID, na.Key, na.Value",
-                                  "WayNodes wn INNER JOIN NodeAttributes na ON wn.NodeID = na.NodeID INNER JOIN WayAttributes wa ON wa.WayID = wn.WayID",
+        KeyValFilterTranslator tr("wn.WayID, wn.NodeID, COALESCE(na.Key, '') as Key, COALESCE(na.Value,'') as Value",
+                                  "WayNodes wn LEFT JOIN NodeAttributes na ON wn.NodeID = na.NodeID INNER JOIN WayAttributes wa ON wa.WayID = wn.WayID",
                                   "",
                                   "wa",
                                   std::vector<std::string>(),

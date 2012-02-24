@@ -16,5 +16,6 @@
 #include "ElementCopy.h"
 #include "ImportTableProcessor.h"
 #include "WayLister.h"
+#include "AllWayLister.h"
 
 #endif /* OSMDB_H_ */

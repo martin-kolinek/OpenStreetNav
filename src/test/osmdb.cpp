@@ -418,4 +418,48 @@ BOOST_AUTO_TEST_CASE(waylister)
     BOOST_CHECK(b);
 }
 
+BOOST_AUTO_TEST_CASE(allwayslister)
+{
+	osm::Node n1(1);
+	n1.tags.insert(osm::Tag("k1", "v1"));
+	n1.tags.insert(osm::Tag("k2", "v2"));
+	osm::Node n2(2);
+	n2.tags.insert(osm::Tag("k3", "v3"));
+	n2.tags.insert(osm::Tag("k4", "v4"));
+	osm::Node n3(3);
+	osm::Way w1(1);
+	w1.tags.insert(osm::Tag("k5", "v5"));
+	w1.tags.insert(osm::Tag("key", "val"));
+	w1.nodes.push_back(n1);
+	w1.nodes.push_back(n2);
+	osm::Way w2(2);
+	w2.tags.insert(osm::Tag("k6", "v6"));
+	w2.tags.insert(osm::Tag("key", "val"));
+	w2.nodes.push_back(n2);
+	w2.nodes.push_back(n3);
+	osm::Way w3(3);
+	w3.nodes.push_back(n3);
+	w3.nodes.push_back(n1);
+	osmdb::OsmDatabase odb(pdb);
+	odb.create_tables();
+	osmdb::ElementInsertion ins(odb);
+	ins.insert_node(n1);
+	ins.insert_node(n2);
+	ins.insert_node(n3);
+	ins.insert_way(w1);
+	ins.insert_way(w2);
+	//ins.insert_way(w3);
+	pdb.begin_transaction();
+	osmdb::AllWayLister wl(odb, std::multimap<std::string, std::string> {std::make_pair("key", "val")});
+	std::vector<osm::Way> exp{w1, w2};
+	std::vector<osm::Way> got;
+	for(auto it = wl.get_range().begin(); it != wl.get_range().end(); ++it)
+	{
+		got.push_back(*it);
+	}
+	BOOST_CHECK(got == exp);
+	pdb.rollback_transaction();
+}
+
 BOOST_AUTO_TEST_SUITE_END()
+
