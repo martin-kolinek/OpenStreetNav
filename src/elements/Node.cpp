@@ -31,7 +31,7 @@ bool Node::operator==(const Node& other) const
     return id == other.id && position == other.position && tags == other.tags;
 }
 
-boost::property_tree::ptree Node::get_description()
+boost::property_tree::ptree Node::get_description() const
 {
     boost::property_tree::ptree ret;
     boost::property_tree::ptree node;

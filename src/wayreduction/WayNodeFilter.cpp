@@ -19,16 +19,6 @@ WayNodeFilter::~WayNodeFilter()
 {
 }
 
-std::vector<osm::Way> WayNodeFilter::reduce_ways(const std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID> , osm::LtByID> & old_ways)
-{
-    std::vector<osm::Way> ret;
-    for (auto it = old_ways.begin(); it != old_ways.end(); ++it)
-    {
-        ret.push_back(process_way(it->first, it->second));
-    }
-    return ret;
-}
-
 osm::Way WayNodeFilter::process_way(const osm::Way& w, const std::multimap<osm::Node, osm::Way, osm::LtByID> & ndmap)
 {
     osm::Way ret(w.id);
@@ -43,6 +33,11 @@ osm::Way WayNodeFilter::process_way(const osm::Way& w, const std::multimap<osm::
 void WayNodeFilter::add_important(const std::string& key, const std::string& val)
 {
     important.insert(std::make_pair(key, val));
+}
+
+osm::Way WayNodeFilter::process_way_pair(const std::pair<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID> > & pair)
+{
+    return process_way(pair.first, pair.second);
 }
 
 bool WayNodeFilter::has_important_ways(const osm::Node& n, const std::multimap<osm::Node, osm::Way, osm::LtByID> & ndmap)

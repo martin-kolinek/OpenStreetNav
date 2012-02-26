@@ -29,7 +29,7 @@ bool Way::operator==(const Way& other) const
     return id == other.id && nodes == other.nodes && tags == other.tags;
 }
 
-boost::property_tree::ptree Way::get_description()
+boost::property_tree::ptree Way::get_description() const
 {
     boost::property_tree::ptree ret;
     boost::property_tree::ptree way;

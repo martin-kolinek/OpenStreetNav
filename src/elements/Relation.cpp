@@ -42,7 +42,7 @@ bool Relation::operator!=(const Relation& r) const
     return !(*this == r);
 }
 
-boost::property_tree::ptree Relation::get_description()
+boost::property_tree::ptree Relation::get_description() const
 {
     boost::property_tree::ptree ret;
     boost::property_tree::ptree rel;

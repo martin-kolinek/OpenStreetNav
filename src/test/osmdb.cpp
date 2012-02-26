@@ -334,6 +334,36 @@ BOOST_AUTO_TEST_CASE(properties)
     BOOST_CHECK(r == r2);
 }
 
+void write_ptree(boost::property_tree::ptree const& ptree, std::ostream& ost, int depth)
+{
+    for (auto it = ptree.begin(); it != ptree.end(); ++it)
+    {
+        if (it->second.data() == "" && it->second.size() == 0)
+            continue;
+        for (int i = 0; i < depth; ++i)
+            ost << "\t";
+        ost << it->first << " ";
+        ost << it->second.data();
+        ost << std::endl;
+        write_ptree(it->second, ost, depth + 1);
+    }
+}
+
+void write_ptree_a(boost::property_tree::ptree const& ptree, std::ostream& ost, int depth)
+{
+    for (auto it = ptree.begin(); it != ptree.end(); ++it)
+    {
+        if (it->second.data() == "" && it->second.size() == 0)
+            continue;
+        for (int i = 0; i < depth; ++i)
+            ost << "\t";
+        ost << it->first << " ";
+        ost << it->second.data();
+        ost << std::endl;
+        write_ptree(it->second, ost, depth + 1);
+    }
+}
+
 BOOST_AUTO_TEST_CASE(waylister)
 {
     osmdb::OsmDatabase odb(pdb);
@@ -388,14 +418,10 @@ BOOST_AUTO_TEST_CASE(waylister)
     pdb.commit_transaction();
     pdb.begin_transaction();
     std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> got;
-    osmdb::WayLister wl(odb, std::multimap<std::string, std::string> {std::make_pair("key", "val")}, 2);
-    while (!wl.end())
+    osmdb::WayLister wl(odb, std::multimap<std::string, std::string> {std::make_pair("key", "val")});
+    for (auto it = wl.get_range().begin(); it != wl.get_range().end(); ++it)
     {
-        wl.next();
-        for (auto it = wl.get_current_connected_ways().begin(); it != wl.get_current_connected_ways().end(); ++it)
-        {
-            got.insert(*it);
-        }
+        got.insert(*it);
     }
     pdb.commit_transaction();
     class WayCmpIgnNd
@@ -420,45 +446,45 @@ BOOST_AUTO_TEST_CASE(waylister)
 
 BOOST_AUTO_TEST_CASE(allwayslister)
 {
-	osm::Node n1(1);
-	n1.tags.insert(osm::Tag("k1", "v1"));
-	n1.tags.insert(osm::Tag("k2", "v2"));
-	osm::Node n2(2);
-	n2.tags.insert(osm::Tag("k3", "v3"));
-	n2.tags.insert(osm::Tag("k4", "v4"));
-	osm::Node n3(3);
-	osm::Way w1(1);
-	w1.tags.insert(osm::Tag("k5", "v5"));
-	w1.tags.insert(osm::Tag("key", "val"));
-	w1.nodes.push_back(n1);
-	w1.nodes.push_back(n2);
-	osm::Way w2(2);
-	w2.tags.insert(osm::Tag("k6", "v6"));
-	w2.tags.insert(osm::Tag("key", "val"));
-	w2.nodes.push_back(n2);
-	w2.nodes.push_back(n3);
-	osm::Way w3(3);
-	w3.nodes.push_back(n3);
-	w3.nodes.push_back(n1);
-	osmdb::OsmDatabase odb(pdb);
-	odb.create_tables();
-	osmdb::ElementInsertion ins(odb);
-	ins.insert_node(n1);
-	ins.insert_node(n2);
-	ins.insert_node(n3);
-	ins.insert_way(w1);
-	ins.insert_way(w2);
-	//ins.insert_way(w3);
-	pdb.begin_transaction();
-	osmdb::AllWayLister wl(odb, std::multimap<std::string, std::string> {std::make_pair("key", "val")});
-	std::vector<osm::Way> exp{w1, w2};
-	std::vector<osm::Way> got;
-	for(auto it = wl.get_range().begin(); it != wl.get_range().end(); ++it)
-	{
-		got.push_back(*it);
-	}
-	BOOST_CHECK(got == exp);
-	pdb.rollback_transaction();
+    osm::Node n1(1);
+    n1.tags.insert(osm::Tag("k1", "v1"));
+    n1.tags.insert(osm::Tag("k2", "v2"));
+    osm::Node n2(2);
+    n2.tags.insert(osm::Tag("k3", "v3"));
+    n2.tags.insert(osm::Tag("k4", "v4"));
+    osm::Node n3(3);
+    osm::Way w1(1);
+    w1.tags.insert(osm::Tag("k5", "v5"));
+    w1.tags.insert(osm::Tag("key", "val"));
+    w1.nodes.push_back(n1);
+    w1.nodes.push_back(n2);
+    osm::Way w2(2);
+    w2.tags.insert(osm::Tag("k6", "v6"));
+    w2.tags.insert(osm::Tag("key", "val"));
+    w2.nodes.push_back(n2);
+    w2.nodes.push_back(n3);
+    osm::Way w3(3);
+    w3.nodes.push_back(n3);
+    w3.nodes.push_back(n1);
+    osmdb::OsmDatabase odb(pdb);
+    odb.create_tables();
+    osmdb::ElementInsertion ins(odb);
+    ins.insert_node(n1);
+    ins.insert_node(n2);
+    ins.insert_node(n3);
+    ins.insert_way(w1);
+    ins.insert_way(w2);
+    //ins.insert_way(w3);
+    pdb.begin_transaction();
+    osmdb::AllWayLister wl(odb, std::multimap<std::string, std::string> {std::make_pair("key", "val")});
+    std::vector<osm::Way> exp {w1, w2};
+    std::vector<osm::Way> got;
+    for (auto it = wl.get_range().begin(); it != wl.get_range().end(); ++it)
+    {
+        got.push_back(*it);
+    }
+    BOOST_CHECK(got == exp);
+    pdb.rollback_transaction();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

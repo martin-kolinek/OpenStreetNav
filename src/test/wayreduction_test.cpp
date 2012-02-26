@@ -38,19 +38,19 @@ BOOST_AUTO_TEST_CASE(waynodefilt)
     osm::Way w5(5);
     w5.nodes.push_back(6);
     w5.nodes.push_back(8);
-    std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> exp;
+    std::vector<std::pair<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID> > > exp;
     std::multimap<osm::Node, osm::Way, osm::LtByID> mp;
     mp.insert(std::make_pair(osm::Node(3, 0.4, 0.8), w2));
     mp.insert(std::make_pair(osm::Node(4, 0.4, 0.8), w3));
-    exp[w] = mp;
+    exp.push_back(std::make_pair(w, mp));
     mp.clear();
     mp.insert(std::make_pair(osm::Node(4, 0.4, 0.8), w));
     mp.insert(std::make_pair(osm::Node(5, 0.4, 0.8), w4));
     mp.insert(std::make_pair(osm::Node(5, 0.4, 0.8), w2));
     mp.insert(std::make_pair(osm::Node(6, 0.4, 0.8), w5));
-    exp[w3] = mp;
+    exp.push_back(std::make_pair(w3, mp));
     w3.nodes.erase(w3.nodes.begin() + 2);
-    auto ret = filt.reduce_ways(exp);
+    auto ret = filt.process_range(exp);
     std::vector<osm::Way> expected_ret
     {
         w,

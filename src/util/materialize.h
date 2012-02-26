@@ -17,10 +17,10 @@ namespace util
 template<typename Rng>
 auto materialize(Rng const& rng) -> std::vector<typename boost::range_value<Rng>::type>
 {
-	std::vector<typename boost::range_value<Rng>::type> ret;
-	for(auto it = rng.begin(); it!= rng.end(); ++it)
-		ret.push_back(*it);
-	return ret;
+    std::vector<typename boost::range_value<Rng>::type> ret;
+    for (auto it = rng.begin(); it != rng.end(); ++it)
+        ret.push_back(*it);
+    return ret;
 }
 
 }

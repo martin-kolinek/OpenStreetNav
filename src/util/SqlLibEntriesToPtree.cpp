@@ -19,5 +19,5 @@ boost::property_tree::ptree get_entries(const std::multimap<std::string, std::st
     ret.add_child("entries", entries);
     return ret;
 }
-    
+
 }

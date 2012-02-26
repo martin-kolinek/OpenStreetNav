@@ -67,19 +67,12 @@ int reduce(std::string const& dbname, std::string const& base, std::string dest,
         pdb.begin_transaction();
         osmdb::WayLister wl(odb, mp);
         std::cout << "Processing ways";
-        while (!wl.end())
+        auto reduced_ways = flt.process_range(wl.get_range());
+        for (auto it = reduced_ways.begin(); it != reduced_ways.end(); ++it)
         {
-            std::cout << ".";
-            auto const& mp = wl.get_current_connected_ways();
-            auto v = flt.reduce_ways(mp);
-            for (unsigned int i = 0; i < v.size(); ++i)
-            {
-                cp.insert_way(v[i]);
-            }
-            wl.next();
+            cp.insert_way(*it);
         }
         std::cout << std::endl;
-        wl.end();
         pdb.commit_transaction();
         cp.end_copy();
         pdb2.begin_transaction();

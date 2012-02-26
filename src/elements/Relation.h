@@ -42,7 +42,7 @@ public:
      * Attributes of this relation.
      */
     std::set<osm::Tag> tags;
-    boost::property_tree::ptree get_description();
+    boost::property_tree::ptree get_description() const;
     osm::ObjectType get_type() const;
     bool operator==(Relation const& r) const;
     bool operator!=(Relation const& r) const;

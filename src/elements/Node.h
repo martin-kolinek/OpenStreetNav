@@ -41,7 +41,7 @@ public:
      * Attributes of this Node.
      */
     std::set<osm::Tag> tags;
-    boost::property_tree::ptree get_description();
+    boost::property_tree::ptree get_description() const;
     osm::ObjectType get_type() const;
     void fill(osmdb::PropertiesSelection& db);
     void add_to_relation(osmdb::ElementImporter& db, int64_t relation, std::string const& role);

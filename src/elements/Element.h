@@ -39,7 +39,7 @@ public:
      *
      * @return a description of this element (used for displaying)
      */
-    virtual boost::property_tree::ptree get_description() = 0;
+    virtual boost::property_tree::ptree get_description() const = 0;
     /**
      *
      * @return the type of this element

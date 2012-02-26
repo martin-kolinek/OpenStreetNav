@@ -8,7 +8,8 @@
 #include <algorithm>
 #include "../util/groupingiterator.h"
 #include "../util/sortedcombiterator.h"
-#include "../util/tuple_sub_eq.h"
+#include "../util/tuple_sub.h"
+#include "../wayreduction/wayreduction.h"
 
 BOOST_AUTO_TEST_SUITE(util)
 
@@ -54,7 +55,7 @@ BOOST_AUTO_TEST_CASE(uncurry_test)
 {
     auto tup = std::make_tuple(1, 2, 3);
     auto f = uncurry(test);
-    BOOST_CHECK(f(tup)==6);
+    BOOST_CHECK(f(tup) == 6);
 }
 
 void test1(int a)
@@ -116,8 +117,8 @@ BOOST_AUTO_TEST_CASE(bind1st_unpack_call)
 {
     A a;
     auto f = bind1st(&A::test, &a);
-    int b = unpack_call<bind_class<single_mem_fn<int, A, int> >, int>(f, std::make_tuple(3));
-    BOOST_CHECK(b == 3);
+    /*int b = unpack_call<bind_class<single_mem_fn<int, A, int> >, int>(f, std::make_tuple(3));
+    BOOST_CHECK(b == 3);*/
 }
 
 bool grp_eq(int a, int b)
@@ -184,12 +185,29 @@ BOOST_AUTO_TEST_CASE(sortedcombine)
 
 BOOST_AUTO_TEST_CASE(tupleeq)
 {
-	auto f = get_tuple_comparer<0, 2 >();
-	auto t1 = std::make_tuple(1, 2, 3);
-	auto t2 = std::make_tuple(1, 5, 3);
-	auto t3 = std::make_tuple(1, 5, 6);
-	BOOST_CHECK(f(t1, t2));
-	BOOST_CHECK(!f(t1, t3));
+    auto f = get_tuple_comparer<0, 2 >();
+    auto t1 = std::make_tuple(1, 2, 3);
+    auto t2 = std::make_tuple(1, 5, 3);
+    auto t3 = std::make_tuple(1, 5, 6);
+    auto t4 = std::make_tuple("aaa", "bbb", "ccc");
+    auto t5 = std::make_tuple("aaa", "bbb", "ccc");
+    BOOST_CHECK(f(t1, t2));
+    BOOST_CHECK(f(t4, t5));
+    BOOST_CHECK(!f(t1, t3));
+}
+
+BOOST_AUTO_TEST_CASE(subtuple)
+{
+    std::tuple<int, int, int> t1(1, 2, 3);
+    util::sub_tie<0, 2>(t1) = std::make_tuple(4, 5);
+    BOOST_CHECK(t1 == std::make_tuple(4, 2, 5));
+}
+
+BOOST_AUTO_TEST_CASE(tail_test)
+{
+    std::tuple<int, int, int> t(1, 2, 3);
+    auto tail = util::tup_tail(t);
+    BOOST_CHECK(tail == std::make_tuple(2, 3));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
