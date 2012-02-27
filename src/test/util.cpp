@@ -4,12 +4,12 @@
 #include "../util/ConcatCollection.h"
 #include "../util/unpack_call.h"
 #include "../util/RowDataDeserializer.h"
-#include "../util/func.h"
 #include <algorithm>
 #include "../util/groupingiterator.h"
 #include "../util/sortedcombiterator.h"
 #include "../util/tuple_sub.h"
 #include "../wayreduction/wayreduction.h"
+#include <boost/type_traits.hpp>
 
 BOOST_AUTO_TEST_SUITE(util)
 
@@ -73,52 +73,6 @@ BOOST_AUTO_TEST_CASE(rowdatadeserializer)
 int test2(int a, int b)
 {
     return a + b;
-}
-
-BOOST_AUTO_TEST_CASE(bind1st_test)
-{
-    auto ptr = util::bind1st(test2, 3);
-    BOOST_CHECK(ptr(3) == 6);
-}
-
-class Functor
-{
-public:
-    int operator()(int a)
-    {
-        return a;
-    }
-};
-
-BOOST_AUTO_TEST_CASE(bind1st_functor)
-{
-    Functor f;
-    auto ptr = util::bind1st(f, 3);
-    BOOST_CHECK(ptr() == 3);
-}
-
-class A
-{
-public:
-    int test(int a)
-    {
-        return a;
-    }
-};
-
-BOOST_AUTO_TEST_CASE(bind1st_class)
-{
-    A a;
-    auto f = bind1st(&A::test, &a);
-    BOOST_CHECK(f(3) == 3);
-}
-
-BOOST_AUTO_TEST_CASE(bind1st_unpack_call)
-{
-    A a;
-    auto f = bind1st(&A::test, &a);
-    /*int b = unpack_call<bind_class<single_mem_fn<int, A, int> >, int>(f, std::make_tuple(3));
-    BOOST_CHECK(b == 3);*/
 }
 
 bool grp_eq(int a, int b)

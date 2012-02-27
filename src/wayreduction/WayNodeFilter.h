@@ -15,7 +15,6 @@
 #include "../util/make_ref.h"
 #include <boost/range/adaptors.hpp>
 #include <boost/range/any_range.hpp>
-#include "../util/func.h"
 
 namespace wayred
 {

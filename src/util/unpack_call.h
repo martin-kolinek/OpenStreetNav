@@ -8,7 +8,6 @@
 #ifndef UNPACK_CALL_H_
 #define UNPACK_CALL_H_
 
-#include "func.h"
 #include "seq.h"
 
 namespace util
@@ -30,16 +29,16 @@ template<typename Func>
 class uncurry_wrapper
 {
 private:
-    Func f;
-    typedef function_traits<Func> traits;
+
 public:
-    typedef typename traits::result_type result_type;
+    Func f;
     uncurry_wrapper(Func f):
         f(f)
     {}
-    result_type operator()(typename traits::arg_tuple const& args)
+    template<typename Tup>
+    auto operator()(Tup const& arg) -> decltype(unpack_call(f, arg))
     {
-        return unpack_call(f, args);
+        return unpack_call(f, arg);
     }
 };
 
