@@ -75,4 +75,30 @@ BOOST_AUTO_TEST_CASE(equals)
     BOOST_CHECK(n3 != n4);
 }
 
+BOOST_AUTO_TEST_CASE(wayregion)
+{
+    osm::Way w(1);
+    osm::Node n(1);
+    for (int i = 0; i < 10; ++i)
+    {
+        n.id = i;
+        w.nodes.push_back(n);
+    }
+    osm::WayRegion wr(w, std::vector<std::pair<unsigned int, unsigned int> > {std::make_pair(2, 4), std::make_pair(7, 8)});
+    osm::Edge e1(osm::Node(0), osm::Node(1), osm::Way(1));
+    osm::Edge e2(osm::Node(0), osm::Node(1), osm::Way(3));
+    osm::Edge e3(osm::Node(2), osm::Node(3), osm::Way(1));
+    osm::Edge e4(osm::Node(2), osm::Node(4), osm::Way(1));
+    osm::Edge e5(osm::Node(1), osm::Node(5), osm::Way(1));
+    osm::Edge e6(osm::Node(5), osm::Node(6), osm::Way(1));
+    osm::Edge e7(osm::Node(7), osm::Node(9), osm::Way(1));
+    BOOST_CHECK(!wr.intersects(e1));
+    BOOST_CHECK(!wr.intersects(e2));
+    BOOST_CHECK(wr.intersects(e3));
+    BOOST_CHECK(wr.intersects(e4));
+    BOOST_CHECK(wr.intersects(e5));
+    BOOST_CHECK(!wr.intersects(e6));
+    BOOST_CHECK(wr.intersects(e7));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

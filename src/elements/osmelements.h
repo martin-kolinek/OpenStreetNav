@@ -14,5 +14,6 @@
 #include "Relation.h"
 #include "Edge.h"
 #include "CompByID.h"
+#include "WayRegion.h"
 
 #endif /* OSMELEMENTS_H_ */

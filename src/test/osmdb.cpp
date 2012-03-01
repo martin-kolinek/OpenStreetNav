@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE(empty_displaydb)
     db.set_bounds(geo::Point(0, 0), geo::Point(1, 1), 1);
 }
 
-BOOST_AUTO_TEST_CASE(simple)
+BOOST_AUTO_TEST_CASE(simple_dispdb)
 {
     osmdb::OsmDatabase odb(pdb);
     odb.create_tables();
@@ -237,6 +237,10 @@ BOOST_AUTO_TEST_CASE(simple)
     nd.position.lon = 0.5;
     ins.insert_node(nd);
     ins.insert_node(osm::Node(5, 0.6, 0.4));
+    w = osm::Way(2);
+    w.nodes.push_back(osm::Node(3));
+    w.nodes.push_back(osm::Node(5));
+    ins.insert_way(w);
     pdb.commit_transaction();
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     BOOST_CHECK(util::count(db.get_display_elements()) == 1);
