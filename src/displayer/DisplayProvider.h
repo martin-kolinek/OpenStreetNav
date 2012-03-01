@@ -8,10 +8,13 @@
 #ifndef DISPLAYPROVIDER_H_
 #define DISPLAYPROVIDER_H_
 
+#include <boost/range.hpp>
+#include <boost/range/any_range.hpp>
 #include <vector>
 #include "../geoelements/geoelements.h"
 #include "../elements/osmelements.h"
 #include "DisplayElement.h"
+#include <memory>
 
 namespace display
 {
@@ -22,11 +25,12 @@ namespace display
 class DisplayProvider
 {
 public:
+    typedef boost::any_range<std::shared_ptr<display::DisplayElement> const, boost::forward_traversal_tag, std::shared_ptr<display::DisplayElement> const, size_t> element_range;
     /**
      *
      * @return the DisplayElements in current view.
      */
-    virtual std::vector<std::unique_ptr<display::DisplayElement> > const& get_display_elements() = 0;
+    virtual element_range get_display_elements() = 0;
     /**
      * Change current view to position bounded by topleft and bottomright using zoomlevel zoom
      * @param topleft

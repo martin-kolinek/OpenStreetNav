@@ -202,13 +202,13 @@ void MapDrawingArea::redraw_from_db()
     std::set<DisplayElement*, DisplayElemPtrLess> displayed;
     for (auto it = dps.begin(); it != dps.end(); ++it)
     {
-        auto const& vect = it->second->get_display_elements();
-        for (unsigned int i = 0; i < vect.size(); ++i)
+        auto els = it->second->get_display_elements();
+        for (auto it2 = els.begin(); it2 != els.end(); ++it2)
         {
-            if (displayed.find(vect[i].get()) == displayed.end())
+            if (displayed.find(it2->get()) == displayed.end())
             {
-                vect[i]->draw(cr, *proj);
-                displayed.insert(vect[i].get());
+                (*it2)->draw(cr, *proj);
+                displayed.insert(it2->get());
             }
         }
     }

@@ -8,6 +8,8 @@
 #include "DisplayDB.h"
 #include "../sqllib/sqllib.h"
 #include "ToShowEdgesSelector.h"
+#include "../displayer/DisplayLine.h"
+#include <boost/range/adaptors.hpp>
 
 namespace osmdb
 {
@@ -42,9 +44,18 @@ OsmDatabase& DisplayDB::get_db()
     return db;
 }
 
-std::vector<std::unique_ptr<display::DisplayElement> > const& DisplayDB::get_display_elements()
+std::shared_ptr<display::DisplayElement> extract_disp_el(std::pair<osm::Edge, display::LineDisplayStyle> const& p)
 {
-    return display_elements;
+    display::DisplayLine* ret = new display::DisplayLine(p.first.start_node.position, p.first.end_node.position,
+            std::unique_ptr<display::LineDisplayStyle>(new display::LineDisplayStyle(p.second)));
+    return std::shared_ptr<display::DisplayElement>(ret);
+}
+
+DisplayDB::element_range DisplayDB::get_display_elements()
+{
+    //boost::any_range<std::unique_ptr<display::DisplayElement>, boost::forward_traversal_tag, std::unique_ptr<display::DisplayElement> const&, size_t> ret =
+    return display_elements | boost::adaptors::transformed(extract_disp_el);
+//    return ret;
 }
 
 void DisplayDB::set_bounds(const geo::Point& p1, const geo::Point& p2, int zoom)
@@ -55,11 +66,7 @@ void DisplayDB::set_bounds(const geo::Point& p1, const geo::Point& p2, int zoom)
     double lower = std::min(p1.lat, p2.lat);
     double higher = std::max(p1.lat, p2.lat);
     auto& stmt = coll.get_edges_for_zoom(zoom);
-    std::vector<std::unique_ptr<display::DisplayElement> > edges = std::move(ToShowEdgesSelector::get_edges(stmt, left, lower, right, higher));
-    for (unsigned int i = 0; i < edges.size(); ++i)
-    {
-        display_elements.push_back(std::unique_ptr<display::DisplayElement>(std::move(edges[i])));
-    }
+    display_elements = std::move(ToShowEdgesSelector::get_edges(stmt, left, lower, right, higher));
 }
 
 std::vector<std::unique_ptr<osm::Element> > DisplayDB::get_selected(const geo::Point& p1, const geo::Point& p2, int zoom)

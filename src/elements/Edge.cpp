@@ -10,10 +10,10 @@
 namespace osm
 {
 
-Edge::Edge(int64_t start_node, int64_t end_node, int64_t way_id):
+Edge::Edge(Node const& start_node, Node const& end_node, osm::Way const& way):
     start_node(start_node),
     end_node(end_node),
-    way_id(way_id)
+    way(way)
 {
 }
 

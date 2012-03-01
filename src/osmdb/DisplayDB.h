@@ -12,6 +12,7 @@
 #include "../displayer/DisplayProvider.h"
 #include "ToShowSelectCollection.h"
 #include "PropertiesSelection.h"
+#include "../displayer/LineDisplayStyle.h"
 
 namespace osmdb
 {
@@ -30,10 +31,11 @@ public:
      * @param min_zoom minimum zoom level to draw
      * @param max_zoom maximum zoom level to draw
      */
-    DisplayDB(OsmDatabase& db, std::string const& path_base, int min_zoom, int max_zoom);
+    DisplayDB(osmdb::OsmDatabase& db, std::string const& path_base, int min_zoom, int max_zoom);
     virtual ~DisplayDB();
-    std::vector<std::unique_ptr<display::DisplayElement> > const& get_display_elements();
-    OsmDatabase& get_db();
+    element_range get_display_elements();
+
+    osmdb::OsmDatabase& get_db();
     void set_bounds(geo::Point const& topleft, geo::Point const& bottomright, int zoom);
     std::vector<std::unique_ptr<osm::Element> > get_selected(geo::Point const& topleft, geo::Point const& bottomright, int zoom);
     double center_lat();
@@ -41,7 +43,7 @@ public:
 private:
     osmdb::OsmDatabase& db;
     osmdb::PropertiesSelection pdb;
-    std::vector<std::unique_ptr<display::DisplayElement> > display_elements;
+    std::vector<std::pair<osm::Edge, display::LineDisplayStyle> > display_elements;
     double clat;
     double clon;
     int minz, maxz;
@@ -49,5 +51,5 @@ private:
     psql::Statement<psql::BindTypes<>, psql::RetTypes<double, double, double, double> > get_bounds;
 };
 
-} /* namespace display */
+} /* namespace osmdb */
 #endif /* DISPLAYDB_H_ */

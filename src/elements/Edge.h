@@ -9,6 +9,8 @@
 #define EDGE_H_
 
 #include <stdint.h>
+#include "Node.h"
+#include "Way.h"
 
 namespace osm
 {
@@ -16,11 +18,11 @@ namespace osm
 class Edge
 {
 public:
-    Edge(int64_t start_node = 0, int64_t end_node = 0, int64_t way_id = 0);
+    Edge(Node const& start_node, Node const& end_node, osm::Way const& way);
     virtual ~Edge();
-    int64_t start_node;
-    int64_t end_node;
-    int64_t way_id;
+    Node start_node;
+    Node end_node;
+    Way way;
 };
 
 } /* namespace display */

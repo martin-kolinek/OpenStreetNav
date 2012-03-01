@@ -12,6 +12,7 @@
 #include "../sqllib/sqllib.h"
 #include <test_config.h>
 #include <algorithm>
+#include "../util/range.h"
 
 class OsmDBFixture
 {
@@ -238,7 +239,7 @@ BOOST_AUTO_TEST_CASE(simple)
     ins.insert_node(osm::Node(5, 0.6, 0.4));
     pdb.commit_transaction();
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
-    BOOST_CHECK(db.get_display_elements().size() == 1);
+    BOOST_CHECK(util::count(db.get_display_elements()) == 1);
     auto elems = db.get_selected(geo::Point(1, 0), geo::Point(0, 1), 1);
     BOOST_CHECK(elems.size() == 1);
     BOOST_CHECK(elems[0]->get_description().front().first == "way");

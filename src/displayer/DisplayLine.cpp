@@ -10,11 +10,10 @@
 namespace display
 {
 
-DisplayLine::DisplayLine(geo::Point p1, geo::Point p2, bool arrow, std::unique_ptr<DisplayStyle> && style):
-    DisplayElement(std::move(style)),
+DisplayLine::DisplayLine(geo::Point p1, geo::Point p2, std::unique_ptr<LineDisplayStyle> && style):
+    style(std::move(style)),
     p1(p1),
-    p2(p2),
-    arrow(arrow)
+    p2(p2)
 {
 }
 
@@ -67,7 +66,7 @@ void DisplayLine::draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProje
 {
     auto pp1 = pr.project(p1);
     auto pp2 = pr.project(p2);
-    if (arrow)
+    if (style->draw_arrow())
     {
         double l = sqrt((pp2.x - pp1.x) * (pp2.x - pp1.x) + (pp2.y - pp1.y) * (pp2.y - pp1.y));
         double norm_x = (pp2.x - pp1.x) / (l * 100);
@@ -85,6 +84,11 @@ void DisplayLine::draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProje
         cr->move_to(pp1.x, pp1.y);
         cr->line_to(pp2.x, pp2.y);
     }
+}
+
+DisplayStyle const& DisplayLine::get_style() const
+{
+    return *style;
 }
 
 /* namespace display */

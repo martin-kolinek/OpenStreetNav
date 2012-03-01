@@ -24,7 +24,7 @@ enum class DisplayElementType
 class DisplayElement
 {
 public:
-    DisplayElement(std::unique_ptr<DisplayStyle> && disp);
+    DisplayElement();
     virtual ~DisplayElement();
     virtual void draw(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const;
     virtual DisplayElementType get_type() const = 0;
@@ -35,7 +35,7 @@ public:
     virtual bool operator==(DisplayElement const& other) const = 0;
     virtual bool operator!=(DisplayElement const& other) const = 0;
 protected:
-    std::unique_ptr<DisplayStyle> disp;
+    virtual DisplayStyle const& get_style() const = 0;
     virtual void draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const = 0;
 
 };
