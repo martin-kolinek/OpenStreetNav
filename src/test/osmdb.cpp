@@ -446,13 +446,13 @@ BOOST_AUTO_TEST_CASE(waylister)
 
 BOOST_AUTO_TEST_CASE(allwayslister)
 {
-    osm::Node n1(1);
+    osm::Node n1(1, 2, 3);
     n1.tags.insert(osm::Tag("k1", "v1"));
     n1.tags.insert(osm::Tag("k2", "v2"));
-    osm::Node n2(2);
+    osm::Node n2(2, -4, 2);
     n2.tags.insert(osm::Tag("k3", "v3"));
     n2.tags.insert(osm::Tag("k4", "v4"));
-    osm::Node n3(3);
+    osm::Node n3(3, 5, -3);
     osm::Way w1(1);
     w1.tags.insert(osm::Tag("k5", "v5"));
     w1.tags.insert(osm::Tag("key", "val"));

@@ -18,12 +18,14 @@ void combine(osm::Way& w, std::tuple<int64_t, std::string, std::string> const& r
         w.tags.insert(osm::Tag(k, v));
 }
 
-void combine_node(std::tuple<int64_t, osm::Node>& acc, std::tuple<int64_t, int64_t, std::string, std::string> const& row)
+void combine_node(std::tuple<int64_t, osm::Node>& acc, std::tuple<int64_t, int64_t, double, double, std::string, std::string> const& row)
 {
     std::get<0>(acc) = std::get<0>(row);
     std::get<1>(acc).id = std::get<1>(row);
-    if (std::get<2>(row) != "")
-        std::get<1>(acc).tags.insert(osm::Tag(std::get<2>(row), std::get<3>(row)));
+    std::get<1>(acc).position.lon = std::get<2>(row);
+    std::get<1>(acc).position.lat = std::get<3>(row);
+    if (std::get<4>(row) != "")
+        std::get<1>(acc).tags.insert(osm::Tag(std::get<4>(row), std::get<5>(row)));
 }
 
 void combine_way(osm::Way& w, std::tuple<int64_t, osm::Node> const& row)
