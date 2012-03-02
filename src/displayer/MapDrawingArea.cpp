@@ -46,6 +46,11 @@ MapDrawingArea::~MapDrawingArea()
 {
 }
 
+void MapDrawingArea::refresh()
+{
+	redraw_from_db();
+}
+
 bool MapDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> & cr)
 {
     cr->translate(tran_x, tran_y);

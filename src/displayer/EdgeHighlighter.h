@@ -12,8 +12,10 @@ namespace display
 class EdgeHighlighter : public DisplayProvider
 {
 public:
-    EdgeHighlighter(EdgeHighlightable& src, std::vector<osm::WayRegion> const& v, LineDisplayStyle const& style);
+    EdgeHighlighter(EdgeHighlightable& src, LineDisplayStyle const& style);
     element_range get_display_elements();
+    void add_way_region(osm::WayRegion const& wr);
+    void clear();
     void set_bounds(geo::Point const& , geo::Point const& , int );
     std::vector<std::unique_ptr<osm::Element> > get_selected(geo::Point const& , geo::Point const& , int );
     double center_lat();

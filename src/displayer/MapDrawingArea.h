@@ -68,6 +68,8 @@ public:
      * that are in the vicinity of point clicked.
      */
     boost::signal<void (std::vector<std::unique_ptr<osm::Element> > const& elem)> element_clicked;
+
+    void refresh();
     virtual ~MapDrawingArea();
 protected:
     bool on_draw(Cairo::RefPtr<Cairo::Context> const& cr);

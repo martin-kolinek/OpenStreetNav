@@ -6,15 +6,11 @@
 
 namespace display
 {
-EdgeHighlighter::EdgeHighlighter(EdgeHighlightable& src, std::vector<osm::WayRegion> const& v, LineDisplayStyle const& style):
+EdgeHighlighter::EdgeHighlighter(EdgeHighlightable& src, LineDisplayStyle const& style):
     src(src),
     style(style),
     renew_cache(true)
 {
-    for (auto it = v.begin(); it != v.end(); ++it)
-    {
-        highlight.insert(std::make_pair(osm::Way(it->get_way().id), *it));
-    }
 }
 
 bool highlight_edge_filter(osm::Edge const& e, std::map<osm::Way, osm::WayRegion, osm::LtByID> const& highlight)
@@ -67,6 +63,18 @@ double EdgeHighlighter::center_lon()
 }
 EdgeHighlighter::~EdgeHighlighter()
 {
+}
+
+void EdgeHighlighter::add_way_region(osm::WayRegion const& wr)
+{
+	highlight.insert(std::make_pair(osm::Way(wr.get_way().id), wr));
+	renew_cache=true;
+}
+
+void EdgeHighlighter::clear()
+{
+	highlight.clear();
+	renew_cache=true;
 }
 
 }

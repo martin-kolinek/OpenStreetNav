@@ -20,6 +20,8 @@
 #include <glibmm/optionentry.h>
 #include <osmdisp_config.h>
 #include "../util/util.h"
+#include "EdgeHighlighter.h"
+#include "LineDisplayStyle.h"
 
 class ZoomerDrawAreaConnector
 {
@@ -77,6 +79,12 @@ Glib::OptionEntry make_entry(std::string lname, char sname, std::string desc = "
     return e;
 }
 
+osm::WayRegion get_way_region_from_el(osm::Element const& el)
+{
+	osm::Way const& w = static_cast<osm::Way const&>(el);
+	return osm::WayRegion(w);
+}
+
 int main(int argc, char** argv)
 {
     Glib::ustring dbname;
@@ -125,14 +133,26 @@ int main(int argc, char** argv)
             psql::execute_sql(pdb, "SET search_path TO " + schema + ", public");
         osmdb::OsmDatabase odb(pdb);
         zoomer->get_adjustment()->set_value(area->get_zoom());
-        area->add_dp(1, std::shared_ptr<display::DisplayProvider>(new osmdb::DisplayDB(odb, TO_SHOW_EDGES, 1, 15)));
+        std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, TO_SHOW_EDGES, 1, 15));
+        area->add_dp(1, dispdb);
+        std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(0, 1, 1, 1, 2, false)));
+        area->add_dp(2, high);
         area->zoom_changed.connect([zoomer](int val)
         {
             zoomer->get_adjustment()->set_value(val);
         });
-        area->element_clicked.connect([view](std::vector<std::unique_ptr<osm::Element> > const & els)
+        area->element_clicked.connect([view, &high, area](std::vector<std::unique_ptr<osm::Element> > const & els)
         {
             view->get_buffer()->set_text(get_els_text(els));
+            high->clear();
+            for(auto it = els.begin(); it!=els.end(); ++it)
+            {
+            	if((*it)->get_type() == osm::ObjectType::Way)
+            	{
+            		high->add_way_region(get_way_region_from_el(**it));
+            	}
+            }
+            area->refresh();
         });
         if (zoom >= 1 && zoom <= 15)
             area->set_zoom(zoom);
