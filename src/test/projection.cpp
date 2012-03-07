@@ -8,6 +8,9 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include "../projection/projection.h"
+#include <cmath>
+
+using std::abs;
 
 BOOST_AUTO_TEST_SUITE(projection)
 
@@ -93,14 +96,22 @@ BOOST_AUTO_TEST_CASE(inverse)
             BOOST_CHECK(abs(p.lon - (65.0 + j)) <= 0.0000001);
             p = proj.unproject(i, j);
             p2 = proj.project(p);
-            if (abs(p2.y - j) > 0)
-            {
-                std::cout << abs(p2.y - j) << std::endl;
-            }
             BOOST_CHECK(abs(p2.x - i) <= 0.0000001);
             BOOST_CHECK(abs(p2.y - j) <= 0.0000001);
         }
     }
+}
+
+BOOST_AUTO_TEST_CASE(pdist)
+{
+    geo::Point p1(0, 1);
+    geo::Point p2(0, 0);
+    BOOST_CHECK(abs(p1.angle_distance(p2) - 1) < 0.0000001);
+    BOOST_CHECK(abs(geo::get_point_distance(1, p1, p2) - M_PI / 180.0) < 0.0000001);
+    geo::Point p3(1, 1);
+    geo::Point p4(0, 0);
+    BOOST_CHECK(abs(p3.angle_distance(p4) - sqrt(2)) < 0.001);
+    BOOST_CHECK(abs(geo::get_point_distance(1, p3, p4) - sqrt(2)*M_PI / 180.0) < 0.001);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

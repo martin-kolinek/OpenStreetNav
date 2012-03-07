@@ -48,7 +48,7 @@ MapDrawingArea::~MapDrawingArea()
 
 void MapDrawingArea::refresh()
 {
-	redraw_from_db();
+    redraw_from_db();
 }
 
 bool MapDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> & cr)

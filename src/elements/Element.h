@@ -13,6 +13,7 @@
 #include <stdint.h>
 #include <boost/property_tree/ptree.hpp>
 #include "ObjectType.h"
+#include "Tag.h"
 
 namespace osmdb
 {
@@ -24,8 +25,6 @@ class ElementImporter;
 
 namespace osm
 {
-
-typedef std::pair<std::string, std::string> Tag;
 
 /**
  * \class Element

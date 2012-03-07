@@ -9,6 +9,8 @@
 #include <cmath>
 #include <utility>
 #include "../util/util.h"
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 namespace geo
 {
@@ -61,6 +63,24 @@ bool Point::before(Point const& other, double tolerance) const
 bool Point::close(const Point& other, double tolerance) const
 {
     return std::abs(lat - other.lat) < tolerance && std::abs(lon - other.lon) < tolerance;
+}
+
+double Point::angle_distance(Point const& other) const
+{
+    double d_lat = std::abs(lat - other.lat) * M_PI / 180.0;
+    double d_lon = std::abs(lon - other.lon) * M_PI / 180.0;
+    double a1 = std::sin(d_lat / 2.0);
+    double a1s = a1 * a1;
+    double a2 = std::sin(d_lon / 2.0);
+    double a2s = a2 * a2;
+    double a3 = std::cos(lat * M_PI / 180) * std::cos(other.lat * M_PI / 180);
+    double d_ang = 2 * std::asin(std::sqrt(a1s + a2s * a3));
+    return d_ang * 180.0 / M_PI;
+}
+
+double get_point_distance(double radius, Point const& p1, Point const& p2)
+{
+    return radius * (p1.angle_distance(p2) * M_PI / 180.0);
 }
 
 } /* namespace geo */

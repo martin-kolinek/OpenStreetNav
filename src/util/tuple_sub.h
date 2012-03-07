@@ -42,6 +42,7 @@ template<size_t... elems>
 class TupleEq
 {
 public:
+    typedef bool result_type;
     template<typename Tup>
     bool operator()(Tup const& t1, Tup const& t2) const
     {

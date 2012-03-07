@@ -8,6 +8,8 @@
 #ifndef POINT_H_
 #define POINT_H_
 
+#define EARTH_RADIUS 6372.8
+
 namespace geo
 {
 
@@ -39,7 +41,11 @@ public:
     bool operator<(Point const& other) const;
     bool before(Point const& other, double tolerance) const;
     bool close(Point const& other, double tolerance) const;
+
+    double angle_distance(Point const& other) const;
 };
+
+double get_point_distance(double radius, Point const& p1, Point const& p2);
 
 } /* namespace geo */
 #endif /* POINT_H_ */

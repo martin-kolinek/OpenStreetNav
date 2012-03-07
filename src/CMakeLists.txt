@@ -58,4 +58,8 @@ add_subdirectory(wayreduction)
 
 add_subdirectory(pathfinding)
 
+add_subdirectory(roads)
+
+add_subdirectory(cost)
+
 add_subdirectory(test)

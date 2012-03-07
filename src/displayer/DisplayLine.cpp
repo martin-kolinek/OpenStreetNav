@@ -71,10 +71,10 @@ void DisplayLine::draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProje
         double l = sqrt((pp2.x - pp1.x) * (pp2.x - pp1.x) + (pp2.y - pp1.y) * (pp2.y - pp1.y));
         double norm_x = (pp2.x - pp1.x) / (l * 100);
         double norm_y = (pp2.y - pp1.y) / (l * 100);
-        if(isnan(norm_x))
-        	norm_x = 0;
-        if(isnan(norm_y))
-        	norm_y = 0;
+        if (isnan(norm_x))
+            norm_x = 0;
+        if (isnan(norm_y))
+            norm_y = 0;
         proj::FlatPoint ppc((pp1.x + pp2.x) / 2.0, (pp1.y + pp2.y) / 2.0);
         cr->move_to(pp1.x, pp1.y);
         cr->line_to(ppc.x, ppc.y);

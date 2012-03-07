@@ -16,6 +16,7 @@ namespace osm
 class EqByID
 {
 public:
+    typedef bool result_type;
     bool operator()(Element const& a, Element const& b) const;
 
 };
@@ -23,6 +24,7 @@ public:
 class NeByID
 {
 public:
+    typedef bool result_type;
     bool operator()(Element const& a, Element const& b) const;
 
 };
@@ -30,24 +32,28 @@ public:
 class LtByID
 {
 public:
+    typedef bool result_type;
     bool operator()(Element const& a, Element const& b) const;
 };
 
 class GtByID
 {
 public:
+    typedef bool result_type;
     bool operator()(Element const& a, Element const& b) const;
 };
 
 class GeByID
 {
 public:
+    typedef bool result_type;
     bool operator()(Element const& a, Element const& b) const;
 };
 
 class LeByID
 {
 public:
+    typedef bool result_type;
     bool operator()(Element const& a, Element const& b) const;
 };
 
@@ -55,6 +61,7 @@ template<typename A, typename B>
 class DerefEqByID
 {
 public:
+    typedef bool result_type;
     bool operator()(A const& a, B const& b) const
     {
         return EqByID()(*a, *b);

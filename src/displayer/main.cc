@@ -81,8 +81,8 @@ Glib::OptionEntry make_entry(std::string lname, char sname, std::string desc = "
 
 osm::WayRegion get_way_region_from_el(osm::Element const& el)
 {
-	osm::Way const& w = static_cast<osm::Way const&>(el);
-	return osm::WayRegion(w);
+    osm::Way const& w = static_cast<osm::Way const&>(el);
+    return osm::WayRegion(w);
 }
 
 int main(int argc, char** argv)
@@ -145,12 +145,12 @@ int main(int argc, char** argv)
         {
             view->get_buffer()->set_text(get_els_text(els));
             high->clear();
-            for(auto it = els.begin(); it!=els.end(); ++it)
+            for (auto it = els.begin(); it != els.end(); ++it)
             {
-            	if((*it)->get_type() == osm::ObjectType::Way)
-            	{
-            		high->add_way_region(get_way_region_from_el(**it));
-            	}
+                if ((*it)->get_type() == osm::ObjectType::Way)
+                {
+                    high->add_way_region(get_way_region_from_el(**it));
+                }
             }
             area->refresh();
         });

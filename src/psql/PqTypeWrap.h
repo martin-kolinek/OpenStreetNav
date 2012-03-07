@@ -42,6 +42,23 @@ public:
 };
 
 template<>
+class PqTypeWrap<bool>
+{
+public:
+    bool get(PGresult* res, int row, int col)
+    {
+        PGbool b;
+        zero_get_check(PQgetf(res, row, "%bool", col, &b));
+        return b == 1;
+    }
+    void put(PGparam* param, bool val)
+    {
+        PGbool b = val ? 1 : 0;
+        zero_put_check(PQputf(param, "%bool", b));
+    }
+};
+
+template<>
 class PqTypeWrap<int>
 {
 public:

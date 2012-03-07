@@ -17,5 +17,6 @@
 #include "ImportTableProcessor.h"
 #include "WayLister.h"
 #include "AllWayLister.h"
+#include "RoadNetworkCreator.h"
 
 #endif /* OSMDB_H_ */

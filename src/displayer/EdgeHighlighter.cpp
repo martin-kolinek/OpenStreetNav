@@ -67,14 +67,14 @@ EdgeHighlighter::~EdgeHighlighter()
 
 void EdgeHighlighter::add_way_region(osm::WayRegion const& wr)
 {
-	highlight.insert(std::make_pair(osm::Way(wr.get_way().id), wr));
-	renew_cache=true;
+    highlight.insert(std::make_pair(osm::Way(wr.get_way().id), wr));
+    renew_cache = true;
 }
 
 void EdgeHighlighter::clear()
 {
-	highlight.clear();
-	renew_cache=true;
+    highlight.clear();
+    renew_cache = true;
 }
 
 }

@@ -9,6 +9,7 @@
 #include "../util/sortedcombiterator.h"
 #include "../util/tuple_sub.h"
 #include "../wayreduction/wayreduction.h"
+#include "../util/range.h"
 #include <boost/type_traits.hpp>
 
 BOOST_AUTO_TEST_SUITE(util)
@@ -162,6 +163,28 @@ BOOST_AUTO_TEST_CASE(tail_test)
     std::tuple<int, int, int> t(1, 2, 3);
     auto tail = util::tup_tail(t);
     BOOST_CHECK(tail == std::make_tuple(2, 3));
+}
+
+bool lthan3(int i)
+{
+    return i == 3;
+}
+
+BOOST_AUTO_TEST_CASE(split_test)
+{
+    std::vector<int> v {1, 2, 3, 4, 5};
+    std::vector<int> first {1, 2, 3};
+    std::vector<int> second {3, 4, 5};
+    auto p = util::split(v, lthan3);
+    BOOST_CHECK(boost::equal(p.first, first));
+    BOOST_CHECK(boost::equal(p.second, second));
+}
+
+BOOST_AUTO_TEST_CASE(gen_vect_test)
+{
+    std::vector<int> v1 {1, 2, 3};
+    auto v2 = util::gen_vect(1, 2, 3);
+    BOOST_CHECK(v1 == v2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
