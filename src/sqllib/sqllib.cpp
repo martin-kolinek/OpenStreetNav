@@ -70,7 +70,7 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, doub
                               "",
                               "wa",
                               std::vector<std::string>(),
-                              "order by WayID, NodeID, Key");
+                              "order by WayID, SequenceNo, NodeID, Key");
     auto cr = SqlCreatorFactory::create(tr.translate(entries));
     if (named)
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string> >(name, cr->create_sql(), db);

@@ -451,13 +451,13 @@ BOOST_AUTO_TEST_CASE(waylister)
 
 BOOST_AUTO_TEST_CASE(allwayslister)
 {
-    osm::Node n1(1, 2, 3);
+    osm::Node n1(3, 2, 3);
     n1.tags.insert(osm::Tag("k1", "v1"));
     n1.tags.insert(osm::Tag("k2", "v2"));
     osm::Node n2(2, -4, 2);
     n2.tags.insert(osm::Tag("k3", "v3"));
     n2.tags.insert(osm::Tag("k4", "v4"));
-    osm::Node n3(3, 5, -3);
+    osm::Node n3(1, 5, -3);
     osm::Way w1(1);
     w1.tags.insert(osm::Tag("k5", "v5"));
     w1.tags.insert(osm::Tag("key", "val"));
@@ -496,6 +496,9 @@ BOOST_AUTO_TEST_CASE(road_create)
 {
     psql::Database dest("");
     dest.set_schema("testing");
+    psql::Database red("");
+    red.set_schema("testing");
+    osmdb::OsmDatabase red_odb(red);
     osmdb::OsmDatabase full_odb(pdb);
     full_odb.create_tables();
     full_odb.create_indexes_and_keys();
@@ -516,7 +519,7 @@ BOOST_AUTO_TEST_CASE(road_create)
     w1.nodes.push_back(osm::Node(4));
     w1.tags.insert(osm::Tag("k", "v"));
     full_ins.insert_way(w1);
-    osmdb::RoadNetworkCreator rnc(full_odb, full_odb, dest_odb, std::multimap<std::string, std::string> {std::make_pair("k", "v")});
+    osmdb::RoadNetworkCreator rnc(full_odb, red_odb, dest_odb, std::multimap<std::string, std::string> {std::make_pair("k", "v")});
     rnc.create_road_network_table();
     rnc.copy_road_network_data();
     auto st = sqllib::get_select_road_edges(dest);

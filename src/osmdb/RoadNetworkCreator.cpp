@@ -44,7 +44,6 @@ std::pair<osm::Way, osm::Way> comb(osm::Way const& w1, osm::Way const& w2)
 void RoadNetworkCreator::copy_road_network_data()
 {
     sqllib::get_drop_road_edges_fkey(destination.get_db()).execute();
-
     auto st = sqllib::get_copy_road_network(destination.get_db());
     st.execute();
     auto red_st = sqllib::get_select_ways_with_nodes(reduced.get_db());
@@ -54,7 +53,6 @@ void RoadNetworkCreator::copy_road_network_data()
     full.get_db().begin_transaction();
     AllWayLister list(full, attributes);
     auto combined = util::sorted_combine(reduced_ways, list.get_range(), comb, osm::LtByID());
-
     cost::LengthAssigner la;
 
     for (auto it = combined.begin(); it != combined.end(); ++it)
@@ -65,9 +63,8 @@ void RoadNetworkCreator::copy_road_network_data()
             st.copy_data(it2->way_id, it2->seq_no, it2->forward, it2->cost);
         }
     }
-
-    st.end_copy();
     full.get_db().rollback_transaction();
+    st.end_copy();
     sqllib::get_create_road_edges_fkey(destination.get_db()).execute();
 }
 
