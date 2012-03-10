@@ -1,5 +1,6 @@
 #include "WayRegion.h"
 #include "../util/util.h"
+#include "Edge.h"
 
 namespace osm
 {

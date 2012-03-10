@@ -20,7 +20,7 @@ ToShowSelectCollection::ToShowSelectCollection(const std::string& path_base, psq
     {
         std::ostringstream ss;
         ss << path_base;
-        if (path_base[path_base.size()-1] != '/')
+        if (path_base[path_base.size() - 1] != '/')
             ss << "/";
         ss << i << ".xml";
         boost::property_tree::ptree entries;
@@ -32,12 +32,12 @@ ToShowSelectCollection::ToShowSelectCollection(const std::string& path_base, psq
 
 psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, int64_t, double, double, int64_t, double, double, double, double, double, int, int> >& ToShowSelectCollection::get_edges_for_zoom(int zoom)
 {
-    return statements[zoom-offset];
+    return statements[zoom - offset];
 }
 
 psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int, int> >& ToShowSelectCollection::get_select_edges(int zoom)
 {
-    return select_statements[zoom-offset];
+    return select_statements[zoom - offset];
 }
 
 }

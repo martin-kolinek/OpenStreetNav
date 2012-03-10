@@ -49,7 +49,7 @@ void osmdb::ElementInsertion::insert_way(const osm::Way& w)
         waynode_ins.execute(w.id, w.nodes[i].id, i);
         if (i + 1 == w.nodes.size())
             break;
-        edge_ins.execute(w.id, w.nodes[i].id, w.nodes[i+1].id, i);
+        edge_ins.execute(w.id, w.nodes[i].id, w.nodes[i + 1].id, i);
     }
     for (auto it = w.tags.begin(); it != w.tags.end(); ++it)
     {

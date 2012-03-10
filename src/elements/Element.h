@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 #include <stdint.h>
-#include <boost/property_tree/ptree.hpp>
 #include "ObjectType.h"
 #include "Tag.h"
+#include "../displayer/Descriptible.h"
 
 namespace osmdb
 {
@@ -30,7 +30,7 @@ namespace osm
  * \class Element
  * Represents an element in OpenStreetMap data.
  */
-class Element
+class Element : public display::Descriptible
 {
 public:
     virtual ~Element();

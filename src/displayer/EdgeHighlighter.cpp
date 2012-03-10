@@ -49,9 +49,9 @@ void EdgeHighlighter::set_bounds(geo::Point const& , geo::Point const& , int )
 {
     renew_cache = true;
 }
-std::vector<std::unique_ptr<osm::Element> > EdgeHighlighter::get_selected(geo::Point const& , geo::Point const& , int )
+std::vector<std::unique_ptr<Descriptible> > EdgeHighlighter::get_selected(geo::Point const& , geo::Point const& , int )
 {
-    return std::vector<std::unique_ptr<osm::Element> >();
+    return std::vector<std::unique_ptr<Descriptible> >();
 }
 double EdgeHighlighter::center_lat()
 {
@@ -65,9 +65,11 @@ EdgeHighlighter::~EdgeHighlighter()
 {
 }
 
-void EdgeHighlighter::add_way_region(osm::WayRegion const& wr)
+void EdgeHighlighter::add_descriptible(Descriptible const& desc)
 {
-    highlight.insert(std::make_pair(osm::Way(wr.get_way().id), wr));
+    auto v = desc.get_regions();
+    for (auto it = v.begin(); it != v.end(); ++it)
+        highlight.insert(std::make_pair(osm::Way((*it)->get_way().id), **it));
     renew_cache = true;
 }
 

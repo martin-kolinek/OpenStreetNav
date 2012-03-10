@@ -2,12 +2,13 @@
 #define WAYREGION_H_
 
 #include "Way.h"
-#include "Edge.h"
 #include <vector>
 #include <algorithm>
 
 namespace osm
 {
+
+class Edge;
 
 class WayRegion
 {

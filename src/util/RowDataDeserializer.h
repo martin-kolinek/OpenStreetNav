@@ -23,9 +23,9 @@ class FireUnfired
 public:
     static void fire(RowType& last_vals, HandlersType& handlers, std::bitset<std::tuple_size<RowType>::value >& fired)
     {
-        if (!fired[max-i])
+        if (!fired[max - i])
         {
-            fired[max-i] = true;
+            fired[max - i] = true;
             FireUnfired < RowType, HandlersType, max, i - 1 >::fire(last_vals, handlers, fired);
             util::unpack_call(std::get < max - i > (handlers), last_vals);
         }

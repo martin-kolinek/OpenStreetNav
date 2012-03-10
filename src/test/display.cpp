@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(highlight)
     ins.insert_node(nd);
     ins.insert_node(osm::Node(5, 0.6, 0.4));
     display::EdgeHighlighter high(db, display::LineDisplayStyle(1, 1, 1, 1, 0, false));
-    high.add_way_region(osm::WayRegion(w));
+    high.add_descriptible(w);
     w = osm::Way(2);
     w.nodes.push_back(osm::Node(3));
     w.nodes.push_back(osm::Node(5));

@@ -39,13 +39,13 @@ public:
      */
     virtual void set_bounds(geo::Point const& topleft, geo::Point const& bottomright, int zoom) = 0;
     /**
-     * Retrieve osm::Elements in box specified by topleft and bottomright when current zoom level is zoom
+     * Retrieve Descriptibles in box specified by topleft and bottomright when current zoom level is zoom
      * @param topleft
      * @param bottomright
      * @param zoom
-     * @return displayed osm::Elements in box
+     * @return displayed Descriptibles in box
      */
-    virtual std::vector<std::unique_ptr<osm::Element> > get_selected(geo::Point const& topleft, geo::Point const& bottomright, int zoom) = 0;
+    virtual std::vector<std::unique_ptr<Descriptible> > get_selected(geo::Point const& topleft, geo::Point const& bottomright, int zoom) = 0;
     /**
      *
      * @return center latitude of all data this DisplayProvider can get

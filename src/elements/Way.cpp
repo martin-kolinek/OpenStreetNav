@@ -64,6 +64,13 @@ void Way::fill(osmdb::PropertiesSelection& db)
     }
 }
 
+std::vector<std::unique_ptr<osm::WayRegion> > Way::get_regions() const
+{
+    std::vector<std::unique_ptr<osm::WayRegion> > ret;
+    ret.push_back(std::unique_ptr<osm::WayRegion>(new osm::WayRegion(*this)));
+    return ret;
+}
+
 int64_t Way::get_id() const
 {
     return id;

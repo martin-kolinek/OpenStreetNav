@@ -77,7 +77,12 @@ void DisplayDB::set_bounds(const geo::Point& p1, const geo::Point& p2, int zoom)
     display_elements = std::move(ToShowEdgesSelector::get_edges(stmt, left, lower, right, higher));
 }
 
-std::vector<std::unique_ptr<osm::Element> > DisplayDB::get_selected(const geo::Point& p1, const geo::Point& p2, int zoom)
+std::unique_ptr<display::Descriptible> transform_ptr(std::unique_ptr<osm::Element> && p)
+{
+    return std::unique_ptr<display::Descriptible>(std::move(p));
+}
+
+std::vector<std::unique_ptr<display::Descriptible> > DisplayDB::get_selected(const geo::Point& p1, const geo::Point& p2, int zoom)
 {
     double left = std::min(p1.lon, p2.lon);
     double right = std::max(p1.lon, p2.lon);
@@ -100,8 +105,14 @@ std::vector<std::unique_ptr<osm::Element> > DisplayDB::get_selected(const geo::P
     {
         ret[i]->fill(pdb);
     }
+    std::vector<std::unique_ptr<display::Descriptible> > ret2;
+    ret2.reserve(ret.size());
+    for (auto it = ret.begin(); it != ret.end(); ++it)
+    {
+        ret2.push_back(std::move(*it));
+    }
 
-    return ret;
+    return ret2;
 }
 
 double DisplayDB::center_lat()

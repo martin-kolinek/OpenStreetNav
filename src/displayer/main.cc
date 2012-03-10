@@ -54,18 +54,13 @@ void write_ptree(boost::property_tree::ptree const& ptree, std::ostream& ost, in
     }
 }
 
-std::string get_els_text(std::vector<std::unique_ptr<osm::Element> > const& els)
+std::string get_els_text(std::vector<std::unique_ptr<display::Descriptible> > const& els)
 {
     std::ostringstream str;
-    std::vector<osm::Element const*> used;
     str << "clicked" << std::endl;
     for (unsigned int i = 0; i < els.size(); ++i)
     {
-        if (util::find<decltype(osm::deref_eq_by_id(*used.begin(), els[i]))>(used.begin(), used.end(), els[i]) == used.end())
-        {
-            used.push_back(els[i].get());
-            write_ptree(els[i]->get_description(), str, 0);
-        }
+        write_ptree(els[i]->get_description(), str, 0);
     }
     return str.str();
 }
@@ -141,16 +136,13 @@ int main(int argc, char** argv)
         {
             zoomer->get_adjustment()->set_value(val);
         });
-        area->element_clicked.connect([view, &high, area](std::vector<std::unique_ptr<osm::Element> > const & els)
+        area->element_clicked.connect([view, &high, area](std::vector<std::unique_ptr<display::Descriptible> > const & els)
         {
             view->get_buffer()->set_text(get_els_text(els));
             high->clear();
             for (auto it = els.begin(); it != els.end(); ++it)
             {
-                if ((*it)->get_type() == osm::ObjectType::Way)
-                {
-                    high->add_way_region(get_way_region_from_el(**it));
-                }
+                high->add_descriptible(**it);
             }
             area->refresh();
         });

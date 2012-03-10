@@ -40,6 +40,7 @@ public:
      * Way attributes.
      */
     std::set<osm::Tag> tags;
+    std::vector<std::unique_ptr<osm::WayRegion> > get_regions() const;
     boost::property_tree::ptree get_description() const;
     osm::ObjectType get_type() const;
     bool operator==(Way const& e) const;

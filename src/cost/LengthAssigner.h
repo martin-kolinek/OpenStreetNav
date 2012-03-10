@@ -25,7 +25,7 @@ private:
     {
         double ln = 0;
         auto it = r.begin();
-        assert(it!=r.end());
+        assert(it != r.end());
         auto last_pos = it->position;
         for (++it; it != r.end(); ++it)
         {
