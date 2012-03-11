@@ -21,7 +21,7 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, doub
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, std::string, std::string> > get_way_attributes_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
 
-psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string> > get_way_node_attributes_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
+psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string, int> > get_way_node_attributes_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
 
 }
 

@@ -63,9 +63,9 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, std::string, std::str
         return psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, std::string, std::string> >(cr->create_sql(), db);
 }
 
-psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string> > get_way_node_attributes_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named, std::string name)
+psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string, int> > get_way_node_attributes_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named, std::string name)
 {
-    KeyValFilterTranslator tr("wn.WayID, wn.NodeID, ST_X(n.Location::geometry), ST_Y(n.Location::geometry), COALESCE(na.Key, '') as Key, COALESCE(na.Value,'') as Value",
+    KeyValFilterTranslator tr("wn.WayID, wn.NodeID, ST_X(n.Location::geometry), ST_Y(n.Location::geometry), COALESCE(na.Key, '') as Key, COALESCE(na.Value,'') as Value, wn.SequenceNo as SequenceNo",
                               "WayNodes wn INNER JOIN Nodes n ON n.ID = wn.NodeID LEFT JOIN NodeAttributes na ON n.ID = na.NodeID INNER JOIN WayAttributes wa ON wa.WayID = wn.WayID",
                               "",
                               "wa",
@@ -73,9 +73,9 @@ psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, doub
                               "order by WayID, SequenceNo, NodeID, Key");
     auto cr = SqlCreatorFactory::create(tr.translate(entries));
     if (named)
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string> >(name, cr->create_sql(), db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string, int> >(name, cr->create_sql(), db);
     else
-        return psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string> >(cr->create_sql(), db);
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string, int> >(cr->create_sql(), db);
 }
 
 }
