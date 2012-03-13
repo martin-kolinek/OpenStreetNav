@@ -1,4 +1,4 @@
-add_executable(tests test.cpp sqlite.cpp osmdb.cpp xml.cpp projection.cpp util.cpp psql.cpp sqllib2.cpp sqllib.cpp osmelements.cpp wayreduction_test.cpp pathfinding.cpp display.cpp cost.cpp)
+add_executable(tests test.cpp sqlite.cpp osmdb.cpp xml.cpp projection.cpp util.cpp psql.cpp sqllib2.cpp sqllib.cpp osmelements.cpp wayreduction_test.cpp pathfinding.cpp display.cpp cost.cpp roads.cpp)
 add_executable(select_ways_test main.cc)
 SET(TOSHOW_TEST_PATH ${CMAKE_BINARY_DIR}/share/toshow/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/testtoshow DESTINATION ${TOSHOW_TEST_PATH})
