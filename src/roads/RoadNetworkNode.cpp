@@ -14,9 +14,4 @@ RoadNetworkNode::~RoadNetworkNode()
 {
 }
 
-std::vector<std::pair<double, IRoadNetworkNode const*> > const& RoadNetworkNode::get_neighbours() const
-{
-    return neighbours;
-}
-
 } /* namespace roads */

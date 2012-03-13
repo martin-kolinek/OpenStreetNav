@@ -1,7 +1,6 @@
 #ifndef PATHFINDCONTEXT_H_
 #define PATHFINDCONTEXT_H_
 
-#include "IRoadNetworkNode.h"
 #include "RoadNetworkNode.h"
 #include <vector>
 #include <memory>
@@ -21,7 +20,7 @@ public:
         {
             ptr->neighbours.push_back(std::make_pair(0, *it));
         }
-        start_node = std::shared_ptr<IRoadNetworkNode const>(std::move(ptr));
+        start_node = std::shared_ptr<RoadNetworkNode const>(std::move(ptr));
 
         for (auto it = end_nodes.begin(); it != end_nodes.end(); ++it)
         {
@@ -29,11 +28,11 @@ public:
         }
         std::sort(this->end_nodes.begin(), this->end_nodes.end());
     }
-    IRoadNetworkNode const* get_start_node() const;
-    bool is_end_node(IRoadNetworkNode const* ptr) const;
+    RoadNetworkNode const* get_start_node() const;
+    bool is_end_node(RoadNetworkNode const* ptr) const;
 private:
-    std::shared_ptr<IRoadNetworkNode const> start_node;
-    std::vector<IRoadNetworkNode const*> end_nodes;
+    std::shared_ptr<RoadNetworkNode const> start_node;
+    std::vector<RoadNetworkNode const*> end_nodes;
 };
 
 }

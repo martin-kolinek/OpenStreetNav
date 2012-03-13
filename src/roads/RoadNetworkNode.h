@@ -9,17 +9,15 @@
 #define ROADNETWORKNODE_H_
 
 #include <vector>
-#include "IRoadNetworkNode.h"
 
 namespace roads
 {
 
-class RoadNetworkNode : public IRoadNetworkNode
+class RoadNetworkNode
 {
 public:
     virtual ~RoadNetworkNode();
-    std::vector<std::pair<double, IRoadNetworkNode const*> > const& get_neighbours() const;
-    std::vector<std::pair<double, IRoadNetworkNode const*> > neighbours;
+    std::vector<std::pair<double, RoadNetworkNode const*> > neighbours;
 };
 
 } /* namespace roads */

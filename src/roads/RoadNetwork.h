@@ -45,7 +45,7 @@ public:
     }
 private:
     std::vector<std::unique_ptr<RoadNetworkNode> > nodes;
-    std::map<std::pair<IRoadNetworkNode const*, IRoadNetworkNode const*>, RoadEdgeWithNodes> nodes_to_edges;
+    std::map<std::pair<RoadNetworkNode const*, RoadNetworkNode const*>, RoadEdgeWithNodes> nodes_to_edges;
     std::multimap<int64_t, RoadNetworkNode*> edge_starts;
     std::multimap<int64_t, RoadNetworkNode*> edge_ends;
 };
