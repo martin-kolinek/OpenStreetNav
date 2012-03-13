@@ -17,8 +17,8 @@ CREATE TABLE RoadEdges (
 --test-param
 
 CREATE VIEW ViewRoadEdges AS
-    SELECT n1.ID as StartNodeID, ST_X(n1.Location::geometry) as StartNodeX, ST_Y(n1.Location::geometry) as StartNodeY,
-           n2.ID as EndNodeID, ST_X(n1.Location::geometry) as EndNodeX, ST_Y(n1.Location::geometry) as EndNodeY,
+    SELECT n1.ID as StartNodeID, n1.Location as StartNodeLocation
+           n2.ID as EndNodeID, n2.Location as EndNodeLocation
            r.WayID as WayID, r.SequenceNo as SequenceNo, r.Forward as Forward, r.Cost as Cost FROM RoadEdges r 
         INNER JOIN WayNodes wn1 ON wn1.WayID = r.WayID AND wn1.SequenceNo = r.SequenceNo
         INNER JOIN Nodes n1 ON wn1.NodeID = n1.ID 
@@ -26,8 +26,8 @@ CREATE VIEW ViewRoadEdges AS
         INNER JOIN Nodes n2 ON wn2.NodeID = n2.ID 
             WHERE r.Forward = TRUE
     UNION
-    SELECT n1.ID as StartNodeID, ST_X(n1.Location::geometry) as StartNodeX, ST_Y(n1.Location::geometry) as StartNodeY,
-           n2.ID as EndNodeID, ST_X(n1.Location::geometry) as EndNodeX, ST_Y(n1.Location::geometry) as EndNodeY,
+    SELECT n1.ID as StartNodeID, n1.Location as StartNodeLocation
+           n2.ID as EndNodeID, n2.Location as EndNodeLocation
            r.WayID as WayID, r.SequenceNo as SequenceNo, r.Forward as Forward, r.Cost as Cost FROM RoadEdges r  
         INNER JOIN WayNodes wn1 ON wn1.WayID = r.WayID AND wn1.SequenceNo = r.SequenceNo + 1
         INNER JOIN Nodes n1 ON wn1.NodeID = n1.ID 
@@ -97,5 +97,8 @@ INSERT INTO RoadEdges(WayID, SequenceNo, Forward, Cost) VALUES ($1, $2, $3, $4)
 --test-param
 --test-result 0
                             
-SELECT StartNodeID, StartNodeX, StartNodeY, EndNodeID, EndNodeX, EndNodeY, WayID, SequenceNo, Forward, Cost FROM ViewRoadEdges
+SELECT 
+    StartNodeID, ST_X(StartNodeLocation::geometry), ST_Y(StartNodeLocation::geometry), 
+    EndNodeID, ST_X(EndNodeLocation::geometry), ST_Y(EndNodeLocation::geometry), 
+    WayID, SequenceNo, Forward, Cost FROM ViewRoadEdges
        

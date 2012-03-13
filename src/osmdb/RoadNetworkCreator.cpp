@@ -10,6 +10,7 @@
 #include "../util/groupingiterator.h"
 #include "AllWayLister.h"
 #include "../cost/LengthAssigner.h"
+#include "RoadEdgeCopy.h"
 
 namespace osmdb
 {
@@ -44,8 +45,8 @@ std::pair<osm::Way, osm::Way> comb(osm::Way const& w1, osm::Way const& w2)
 void RoadNetworkCreator::copy_road_network_data()
 {
     sqllib::get_drop_road_edges_fkey(destination.get_db()).execute();
-    auto st = sqllib::get_copy_road_network(destination.get_db());
-    st.execute();
+    RoadEdgeCopy cp(destination);
+    cp.start_copy();
     auto red_st = sqllib::get_select_ways_with_nodes(reduced.get_db());
     auto reduced_rows = psql::exec_statement(red_st);
     auto reduced_ways = reduced_rows |
@@ -60,11 +61,11 @@ void RoadNetworkCreator::copy_road_network_data()
         auto v = la.extract_edges(it->first, it->second);
         for (auto it2 = v.begin(); it2 != v.end(); ++it2)
         {
-            st.copy_data(it2->way_id, it2->seq_no, it2->forward, it2->cost);
+            cp.copy_edge(*it2);
         }
     }
     full.get_db().rollback_transaction();
-    st.end_copy();
+    cp.end_copy();
     sqllib::get_create_road_edges_fkey(destination.get_db()).execute();
 }
 
