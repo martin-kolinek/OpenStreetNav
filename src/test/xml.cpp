@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(basic)
     std::vector<osm::Way> correctw;
     osm::Way w1(5432);
     w1.tags.insert(osm::Tag("wkey", "wval"));
-    w1.nodes.push_back(555);
+    w1.add_node(555);
     correctw.push_back(w1);
     std::vector<osm::Relation> correctr;
     osm::Relation r1(1253);

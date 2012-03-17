@@ -6,9 +6,9 @@
 --test-depend insert_node 21, 0, 0
 --test-depend insert_node 22, 0, 1
 --test-depend insert_way 20
---test-depend insert_way_node 20, 21, 1
---test-depend insert_way_node 20, 22, 2
---test-depend insert_edge 20, 21, 22, 0
+--test-depend insert_way_node 20, 21, 1, 2
+--test-depend insert_way_node 20, 22, 2, -1
+--test-depend insert_edge 20, 21, 22, 1, 2
 --test-param 10, 30
 --test-result 0
 --test-result 1

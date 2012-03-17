@@ -34,7 +34,7 @@ void RoadNetworkCreator::create_road_network_table()
 void group_way_nodes(osm::Way& w, std::tuple<int64_t, int64_t, int> const& row)
 {
     w.id = std::get<0>(row);
-    w.nodes.push_back(osm::Node(std::get<1>(row)));
+    w.add_node(osm::Node(std::get<1>(row)), std::get<2>(row));
 }
 
 std::pair<osm::Way, osm::Way> comb(osm::Way const& w1, osm::Way const& w2)

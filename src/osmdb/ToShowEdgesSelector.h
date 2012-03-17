@@ -25,7 +25,7 @@ public:
      */
     template<typename... Args>
     static std::vector<std::pair<osm::Edge, display::LineDisplayStyle> > get_edges(psql::Statement < psql::BindTypes<Args...>,
-            psql::RetTypes<int64_t, double, double, int64_t, double, double, int64_t, double, double, double, double, double, int, int> > & st,
+            psql::RetTypes<int, int64_t, double, double, int, int64_t, double, double, int64_t, double, double, double, double, double, int, int> > & st,
             Args... args)
     {
         std::vector<std::pair<osm::Edge, display::LineDisplayStyle> > ret;
@@ -34,10 +34,10 @@ public:
         {
             double lon1, lat1, lon2, lat2, r, g, b, a, t;
             int64_t id1, id2, wid;
-            int attrs, p;
+            int attrs, p, sq1, sq2;
             bool arrow = attrs & 1;
-            std::tie(id1, lon1, lat1, id2, lon2, lat2, wid, r, g, b, a, t, attrs, p) = st.get_row(i);
-            ret.push_back(std::make_pair(osm::Edge(osm::Node(id1, lat1, lon1), osm::Node(id2, lat2, lon2), osm::Way(wid)),
+            std::tie(sq1, id1, lon1, lat1, sq2, id2, lon2, lat2, wid, r, g, b, a, t, attrs, p) = st.get_row(i);
+            ret.push_back(std::make_pair(osm::Edge(osm::Node(id1, lat1, lon1), sq1, osm::Node(id2, lat2, lon2), sq2, osm::Way(wid)),
                                          display::LineDisplayStyle(r, g, b, a, t, arrow)));
         }
         return ret;

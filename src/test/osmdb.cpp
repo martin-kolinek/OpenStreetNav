@@ -65,8 +65,8 @@ BOOST_AUTO_TEST_CASE(insert)
     n.id = 124;
     ins.insert_node(n);
     osm::Way w(341);
-    w.nodes.push_back(123);
-    w.nodes.push_back(124);
+    w.add_node(123);
+    w.add_node(124);
     w.tags.insert(osm::Tag("wkey", "wval"));
     ins.insert_way(w);
     osm::Relation r(432);
@@ -80,11 +80,11 @@ BOOST_AUTO_TEST_CASE(insert)
     ins.insert_relation(r);
     std::vector<std::tuple<int64_t, double, double> > nodes {std::make_tuple(123, 2, 1), std::make_tuple(124, 2, 1)};
     std::vector<std::tuple<int64_t> > ways {std::make_tuple(341)};
-    std::vector<std::tuple<int64_t, int64_t, int64_t> > edges {std::make_tuple(341, 123, 124)};
-    std::vector<std::tuple<int64_t, int64_t, int> > waynodes
+    std::vector<std::tuple<int64_t, int64_t, int64_t, int, int> > edges {std::make_tuple(341, 123, 124, 0, 1)};
+    std::vector<std::tuple<int64_t, int64_t, int, int> > waynodes
     {
-        std::make_tuple(341, 123, 0),
-        std::make_tuple(341, 124, 1)
+        std::make_tuple(341, 123, 0, 1),
+        std::make_tuple(341, 124, 1, -1)
     };
     std::sort(waynodes.begin(), waynodes.end());
     std::vector<std::tuple<int64_t, std::string, std::string> > ndattrs {std::make_tuple(123, "nkey", "nval")};
@@ -96,8 +96,8 @@ BOOST_AUTO_TEST_CASE(insert)
     std::vector<std::tuple<int64_t, std::string, int64_t> > rmembers {std::make_tuple(433, "rrel", 432)};
     auto nodes2 = psql::query_sql<int64_t, double, double>(db.get_db(), "SELECT ID, ST_X(Location::geometry), ST_Y(Location::geometry) FROM Nodes");
     auto ways2 = psql::query_sql<int64_t>(db.get_db(), "SELECT ID FROM Ways");
-    auto waynodes2 = psql::query_sql<int64_t, int64_t, int>(db.get_db(), "SELECT WayID, NodeID, SequenceNo FROM WayNodes");
-    auto edges2 = psql::query_sql<int64_t, int64_t, int64_t>(db.get_db(), "SELECT WayID, StartNodeID, EndNodeID FROM Edges");
+    auto waynodes2 = psql::query_sql<int64_t, int64_t, int, int>(db.get_db(), "SELECT WayID, NodeID, SequenceNo, COALESCE(NextSequenceNo, -1) FROM WayNodes");
+    auto edges2 = psql::query_sql<int64_t, int64_t, int64_t, int, int>(db.get_db(), "SELECT WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenceNo FROM Edges");
     std::sort(waynodes2.begin(), waynodes2.end());
     auto ndattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT NodeID, Key, Value FROM NodeAttributes");
     auto wattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT WayID, Key, Value FROM WayAttributes");
@@ -135,8 +135,8 @@ BOOST_AUTO_TEST_CASE(new_import)
     n.id = 124;
     ins.insert_node(n);
     osm::Way w(341);
-    w.nodes.push_back(123);
-    w.nodes.push_back(124);
+    w.add_node(123);
+    w.add_node(124);
     w.tags.insert(osm::Tag("\r\n\twkey", "wval"));
     ins.insert_way(w);
     osm::Relation r(432);
@@ -153,11 +153,11 @@ BOOST_AUTO_TEST_CASE(new_import)
     proc.process();
     std::vector<std::tuple<int64_t, double, double> > nodes {std::make_tuple(123, 2, 1), std::make_tuple(124, 2, 1)};
     std::vector<std::tuple<int64_t> > ways {std::make_tuple(341)};
-    std::vector<std::tuple<int64_t, int64_t, int64_t> > edges {std::make_tuple(341, 123, 124)};
-    std::vector<std::tuple<int64_t, int64_t, int> > waynodes
+    std::vector<std::tuple<int64_t, int64_t, int64_t, int, int> > edges {std::make_tuple(341, 123, 124, 0, 1)};
+    std::vector<std::tuple<int64_t, int64_t, int, int> > waynodes
     {
-        std::make_tuple(341, 123, 0),
-        std::make_tuple(341, 124, 1)
+        std::make_tuple(341, 123, 0, 1),
+        std::make_tuple(341, 124, 1, -1)
     };
     std::sort(waynodes.begin(), waynodes.end());
     std::vector<std::tuple<int64_t, std::string, std::string> > ndattrs {std::make_tuple(123, "nkey", "nval")};
@@ -169,8 +169,8 @@ BOOST_AUTO_TEST_CASE(new_import)
     std::vector<std::tuple<int64_t, std::string, int64_t> > rmembers {std::make_tuple(433, "rrel", 432)};
     auto nodes2 = psql::query_sql<int64_t, double, double>(db.get_db(), "SELECT ID, ST_X(Location::geometry), ST_Y(Location::geometry) FROM Nodes");
     auto ways2 = psql::query_sql<int64_t>(db.get_db(), "SELECT ID FROM Ways");
-    auto waynodes2 = psql::query_sql<int64_t, int64_t, int>(db.get_db(), "SELECT WayID, NodeID, SequenceNo FROM WayNodes");
-    auto edges2 = psql::query_sql<int64_t, int64_t, int64_t>(db.get_db(), "SELECT WayID, StartNodeID, EndNodeID FROM Edges");
+    auto waynodes2 = psql::query_sql<int64_t, int64_t, int, int>(db.get_db(), "SELECT WayID, NodeID, SequenceNo, COALESCE(NextSequenceNo, -1) FROM WayNodes");
+    auto edges2 = psql::query_sql<int64_t, int64_t, int64_t, int, int>(db.get_db(), "SELECT WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenceNo FROM Edges");
     std::sort(waynodes2.begin(), waynodes2.end());
     auto ndattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT NodeID, Key, Value FROM NodeAttributes");
     auto wattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT WayID, Key, Value FROM WayAttributes");
@@ -228,8 +228,8 @@ BOOST_AUTO_TEST_CASE(simple_dispdb)
     ins.insert_node(osm::Node(2, 0.4, 0.4));
     ins.insert_node(osm::Node(3, 0.4, 0.8));
     osm::Way w(1);
-    w.nodes.push_back(2);
-    w.nodes.push_back(3);
+    w.add_node(2);
+    w.add_node(3);
     w.tags.insert(osm::Tag("key", "val"));
     ins.insert_way(w);
     nd.id = 4;
@@ -238,8 +238,8 @@ BOOST_AUTO_TEST_CASE(simple_dispdb)
     ins.insert_node(nd);
     ins.insert_node(osm::Node(5, 0.6, 0.4));
     w = osm::Way(2);
-    w.nodes.push_back(osm::Node(3));
-    w.nodes.push_back(osm::Node(5));
+    w.add_node(osm::Node(3));
+    w.add_node(osm::Node(5));
     ins.insert_way(w);
     pdb.commit_transaction();
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
@@ -262,8 +262,8 @@ BOOST_AUTO_TEST_CASE(wayred_cursor)
     ins.insert_node(osm::Node(2, 0.4, 0.4));
     ins.insert_node(osm::Node(3, 0.4, 0.8));
     osm::Way w(1);
-    w.nodes.push_back(2);
-    w.nodes.push_back(3);
+    w.add_node(2);
+    w.add_node(3);
     w.tags.insert(osm::Tag("key", "val"));
     ins.insert_way(w);
     w = osm::Way(2);
@@ -301,8 +301,8 @@ BOOST_AUTO_TEST_CASE(properties)
     n.id = 124;
     ins.insert_node(n);
     osm::Way w(341);
-    w.nodes.push_back(123);
-    w.nodes.push_back(124);
+    w.add_node(123);
+    w.add_node(124);
     w.tags.insert(osm::Tag("wkey", "wval"));
     ins.insert_way(w);
     osm::Relation r(432);
@@ -384,30 +384,30 @@ BOOST_AUTO_TEST_CASE(waylister)
     ins.insert_node(osm::Node(7, 0.4, 0.8));
     ins.insert_node(osm::Node(8, 0.4, 0.8));
     osm::Way w(1);
-    w.nodes.push_back(osm::Node(2, 0.4, 0.4));
-    w.nodes.push_back(osm::Node(3, 0.4, 0.8));
-    w.nodes.push_back(osm::Node(4, 0.4, 0.8));
+    w.add_node(osm::Node(2, 0.4, 0.4));
+    w.add_node(osm::Node(3, 0.4, 0.8));
+    w.add_node(osm::Node(4, 0.4, 0.8));
     w.tags.insert(osm::Tag("key", "val"));
     ins.insert_way(w);
     osm::Way w2(2);
-    w2.nodes.push_back(3);
-    w2.nodes.push_back(5);
+    w2.add_node(3);
+    w2.add_node(5);
     w2.tags.insert(osm::Tag("asdf", "bsdf"));
     w2.tags.insert(osm::Tag("fcda", "gas"));
     ins.insert_way(w2);
     osm::Way w3(3);
     w3.tags.insert(osm::Tag("key", "val"));
-    w3.nodes.push_back(osm::Node(4, 0.4, 0.8));
-    w3.nodes.push_back(osm::Node(5, 0.4, 0.8));
-    w3.nodes.push_back(osm::Node(6, 0.4, 0.8));
+    w3.add_node(osm::Node(4, 0.4, 0.8));
+    w3.add_node(osm::Node(5, 0.4, 0.8));
+    w3.add_node(osm::Node(6, 0.4, 0.8));
     ins.insert_way(w3);
     osm::Way w4(4);
-    w4.nodes.push_back(5);
-    w4.nodes.push_back(7);
+    w4.add_node(5);
+    w4.add_node(7);
     ins.insert_way(w4);
     osm::Way w5(5);
-    w5.nodes.push_back(6);
-    w5.nodes.push_back(8);
+    w5.add_node(6);
+    w5.add_node(8);
     ins.insert_way(w5);
     std::map<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID>, osm::LtByID> exp;
     std::multimap<osm::Node, osm::Way, osm::LtByID> mp;
@@ -461,16 +461,16 @@ BOOST_AUTO_TEST_CASE(allwayslister)
     osm::Way w1(1);
     w1.tags.insert(osm::Tag("k5", "v5"));
     w1.tags.insert(osm::Tag("key", "val"));
-    w1.nodes.push_back(n1);
-    w1.nodes.push_back(n2);
+    w1.add_node(n1);
+    w1.add_node(n2);
     osm::Way w2(2);
     w2.tags.insert(osm::Tag("k6", "v6"));
     w2.tags.insert(osm::Tag("key", "val"));
-    w2.nodes.push_back(n2);
-    w2.nodes.push_back(n3);
+    w2.add_node(n2);
+    w2.add_node(n3);
     osm::Way w3(3);
-    w3.nodes.push_back(n3);
-    w3.nodes.push_back(n1);
+    w3.add_node(n3);
+    w3.add_node(n1);
     osmdb::OsmDatabase odb(pdb);
     odb.create_tables();
     osmdb::ElementInsertion ins(odb);
@@ -513,10 +513,10 @@ BOOST_AUTO_TEST_CASE(road_create)
     full_ins.insert_node(n3);
     full_ins.insert_node(n4);
     osm::Way w1(1);
-    w1.nodes.push_back(osm::Node(1));
-    w1.nodes.push_back(osm::Node(2));
-    w1.nodes.push_back(osm::Node(3));
-    w1.nodes.push_back(osm::Node(4));
+    w1.add_node(osm::Node(1));
+    w1.add_node(osm::Node(2));
+    w1.add_node(osm::Node(3));
+    w1.add_node(osm::Node(4));
     w1.tags.insert(osm::Tag("k", "v"));
     full_ins.insert_way(w1);
     osmdb::RoadNetworkCreator rnc(full_odb, red_odb, dest_odb, std::multimap<std::string, std::string> {std::make_pair("k", "v")});

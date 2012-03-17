@@ -7,8 +7,8 @@ BOOST_AUTO_TEST_SUITE(roads)
 BOOST_AUTO_TEST_CASE(roadnet)
 {
     RoadNetwork net;
-    net.add_edge(RoadEdgeWithNodes(1, 0, true, 1, 0, 1));
-    net.add_edge(RoadEdgeWithNodes(2, 1, true, 2, 1, 2));
+    net.add_edge(RoadEdgeWithNodes(1, 0, 1, true, 1, 0, 1));
+    net.add_edge(RoadEdgeWithNodes(2, 1, 2, true, 2, 1, 2));
     auto c = net.get_path_find_context(0, 2);
     auto p = c.get_start_node();
     std::vector<double> costs {0, 1, 0, 2};
@@ -33,8 +33,8 @@ BOOST_AUTO_TEST_CASE(roadnet)
 BOOST_AUTO_TEST_CASE(roadnet2)
 {
     RoadNetwork net;
-    net.add_edge(RoadEdgeWithNodes(1, 0, true, 1, 0, 1));
-    net.add_edge(RoadEdgeWithNodes(1, 1, true, 2, 0, 2));
+    net.add_edge(RoadEdgeWithNodes(1, 0, 1, true, 1, 0, 1));
+    net.add_edge(RoadEdgeWithNodes(1, 1, 2, true, 2, 0, 2));
     auto c = net.get_path_find_context(0, 2);
     auto p = c.get_start_node();
     BOOST_CHECK(p->neighbours.size() == 2);

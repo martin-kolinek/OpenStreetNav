@@ -17,13 +17,13 @@ SELECT Key, Value from NodeAttributes WHERE NodeID = $1
 SELECT Key, Value from WayAttributes WHERE WayID = $1
 
 --name select_waynodes
---type psql::BindTypes<int64_t>, psql::RetTypes<int64_t>
+--type psql::BindTypes<int64_t>, psql::RetTypes<int64_t, int>
 --test-depend create_waynodes_table
---test-depend insert_way_node 10, 12, 1
+--test-depend insert_way_node 10, 12, 1, -1
 --test-param 10
 --test-result 0
 
-SELECT NodeID FROM WayNodes WHERE WayID = $1 ORDER BY SequenceNo
+SELECT NodeID, SequenceNo FROM WayNodes WHERE WayID = $1 ORDER BY SequenceNo
 
 --name select_rel_attributes
 --type psql::BindTypes<int64_t>, psql::RetTypes<std::string, std::string>

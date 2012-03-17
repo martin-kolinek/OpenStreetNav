@@ -10,27 +10,15 @@ WayRegion::WayRegion(Way const& w):
     regions.push_back(std::make_pair(0, w.nodes.size() - 1));
 }
 
-bool WayRegion::intersects(Edge const& e) const
+bool WayRegion::contains(SeqEdge const& e) const
 {
-    if (e.way.id != w.id)
+    if (e.get_way().id != w.id)
         return false;
-    bool in_edge = false;
-    bool in_region = false;
-    auto it = regions.begin();
-    for (unsigned int i = 0; i < w.nodes.size(); ++i)
+    for (unsigned int i = 0; i < regions.size(); ++i)
     {
-        if (w.nodes[i].id == e.start_node.id)
-            in_edge = true;
-        if (w.nodes[i].id == e.end_node.id)
-            in_edge = false;
-        if (i == it->first)
-            in_region = true;
-        if (i == it->second)
-        {
-            in_region = false;
-            ++it;
-        }
-        if (in_region && in_edge)
+        int st = regions[i].first;
+        int en = regions[i].second;
+        if (e.get_start_seq_no() >= st && e.get_end_seq_no() <= en)
             return true;
     }
     return false;

@@ -22,9 +22,9 @@ BOOST_AUTO_TEST_CASE(length1)
     osm::Node n6(6, 0, 6);
     osm::Way full(1);
     full.tags.insert(osm::Tag("highway", "primary"));
-    full.nodes = std::vector<osm::Node> {n1, n2, n3, n4, n5, n6};
+    full.nodes = std::map<int, osm::Node> {std::make_pair(0, n1), std::make_pair(1, n2), std::make_pair(2, n3), std::make_pair(3, n4), std::make_pair(4, n5), std::make_pair(5, n6)};
     osm::Way reduced(1);
-    reduced.nodes = {n1, n4};
+    reduced.nodes = {std::make_pair(0, n1), std::make_pair(3, n4)};
     cost::LengthAssigner ln;
     auto v = ln.extract_edges(reduced, full);
     BOOST_CHECK(v.size() == 2);

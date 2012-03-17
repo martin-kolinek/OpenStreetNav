@@ -25,7 +25,7 @@ public:
     std::set<std::pair<std::string, std::string> > get_node_tags(int64_t id);
     std::set<std::pair<std::string, std::string> > get_way_tags(int64_t id);
     std::set<std::pair<std::string, std::string> > get_relation_tags(int64_t id);
-    std::vector<int64_t> get_waynodes(int64_t way_id);
+    std::map<int, int64_t> get_waynodes(int64_t way_id);
     std::multimap<std::string, int64_t> get_node_members(int64_t rel_id);
     std::multimap<std::string, int64_t> get_way_members(int64_t rel_id);
     std::multimap<std::string, int64_t> get_relation_members(int64_t rel_id);
@@ -36,7 +36,7 @@ private:
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<std::string, std::string> > get_node_attrs_st;
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<std::string, std::string> > get_way_attrs_st;
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<std::string, std::string> > get_rel_attrs_st;
-    psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<int64_t> > get_waynodes_st;
+    psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<int64_t, int> > get_waynodes_st;
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<std::string, int64_t> > get_node_members_st;
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<std::string, int64_t> > get_way_members_st;
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<std::string, int64_t> > get_rel_members_st;

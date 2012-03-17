@@ -10,9 +10,10 @@
 namespace roads
 {
 
-RoadEdge::RoadEdge(int64_t way_id, int seq_no, bool forward, double cost):
+RoadEdge::RoadEdge(int64_t way_id, int seq_no, int next_seq_no, bool forward, double cost):
     way_id(way_id),
     seq_no(seq_no),
+    next_seq_no(next_seq_no),
     forward(forward),
     cost(cost)
 {

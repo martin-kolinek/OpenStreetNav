@@ -40,7 +40,8 @@ post_way ()
 {
 	osm::Way ret(_id);
 	ret.tags=tags;
-	ret.nodes=nodes;
+	for(auto it = nodes.begin(); it!=nodes.end(); ++it)
+		ret.add_node(*it);
 	return ret;
 }
 

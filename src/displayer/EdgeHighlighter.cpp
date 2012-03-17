@@ -15,15 +15,15 @@ EdgeHighlighter::EdgeHighlighter(EdgeHighlightable& src, LineDisplayStyle const&
 
 bool highlight_edge_filter(osm::Edge const& e, std::map<osm::Way, osm::WayRegion, osm::LtByID> const& highlight)
 {
-    auto it = highlight.find(e.way);
+    auto it = highlight.find(e.get_way());
     if (it == highlight.end())
         return false;
-    return it->second.intersects(e);
+    return it->second.contains(e);
 }
 
 std::shared_ptr<DisplayElement> elem_from_edge(osm::Edge const& e, LineDisplayStyle const& s)
 {
-    return std::shared_ptr<DisplayElement>(new DisplayLine(e.start_node.position, e.end_node.position,
+    return std::shared_ptr<DisplayElement>(new DisplayLine(e.get_start_node().position, e.get_end_node().position,
                                            std::unique_ptr<LineDisplayStyle>(new LineDisplayStyle(s))));
 }
 

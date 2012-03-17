@@ -19,7 +19,7 @@ public:
 private:
     boost::any_range<osm::Way, boost::single_pass_traversal_tag, osm::Way const&, int> rng;
     psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, std::string, std::string> > way_attr_crs;
-    psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, std::string, std::string, int> > way_node_attr_crs;
+    psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int, int64_t, double, double, std::string, std::string> > way_node_attr_crs;
 };
 }
 

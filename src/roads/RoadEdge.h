@@ -16,10 +16,10 @@ namespace roads
 class RoadEdge
 {
 public:
-    RoadEdge(int64_t way_id, int seq_no, bool forward, double cost);
+    RoadEdge(int64_t way_id, int seq_no, int next_seq_no, bool forward, double cost);
     virtual ~RoadEdge();
     int64_t way_id;
-    int seq_no;
+    int seq_no, next_seq_no;
     bool forward;
     double cost;
 };

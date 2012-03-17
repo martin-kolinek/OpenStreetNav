@@ -16,7 +16,7 @@ namespace roads
 class RoadEdgeWithNodes : public RoadEdge
 {
 public:
-    RoadEdgeWithNodes(int64_t way_id, int seq_no, bool forward, double cost, int64_t start_node_id, int64_t end_node_id);
+    RoadEdgeWithNodes(int64_t way_id, int seq_no, int next_seq_no, bool forward, double cost, int64_t start_node_id, int64_t end_node_id);
     virtual ~RoadEdgeWithNodes();
     int64_t start_node_id, end_node_id;
 };

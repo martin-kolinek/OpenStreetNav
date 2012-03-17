@@ -4,5 +4,6 @@
 CREATE TABLE WayNodes (
     WayID bigint,
     NodeID bigint,
-    SequenceNo int
+    SequenceNo int,
+    NextSequenceNo int
     )

@@ -18,20 +18,20 @@ void combine(osm::Way& w, std::tuple<int64_t, std::string, std::string> const& r
         w.tags.insert(osm::Tag(k, v));
 }
 
-void combine_node(std::tuple<int64_t, osm::Node>& acc, std::tuple<int64_t, int64_t, double, double, std::string, std::string, int> const& row)
+void combine_node(std::tuple<int64_t, int, osm::Node>& acc, std::tuple<int64_t, int, int64_t, double, double, std::string, std::string> const& row)
 {
-    std::get<0>(acc) = std::get<0>(row);
-    std::get<1>(acc).id = std::get<1>(row);
-    std::get<1>(acc).position.lon = std::get<2>(row);
-    std::get<1>(acc).position.lat = std::get<3>(row);
-    if (std::get<4>(row) != "")
-        std::get<1>(acc).tags.insert(osm::Tag(std::get<4>(row), std::get<5>(row)));
+    util::sub_tie<0, 1>(acc) = util::sub_const_tie<0, 1>(row);
+    std::get<2>(acc).id = std::get<2>(row);
+    std::get<2>(acc).position.lon = std::get<3>(row);
+    std::get<2>(acc).position.lat = std::get<4>(row);
+    if (std::get<5>(row) != "")
+        std::get<2>(acc).tags.insert(osm::Tag(std::get<5>(row), std::get<6>(row)));
 }
 
-void combine_way(osm::Way& w, std::tuple<int64_t, osm::Node> const& row)
+void combine_way(osm::Way& w, std::tuple<int64_t, int, osm::Node> const& row)
 {
     w.id = std::get<0>(row);
-    w.nodes.push_back(std::get<1>(row));
+    w.add_node(std::get<2>(row), std::get<1>(row));
 }
 
 osm::Way final_comb(osm::Way const& w1, osm::Way const& w2)
@@ -55,7 +55,7 @@ AllWayLister::AllWayLister(OsmDatabase& db, std::multimap<std::string, std::stri
     auto way_node_attr_rng = make_cursor_range(way_node_attr_crs);
 
     auto way_with_nodes = way_node_attr_rng |
-                          util::groupped(util::get_tuple_comparer<0, 1>(), combine_node, std::tuple<int64_t, osm::Node>());
+                          util::groupped(util::get_tuple_comparer<0, 1>(), combine_node, std::tuple<int64_t, int, osm::Node>());
 
     auto way_with_nodes2 = way_with_nodes |
                            util::groupped(util::get_tuple_comparer<0>(), combine_way, osm::Way());

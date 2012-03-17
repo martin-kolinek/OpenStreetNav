@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include "Element.h"
 #include "Node.h"
-#include <vector>
+#include <map>
 #include <set>
 
 namespace osm
@@ -35,10 +35,11 @@ public:
     /**
      * Member nodes - from first to last.
      */
-    std::vector<osm::Node> nodes;
+    std::map<int, osm::Node> nodes;
     /**
      * Way attributes.
      */
+    void add_node(osm::Node const& nd, int seq = -1);
     std::set<osm::Tag> tags;
     std::vector<std::unique_ptr<osm::WayRegion> > get_regions() const;
     boost::property_tree::ptree get_description() const;

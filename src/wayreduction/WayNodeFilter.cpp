@@ -22,10 +22,10 @@ WayNodeFilter::~WayNodeFilter()
 osm::Way WayNodeFilter::process_way(const osm::Way& w, const std::multimap<osm::Node, osm::Way, osm::LtByID> & ndmap)
 {
     osm::Way ret(w.id);
-    for (unsigned int i = 0; i < w.nodes.size(); ++i)
+    for (auto it = w.nodes.begin(); it != w.nodes.end(); ++it)
     {
-        if (i == 0 || has_important_ways(w.nodes[i], ndmap) || i == w.nodes.size() - 1)
-            ret.nodes.push_back(w.nodes[i]);
+        if (it == w.nodes.begin() || has_important_ways(it->second, ndmap) || it == --w.nodes.end())
+            ret.add_node(it->second, it->first);
     }
     return ret;
 }

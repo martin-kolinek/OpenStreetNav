@@ -39,7 +39,7 @@ public:
     virtual ~ElementCopy();
 private:
     OsmDatabase& db;
-    psql::Statement<psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int, int64_t, int64_t, int, double, double, std::string, std::string> > copy;
+    psql::Statement<psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int, int64_t, int64_t, int, int, double, double, std::string, std::string> > copy;
 };
 
 } /* namespace osmdb */

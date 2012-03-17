@@ -40,7 +40,7 @@ public:
     virtual ~WayLister();
 private:
     OsmDatabase& db;
-    psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int64_t, double, double, int64_t, std::string, std::string, int> > get_way_descr;
+    psql::Cursor<psql::BindTypes<>, psql::RetTypes<int64_t, int, int64_t, double, double, int64_t, std::string, std::string> > get_way_descr;
     range_t rng;
 };
 

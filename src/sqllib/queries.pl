@@ -62,6 +62,7 @@ for(my $ix=3; $ix<(scalar @ARGV); $ix++)
 	my $i = 0;
 	my $type="";
     my $needend = 0;
+    print TST "//in $f\n";
 	print TST "BOOST_AUTO_TEST_CASE(lib_$name)\n";
 	print TST "{\n";
 	while(<IN>)
@@ -81,6 +82,7 @@ for(my $ix=3; $ix<(scalar @ARGV); $ix++)
                 print HDR "\n";
                 print SRC "\n";
                 print TST "\n";
+                print TST "//in $f\n";
                 print TST "BOOST_AUTO_TEST_CASE(lib_$name)\n";
             	print TST "{\n";
             }
@@ -95,7 +97,9 @@ for(my $ix=3; $ix<(scalar @ARGV); $ix++)
 		}
 		if(/^\s*--\s*type\s+(.*)$/)
 		{
+            print HDR "//in $f\n";
 			print HDR "psql::Statement<$1> get_$name(psql::Database& db, bool named=false, std::string const& name=\"\");\n";
+            print SRC "//in $f\n";
 			print SRC "psql::Statement<$1> get_$name(psql::Database& db, bool named, std::string const& name)\n";
 			print SRC "{\n";
 			print SRC "std::string str(\"\\\n";

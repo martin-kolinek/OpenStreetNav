@@ -21,24 +21,24 @@ public:
     virtual ~LengthAssigner();
 private:
     template<typename Rng>
-    void insert_road_edges(std::vector<roads::RoadEdge>& v, Rng& r, int seq, osm::Way const& w)
+    void insert_road_edges(std::vector<roads::RoadEdge>& v, Rng& r, int seq, int nextseq, osm::Way const& w)
     {
         double ln = 0;
         auto it = r.begin();
         assert(it != r.end());
-        auto last_pos = it->position;
+        auto last_pos = it->second.position;
         for (++it; it != r.end(); ++it)
         {
-            ln += geo::get_point_distance(EARTH_RADIUS, it->position, last_pos);
+            ln += geo::get_point_distance(EARTH_RADIUS, it->second.position, last_pos);
         }
         if (one_way(w))
         {
-            v.push_back(roads::RoadEdge(w.id, seq, get_dir(w), ln));
+            v.push_back(roads::RoadEdge(w.id, seq, nextseq, get_dir(w), ln));
         }
         else
         {
-            v.push_back(roads::RoadEdge(w.id, seq, true, ln));
-            v.push_back(roads::RoadEdge(w.id, seq, false, ln));
+            v.push_back(roads::RoadEdge(w.id, seq, nextseq, true, ln));
+            v.push_back(roads::RoadEdge(w.id, seq, nextseq, false, ln));
         }
     }
 

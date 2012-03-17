@@ -46,8 +46,8 @@ BOOST_AUTO_TEST_CASE(highlight)
     ins.insert_node(osm::Node(2, 0.4, 0.4));
     ins.insert_node(osm::Node(3, 0.4, 0.8));
     osm::Way w(1);
-    w.nodes.push_back(2);
-    w.nodes.push_back(3);
+    w.add_node(2);
+    w.add_node(3);
     w.tags.insert(osm::Tag("key", "val"));
     ins.insert_way(w);
     nd.id = 4;
@@ -58,8 +58,8 @@ BOOST_AUTO_TEST_CASE(highlight)
     display::EdgeHighlighter high(db, display::LineDisplayStyle(1, 1, 1, 1, 0, false));
     high.add_descriptible(w);
     w = osm::Way(2);
-    w.nodes.push_back(osm::Node(3));
-    w.nodes.push_back(osm::Node(5));
+    w.add_node(osm::Node(3));
+    w.add_node(osm::Node(5));
     w.tags.insert(osm::Tag("key", "val"));
     ins.insert_way(w);
     pdb.commit_transaction();

@@ -4,11 +4,10 @@
 #include "Way.h"
 #include <vector>
 #include <algorithm>
+#include "SeqEdge.h"
 
 namespace osm
 {
-
-class Edge;
 
 class WayRegion
 {
@@ -25,7 +24,7 @@ public:
         std::sort(this->regions.begin(), this->regions.end());
     }
 
-    bool intersects(Edge const& e) const;
+    bool contains(SeqEdge const& e) const;
 
     bool operator==(WayRegion const& other) const;
     bool operator!=(WayRegion const& other) const;

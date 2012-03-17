@@ -44,12 +44,17 @@ void osmdb::ElementInsertion::insert_node(const osm::Node& nd)
 void osmdb::ElementInsertion::insert_way(const osm::Way& w)
 {
     way_ins.execute(w.id);
-    for (unsigned int i = 0; i < w.nodes.size(); ++i)
+    for (auto it = w.nodes.begin(); it != w.nodes.end(); ++it)
     {
-        waynode_ins.execute(w.id, w.nodes[i].id, i);
-        if (i + 1 == w.nodes.size())
+        auto it2 = it;
+        ++it2;
+        if (it2 == w.nodes.end())
+        {
+            waynode_ins.execute(w.id, it->second.id, it->first, -1);
             break;
-        edge_ins.execute(w.id, w.nodes[i].id, w.nodes[i + 1].id, i);
+        }
+        waynode_ins.execute(w.id, it->second.id, it->first, it2->first);
+        edge_ins.execute(w.id, it->second.id, it2->second.id, it->first, it2->first);
     }
     for (auto it = w.tags.begin(); it != w.tags.end(); ++it)
     {

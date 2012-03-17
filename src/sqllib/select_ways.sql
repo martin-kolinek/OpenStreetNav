@@ -11,7 +11,7 @@ SELECT ID FROM Ways;
 --test-depend create_ways_table
 --test-depend create_waynodes_table
 --test-depend insert_way 20
---test-depend insert_way_node 20, 10, 1
+--test-depend insert_way_node 20, 10, 1, -1
 --test-param
 --test-result 0
 

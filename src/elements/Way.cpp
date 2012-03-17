@@ -41,9 +41,9 @@ boost::property_tree::ptree Way::get_description() const
     }
     way.put_child("tags", tags_desc);
     boost::property_tree::ptree nds;
-    for (unsigned int i = 0; i < nodes.size(); ++i)
+    for (auto it = nodes.begin(); it != nodes.end(); ++it)
     {
-        nds.push_back(nodes[i].get_description().front());
+        nds.push_back(it->second.get_description().front());
     }
     way.put_child("nodes", nds);
     ret.put_child("way", way);
@@ -53,11 +53,12 @@ boost::property_tree::ptree Way::get_description() const
 void Way::fill(osmdb::PropertiesSelection& db)
 {
     tags = db.get_way_tags(id);
-    auto v = db.get_waynodes(id);
-    for (unsigned int i = 0; i < v.size(); ++i)
+    auto m =  db.get_waynodes(id);
+    for (auto it = m.begin(); it != m.end(); ++it)
     {
-        nodes.push_back(osm::Node(v[i]));
+        nodes.insert(std::make_pair(it->first, Node(it->second)));
     }
+
     for (unsigned int i = 0; i < nodes.size(); ++i)
     {
         nodes[i].fill(db);
@@ -89,6 +90,22 @@ osm::ObjectType Way::get_type() const
 bool Way::operator !=(const Way& other) const
 {
     return !(*this == other);
+}
+
+void Way::add_node(osm::Node const& nd, int seq)
+{
+    if (seq < 0)
+    {
+        auto it = nodes.end();
+        if (it == nodes.begin())
+            seq = 0;
+        else
+            seq = (--it)->first + 1;
+
+    }
+
+    nodes.insert(std::make_pair(seq, nd));
+
 }
 
 }

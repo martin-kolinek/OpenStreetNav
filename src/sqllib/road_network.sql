@@ -17,8 +17,8 @@ CREATE TABLE RoadEdges (
 --test-param
 
 CREATE VIEW ViewRoadEdges AS
-    SELECT n1.ID as StartNodeID, n1.Location as StartNodeLocation
-           n2.ID as EndNodeID, n2.Location as EndNodeLocation
+    SELECT n1.ID as StartNodeID, n1.Location as StartNodeLocation,
+           n2.ID as EndNodeID, n2.Location as EndNodeLocation,
            r.WayID as WayID, r.SequenceNo as SequenceNo, r.Forward as Forward, r.Cost as Cost FROM RoadEdges r 
         INNER JOIN WayNodes wn1 ON wn1.WayID = r.WayID AND wn1.SequenceNo = r.SequenceNo
         INNER JOIN Nodes n1 ON wn1.NodeID = n1.ID 
@@ -26,8 +26,8 @@ CREATE VIEW ViewRoadEdges AS
         INNER JOIN Nodes n2 ON wn2.NodeID = n2.ID 
             WHERE r.Forward = TRUE
     UNION
-    SELECT n1.ID as StartNodeID, n1.Location as StartNodeLocation
-           n2.ID as EndNodeID, n2.Location as EndNodeLocation
+    SELECT n1.ID as StartNodeID, n1.Location as StartNodeLocation,
+           n2.ID as EndNodeID, n2.Location as EndNodeLocation,
            r.WayID as WayID, r.SequenceNo as SequenceNo, r.Forward as Forward, r.Cost as Cost FROM RoadEdges r  
         INNER JOIN WayNodes wn1 ON wn1.WayID = r.WayID AND wn1.SequenceNo = r.SequenceNo + 1
         INNER JOIN Nodes n1 ON wn1.NodeID = n1.ID 
@@ -91,8 +91,8 @@ INSERT INTO RoadEdges(WayID, SequenceNo, Forward, Cost) VALUES ($1, $2, $3, $4)
 --test-depend create_road_edges_view
 --test-depend insert_node 1, 1, 2
 --test-depend insert_node 2, 2, 2
---test-depend insert_way_node 1, 2, 0
---test-depend insert_way_node 1, 1, 1
+--test-depend insert_way_node 1, 2, 0, 1
+--test-depend insert_way_node 1, 1, 1, -1
 --test-depend insert_road_edge 1, 0, 1, 1
 --test-param
 --test-result 0

@@ -8,6 +8,8 @@
 #include "PropertiesSelection.h"
 #include "../sqllib/sqllib.h"
 #include "PropertiesSelectionException.h"
+#include "../util/tuple_sub.h"
+#include <tuple>
 
 namespace osmdb
 {
@@ -40,9 +42,15 @@ std::set<std::pair<std::string, std::string> > PropertiesSelection::get_relation
     return get_multimap<std::set<std::pair<std::string, std::string> > >(get_rel_attrs_st, id);
 }
 
-std::vector<int64_t> PropertiesSelection::get_waynodes(int64_t way_id)
+std::map<int, int64_t> PropertiesSelection::get_waynodes(int64_t way_id)
 {
-    return psql::exec_statement_col(get_waynodes_st, way_id);
+    std::map<int, int64_t> ret;
+    auto v = psql::exec_statement(get_waynodes_st, way_id);
+    for (auto it = v.begin(); it != v.end(); ++it)
+    {
+        ret.insert(std::make_pair(std::get<1>(*it), std::get<0>(*it)));
+    }
+    return ret;
 }
 
 std::multimap<std::string, int64_t> PropertiesSelection::get_node_members(int64_t rel_id)

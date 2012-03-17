@@ -231,9 +231,9 @@ bool less_eq_impl(A const& a, A const& b)
  * @return true if collections contain elements which are equal according to Eq
  */
 template<typename Eq, typename Col1, typename Col2>
-bool equal_collection(Col1 c1, Col2 c2)
+bool equal_collection(Col1 c1, Col2 c2, Eq eq = Eq())
 {
-    return std::equal<decltype(c1.begin()), decltype(c2.begin()), Eq>(c1.begin(), c1.end(), c2.begin(), Eq());
+    return std::equal<decltype(c1.begin()), decltype(c2.begin()), Eq>(c1.begin(), c1.end(), c2.begin(), eq);
 }
 
 /**

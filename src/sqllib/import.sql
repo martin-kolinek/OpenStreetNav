@@ -15,6 +15,7 @@ CREATE TABLE Import (
 	biginta bigint null,
 	bigintb bigint null,
 	inta int null,
+    intb int null,
 	doublea float8 null,
 	doubleb float8 null,
 	stringa text null,
@@ -22,12 +23,12 @@ CREATE TABLE Import (
 )
 
 --name copy_import
---type psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int, int64_t, int64_t, int, double, double, std::string, std::string>
+--type psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int, int64_t, int64_t, int, int, double, double, std::string, std::string>
 --test-depend create_import_seq
 --test-depend create_import_table
 --test-param
 
-COPY Import (EntryType, biginta, bigintb, inta, doublea, doubleb, stringa, stringb) FROM STDIN
+COPY Import (EntryType, biginta, bigintb, inta, intb, doublea, doubleb, stringa, stringb) FROM STDIN
 
 --name create_import_pkey
 --type psql::BindTypes<>, psql::RetTypes<>
@@ -846,7 +847,7 @@ INSERT INTO RelationAttributes (RelationID, Key, Value) SELECT biginta, stringa,
 --test-depend create_relation_attributes
 --test-param
 
-INSERT INTO WayNodes (WayID, NodeID, SequenceNo) SELECT biginta, bigintb, inta FROM Import WHERE EntryType = 7
+INSERT INTO WayNodes (WayID, NodeID, SequenceNo, NextSequenceNo) SELECT biginta, bigintb, inta, intb FROM Import WHERE EntryType = 7
 
 --name do_import8
 --type psql::BindTypes<>, psql::RetTypes<>
@@ -919,9 +920,9 @@ INSERT INTO MemberRelations (ParentID, Role, ChildID) SELECT biginta, stringa, b
 --test-depend create_relation_attributes
 --test-param
 
-INSERT INTO Edges (WayID, StartNodeID, EndNodeID, SequenceNo, Location)
-    SELECT i.biginta, i.bigintb, i2.bigintb, i.inta, ST_MakeLine(n1.Location::geometry, n2.Location::geometry)::geography FROM
-        Import i INNER JOIN Import i2 ON i2.biginta = i.biginta AND i.inta + 1 = i2.inta INNER JOIN Nodes n1 ON n1.ID = i.bigintb INNER JOIN Nodes n2 ON n2.ID = i2.bigintb    
+INSERT INTO Edges (WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenceNo, Location)
+    SELECT i.biginta, i.bigintb, i2.bigintb, i.inta, i.intb, ST_MakeLine(n1.Location::geometry, n2.Location::geometry)::geography FROM
+        Import i INNER JOIN Import i2 ON i2.biginta = i.biginta AND i.intb = i2.inta INNER JOIN Nodes n1 ON n1.ID = i.bigintb INNER JOIN Nodes n2 ON n2.ID = i2.bigintb    
             WHERE i.EntryType=7 AND i2.EntryType=7
 
 --name clear_import_table
