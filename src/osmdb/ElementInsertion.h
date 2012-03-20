@@ -49,7 +49,6 @@ public:
 private:
     OsmDatabase& db;
     psql::Statement<psql::BindTypes<int64_t, double, double>, psql::RetTypes<> > node_ins;
-    psql::Statement<psql::BindTypes<int64_t, int64_t, int64_t, int, int>, psql::RetTypes<> > edge_ins;
     psql::Statement<psql::BindTypes<int64_t, int64_t, int, int>, psql::RetTypes<> > waynode_ins;
     psql::Statement<psql::BindTypes<int64_t>, psql::RetTypes<> > way_ins;
     psql::Statement<psql::BindTypes<int64_t, std::string, std::string>, psql::RetTypes<> > node_attrs_ins;

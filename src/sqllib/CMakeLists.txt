@@ -89,6 +89,7 @@ set(SQLFILES
     test_select.sql
     import.sql
     road_network.sql
+    insert_edges.sql
     )
 
 set(TEMPL ${CMAKE_BINARY_DIR}/templ)

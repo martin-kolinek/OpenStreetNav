@@ -78,6 +78,9 @@ BOOST_AUTO_TEST_CASE(insert)
     r.add_way("rway", osm::Way(341));
     r.add_rel("rrel", osm::Relation(432));
     ins.insert_relation(r);
+    osmdb::EdgeCreator ecr(db);
+    ecr.create_tables();
+    ecr.insert_data();
     std::vector<std::tuple<int64_t, double, double> > nodes {std::make_tuple(123, 2, 1), std::make_tuple(124, 2, 1)};
     std::vector<std::tuple<int64_t> > ways {std::make_tuple(341)};
     std::vector<std::tuple<int64_t, int64_t, int64_t, int, int> > edges {std::make_tuple(341, 123, 124, 0, 1)};
@@ -151,6 +154,10 @@ BOOST_AUTO_TEST_CASE(new_import)
     ins.end_copy();
     osmdb::ImportTableProcessor proc(db);
     proc.process();
+    osmdb::EdgeCreator cr(db);
+    cr.create_tables();
+    cr.insert_data();
+    cr.create_keys_and_indexes();
     std::vector<std::tuple<int64_t, double, double> > nodes {std::make_tuple(123, 2, 1), std::make_tuple(124, 2, 1)};
     std::vector<std::tuple<int64_t> > ways {std::make_tuple(341)};
     std::vector<std::tuple<int64_t, int64_t, int64_t, int, int> > edges {std::make_tuple(341, 123, 124, 0, 1)};
@@ -192,6 +199,31 @@ BOOST_AUTO_TEST_CASE(new_import)
     BOOST_CHECK(rels == rels2);
 }
 
+BOOST_AUTO_TEST_CASE(edge_creator)
+{
+    osmdb::OsmDatabase db(pdb);
+    db.create_tables();
+    db.create_indexes_and_keys();
+    osmdb::ElementInsertion ins(db);
+    osm::Way w(2);
+    w.add_node(1);
+    w.add_node(2);
+    ins.insert_node(1);
+    ins.insert_node(2);
+    ins.insert_node(3);
+    ins.insert_way(w);
+    w = osm::Way(1);
+    w.add_node(2);
+    w.add_node(3);
+    ins.insert_way(w);
+    osmdb::EdgeCreator ecr(db);
+    ecr.create_tables();
+    ecr.create_keys_and_indexes();
+    ecr.insert_data();
+    auto v = psql::query_sql<int64_t, int, int, int64_t, int64_t>(db.get_db(), "SELECT WayID, StartSequenceNo, EndSequenceNo, StartNodeID, EndNodeID FROM Edges");
+    BOOST_CHECK(v.size() == 2);
+}
+
 BOOST_AUTO_TEST_CASE(import_proc_dis)
 {
     osmdb::OsmDatabase db(pdb);
@@ -208,8 +240,11 @@ BOOST_AUTO_TEST_CASE(import_proc_dis)
 BOOST_AUTO_TEST_CASE(empty_displaydb)
 {
     osmdb::OsmDatabase odb(pdb);
+    osmdb::EdgeCreator ecr(odb);
     odb.create_tables();
     odb.create_indexes_and_keys();
+    ecr.create_tables();
+    ecr.create_keys_and_indexes();
     osmdb::DisplayDB db(odb, TEST_TO_SHOW_EDGES, 1, 1);
     db.set_bounds(geo::Point(0, 0), geo::Point(1, 1), 1);
 }
@@ -241,6 +276,9 @@ BOOST_AUTO_TEST_CASE(simple_dispdb)
     w.add_node(osm::Node(3));
     w.add_node(osm::Node(5));
     ins.insert_way(w);
+    osmdb::EdgeCreator ecr(odb);
+    ecr.create_tables();
+    ecr.insert_data();
     pdb.commit_transaction();
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     BOOST_CHECK(util::count(db.get_display_elements()) == 1);

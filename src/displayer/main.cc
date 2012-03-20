@@ -103,7 +103,6 @@ int main(int argc, char** argv)
     try
     {
         Gtk::Main kit(argc, argv, cxt);
-
         Glib::RefPtr<Gtk::Builder> bldr = Gtk::Builder::create_from_file(GLADE_PATH);
         Gtk::Window* wnd = 0;
         bldr->get_widget("window1", wnd);
@@ -156,6 +155,10 @@ int main(int argc, char** argv)
         area->show();
 
         kit.run(*wnd);
+    }
+    catch (Glib::Error& err)
+    {
+        std::cout << err.what() << std::endl;
     }
     catch (std::exception& err)
     {

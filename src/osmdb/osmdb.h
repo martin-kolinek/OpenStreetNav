@@ -18,5 +18,6 @@
 #include "WayLister.h"
 #include "AllWayLister.h"
 #include "RoadNetworkCreator.h"
+#include "EdgeCreator.h"
 
 #endif /* OSMDB_H_ */

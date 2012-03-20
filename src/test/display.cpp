@@ -62,6 +62,9 @@ BOOST_AUTO_TEST_CASE(highlight)
     w.add_node(osm::Node(5));
     w.tags.insert(osm::Tag("key", "val"));
     ins.insert_way(w);
+    osmdb::EdgeCreator ecr(odb);
+    ecr.create_tables();
+    ecr.insert_data();
     pdb.commit_transaction();
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     high.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);

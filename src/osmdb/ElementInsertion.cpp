@@ -14,7 +14,6 @@ namespace osmdb
 osmdb::ElementInsertion::ElementInsertion(OsmDatabase& db):
     db(db),
     node_ins(sqllib::get_insert_node(db.get_db(), true, "node_ins_st")),
-    edge_ins(sqllib::get_insert_edge(db.get_db(), true, "edge_ins_st")),
     waynode_ins(sqllib::get_insert_way_node(db.get_db(), true, "waynode_ins_st")),
     way_ins(sqllib::get_insert_way(db.get_db(), true, "way_ins_st")),
     node_attrs_ins(sqllib::get_insert_node_attr(db.get_db(), true, "node_attrs_ins_st")),
@@ -54,7 +53,6 @@ void osmdb::ElementInsertion::insert_way(const osm::Way& w)
             break;
         }
         waynode_ins.execute(w.id, it->second.id, it->first, it2->first);
-        edge_ins.execute(w.id, it->second.id, it2->second.id, it->first, it2->first);
     }
     for (auto it = w.tags.begin(); it != w.tags.end(); ++it)
     {

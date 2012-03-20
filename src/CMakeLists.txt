@@ -65,3 +65,5 @@ add_subdirectory(cost)
 add_subdirectory(test)
 
 add_subdirectory(road_db_creator)
+
+add_subdirectory(edge_creator)

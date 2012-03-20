@@ -320,12 +320,6 @@ void ImportTableProcessor::process()
             st.execute();
             action_signal(ImportTableAction::IMPORT_MEMBER_REL, st.affected_rows());
         }
-        st = sqllib::get_do_import11(db.get_db());
-        if (enabled[ImportTableAction::IMPORT_EDGES])
-        {
-            st.execute();
-            action_signal(ImportTableAction::IMPORT_EDGES, st.affected_rows());
-        }
 
         if (enabled[ImportTableAction::CLEAR_IMPORT])
         {

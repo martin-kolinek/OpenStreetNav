@@ -67,15 +67,11 @@ public:
 
     void create_edge_foreign_keys();
 
-    void create_edge_indexes();
-
     void create_edge_keys_and_indexes();
 
     void drop_edge_primary_keys();
 
     void drop_edge_foreign_keys();
-
-    void drop_edge_indexes();
 
     void drop_edge_keys_and_indexes();
 

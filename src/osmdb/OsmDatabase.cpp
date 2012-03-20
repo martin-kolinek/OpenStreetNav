@@ -36,7 +36,6 @@ void OsmDatabase::create_indexes_and_keys()
 
 void OsmDatabase::create_indexes()
 {
-    create_edge_indexes();
     sqllib::get_create_nodes_loc_index(db).execute();
     sqllib::get_create_nodeattr_keyval_index(db).execute();
     sqllib::get_create_wayattr_keyval_index(db).execute();
@@ -84,7 +83,6 @@ void OsmDatabase::drop_indexes()
     sqllib::get_drop_wayattr_keyval_index(db).execute();
     sqllib::get_drop_nodeattr_keyval_index(db).execute();
     sqllib::get_drop_nodes_loc_index(db).execute();
-    drop_edge_indexes();
 }
 
 void OsmDatabase::drop_foreign_keys()
@@ -135,13 +133,11 @@ void OsmDatabase::create_tables()
 
 void OsmDatabase::create_edge_tables()
 {
-    sqllib::get_create_edges_table(db).execute();
     sqllib::get_create_waynodes_table(db).execute();
 }
 
 void OsmDatabase::create_edge_primary_keys()
 {
-    sqllib::get_create_edges_pkey(db).execute();
     sqllib::get_create_waynodes_pkey(db).execute();
 }
 
@@ -149,26 +145,16 @@ void OsmDatabase::create_edge_foreign_keys()
 {
     sqllib::get_create_waynodes_node_fkey(db).execute();
     sqllib::get_create_waynodes_way_fkey(db).execute();
-    sqllib::get_create_edges_startnode_fkey(db).execute();
-    sqllib::get_create_edges_endnode_fkey(db).execute();
-    sqllib::get_create_edges_wayid_fkey(db).execute();
-}
-
-void OsmDatabase::create_edge_indexes()
-{
-    sqllib::get_create_edges_location_index(db).execute();
 }
 
 void OsmDatabase::create_edge_keys_and_indexes()
 {
     create_edge_primary_keys();
     create_edge_foreign_keys();
-    create_edge_indexes();
 }
 
 void OsmDatabase::drop_edge_primary_keys()
 {
-    sqllib::get_drop_edges_pkey(db).execute();
     sqllib::get_drop_waynodes_pkey(db).execute();
 }
 
@@ -176,19 +162,10 @@ void OsmDatabase::drop_edge_foreign_keys()
 {
     sqllib::get_drop_waynodes_way_fkey(db).execute();
     sqllib::get_drop_waynodes_node_fkey(db).execute();
-    sqllib::get_drop_edges_wayid_fkey(db).execute();
-    sqllib::get_drop_edges_endnode_fkey(db).execute();
-    sqllib::get_drop_edges_startnode_fkey(db).execute();
-}
-
-void OsmDatabase::drop_edge_indexes()
-{
-    sqllib::get_drop_edges_location_index(db).execute();
 }
 
 void OsmDatabase::drop_edge_keys_and_indexes()
 {
-    drop_edge_indexes();
     drop_edge_foreign_keys();
     drop_edge_primary_keys();
 }
