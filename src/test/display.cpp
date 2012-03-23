@@ -11,17 +11,17 @@
 #include "../displayer/EdgeHighlighter.h"
 #include "../util/range.h"
 
-class OsmDBFixture
+class disp_db_fix
 {
 public:
-    OsmDBFixture():
+    disp_db_fix():
         pdb("")
     {
 
         psql::execute_sql(pdb, "CREATE SCHEMA testing");
         psql::execute_sql(pdb, "SET search_path TO testing, public");
     }
-    ~OsmDBFixture()
+    ~disp_db_fix()
     {
         if (pdb.in_transaction() || pdb.in_failed_transaction())
             pdb.rollback_transaction();
@@ -30,7 +30,7 @@ public:
     psql::Database pdb;
 };
 
-BOOST_FIXTURE_TEST_SUITE(display_test, OsmDBFixture)
+BOOST_FIXTURE_TEST_SUITE(display_test, disp_db_fix)
 
 BOOST_AUTO_TEST_CASE(highlight)
 {

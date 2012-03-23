@@ -10,10 +10,10 @@
 namespace roads
 {
 
-RoadEdgeWithNodes::RoadEdgeWithNodes(int64_t way_id, int seq_no, int next_seq_no, bool forward, double cost, int64_t start_node_id, int64_t end_node_id):
-    RoadEdge(way_id, seq_no, next_seq_no, forward, cost),
-    start_node_id(start_node_id),
-    end_node_id(end_node_id)
+RoadEdgeWithNodes::RoadEdgeWithNodes(int64_t way_id, int start_seq_no, int end_seq_no, bool forward, double cost, osm::Node start_node, osm::Node end_node):
+    RoadEdge(way_id, start_seq_no, end_seq_no, forward, cost),
+    start_node(start_node),
+    end_node(end_node)
 {
 }
 

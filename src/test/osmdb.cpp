@@ -18,19 +18,26 @@ class OsmDBFixture
 {
 public:
     OsmDBFixture():
-        pdb("")
+        pdb(""),
+        pdb2("")
     {
-
         psql::execute_sql(pdb, "CREATE SCHEMA testing");
         psql::execute_sql(pdb, "SET search_path TO testing, public");
+        psql::execute_sql(pdb2, "CREATE SCHEMA testing2");
+        psql::execute_sql(pdb2, "SET search_path TO testing2, testing, public");
     }
     ~OsmDBFixture()
     {
         if (pdb.in_transaction() || pdb.in_failed_transaction())
             pdb.rollback_transaction();
         psql::execute_sql(pdb, "DROP SCHEMA testing CASCADE");
+        if (pdb2.in_transaction() || pdb2.in_failed_transaction())
+            pdb2.rollback_transaction();
+        psql::execute_sql(pdb2, "DROP SCHEMA testing2 CASCADE");
+
     }
     psql::Database pdb;
+    psql::Database pdb2;
 };
 
 BOOST_FIXTURE_TEST_SUITE(OsmDBCreateTests, OsmDBFixture)
@@ -534,12 +541,12 @@ BOOST_AUTO_TEST_CASE(road_create)
 {
     psql::Database dest("");
     dest.set_schema("testing");
-    psql::Database red("");
-    red.set_schema("testing");
-    osmdb::OsmDatabase red_odb(red);
+    osmdb::OsmDatabase red_odb(pdb2);
     osmdb::OsmDatabase full_odb(pdb);
     full_odb.create_tables();
     full_odb.create_indexes_and_keys();
+    red_odb.create_tables();
+    red_odb.create_indexes_and_keys();
     osmdb::OsmDatabase dest_odb(dest);
     osmdb::ElementInsertion full_ins(full_odb);
     osm::Node n1(1, 0, 0);
@@ -557,12 +564,29 @@ BOOST_AUTO_TEST_CASE(road_create)
     w1.add_node(osm::Node(4));
     w1.tags.insert(osm::Tag("k", "v"));
     full_ins.insert_way(w1);
+    osmdb::ElementInsertion red_ins(red_odb);
+    w1.nodes.erase(1);
+    red_ins.insert_node(n1);
+    red_ins.insert_node(n2);
+    red_ins.insert_node(n3);
+    red_ins.insert_node(n4);
+    red_ins.insert_way(w1);
     osmdb::RoadNetworkCreator rnc(full_odb, red_odb, dest_odb, std::multimap<std::string, std::string> {std::make_pair("k", "v")});
     rnc.create_road_network_table();
     rnc.copy_road_network_data();
     auto st = sqllib::get_select_road_edges(dest);
     st.execute();
-    BOOST_CHECK(st.row_count() == 6);
+    BOOST_CHECK(st.row_count() == 4);
+    bool b = false;
+    for (int i = 0; i < st.row_count(); ++i)
+    {
+        auto tup = st.get_row(i);
+        int i1 = std::get<7>(tup);
+        int i2 = std::get<8>(tup);
+        if (i2 - i1 == 2)
+            b = true;
+    }
+    BOOST_CHECK(b);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

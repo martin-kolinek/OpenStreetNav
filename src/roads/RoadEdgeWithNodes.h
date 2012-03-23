@@ -8,6 +8,7 @@
 #ifndef ROADEDGEWITHNODES_H_
 #define ROADEDGEWITHNODES_H_
 
+#include "../elements/osmelements.h"
 #include "RoadEdge.h"
 
 namespace roads
@@ -16,9 +17,9 @@ namespace roads
 class RoadEdgeWithNodes : public RoadEdge
 {
 public:
-    RoadEdgeWithNodes(int64_t way_id, int seq_no, int next_seq_no, bool forward, double cost, int64_t start_node_id, int64_t end_node_id);
+    RoadEdgeWithNodes(int64_t way_id, int start_seq_no, int end_seq_no, bool forward, double cost, osm::Node start_node, osm::Node end_node);
     virtual ~RoadEdgeWithNodes();
-    int64_t start_node_id, end_node_id;
+    osm::Node start_node, end_node;
 };
 
 } /* namespace roads */

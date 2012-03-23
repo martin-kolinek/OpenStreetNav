@@ -30,6 +30,8 @@ public:
     }
     RoadNetworkNode const* get_start_node() const;
     bool is_end_node(RoadNetworkNode const* ptr) const;
+    bool is_valid();
+    std::vector<RoadNetworkNode const*> const& get_end_nodes() const;
 private:
     std::shared_ptr<RoadNetworkNode const> start_node;
     std::vector<RoadNetworkNode const*> end_nodes;

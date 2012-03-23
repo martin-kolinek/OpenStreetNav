@@ -10,7 +10,7 @@
 
 #include <vector>
 #include "../elements/osmelements.h"
-#include "../roads/RoadEdge.h"
+#include "../roads/roads.h"
 
 namespace cost
 {
@@ -19,7 +19,7 @@ class CostAssigner
 {
 public:
     virtual ~CostAssigner();
-    virtual std::vector<roads::RoadEdge> extract_edges(osm::Way const& reduced, osm::Way const& full) = 0;
+    virtual std::vector<roads::RoadEdgeWithNodes> extract_edges(osm::Way const& reduced, osm::Way const& full) = 0;
 };
 
 } /* namespace cost */

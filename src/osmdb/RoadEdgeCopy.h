@@ -19,12 +19,12 @@ class RoadEdgeCopy
 public:
     RoadEdgeCopy(OsmDatabase& db);
     void start_copy();
-    void copy_edge(roads::RoadEdge const& re);
+    void copy_edge(roads::RoadEdgeWithNodes const& re);
     void end_copy();
     virtual ~RoadEdgeCopy();
 private:
     OsmDatabase& db;
-    psql::Statement<psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int64_t, int, bool, double> > st;
+    psql::Statement<psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int64_t, int64_t, int64_t, int, int, bool, double> > st;
 };
 
 } /* namespace osmdb */

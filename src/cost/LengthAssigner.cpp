@@ -8,8 +8,8 @@
 #include "LengthAssigner.h"
 #include <boost/range.hpp>
 #include <boost/range/any_range.hpp>
-#include "../util/range.h"
 #include "../util/tuple_sub.h"
+#include "../util/range.h"
 
 namespace cost
 {
@@ -19,16 +19,16 @@ LengthAssigner::LengthAssigner()
 
 }
 
-std::vector<roads::RoadEdge> LengthAssigner::extract_edges(osm::Way const& reduced, osm::Way const& full)
+std::vector<roads::RoadEdgeWithNodes> LengthAssigner::extract_edges(osm::Way const& reduced, osm::Way const& full)
 {
-    std::vector<roads::RoadEdge> ret;
+    std::vector<roads::RoadEdgeWithNodes> ret;
     boost::any_range<std::pair<const int, osm::Node>, boost::forward_traversal_tag, std::pair<const int, osm::Node>, size_t> rng = full.nodes;
     auto it = reduced.nodes.begin();
     auto it2 = it;
     for (++it; it != reduced.nodes.end(); ++it, ++it2)
     {
         auto pair = util::split(rng, boost::bind(util::get_tuple_comparer<0>(), _1, *it));
-        insert_road_edges(ret, pair.first, it2->first, it->first, full);
+        insert_road_edges(ret, pair.first, it2, it, full);
         rng = pair.second;
     }
 

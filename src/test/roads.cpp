@@ -26,8 +26,8 @@ BOOST_AUTO_TEST_CASE(roadnet)
     BOOST_CHECK(edges.size() == 2);
     BOOST_CHECK(edges[0].way_id == 1);
     BOOST_CHECK(edges[1].way_id == 2);
-    BOOST_CHECK(edges[0].seq_no == 0);
-    BOOST_CHECK(edges[1].seq_no == 1);
+    BOOST_CHECK(edges[0].start_seq_no == 0);
+    BOOST_CHECK(edges[1].start_seq_no == 1);
 }
 
 BOOST_AUTO_TEST_CASE(roadnet2)

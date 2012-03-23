@@ -9,6 +9,7 @@
 #define ROADNETWORKNODE_H_
 
 #include <vector>
+#include "../geoelements/geoelements.h"
 
 namespace roads
 {
@@ -17,6 +18,7 @@ class RoadNetworkNode
 {
 public:
     virtual ~RoadNetworkNode();
+    geo::Point position;
     std::vector<std::pair<double, RoadNetworkNode const*> > neighbours;
 };
 

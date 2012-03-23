@@ -11,6 +11,7 @@
 #include <map>
 #include <string>
 #include "OsmDatabase.h"
+#include "../roads/roads.h"
 
 namespace osmdb
 {
@@ -21,6 +22,7 @@ public:
     RoadNetworkCreator(OsmDatabase& full, OsmDatabase& reduced, OsmDatabase& destination, std::multimap<std::string, std::string> const& attributes);
     void create_road_network_table();
     void copy_road_network_data();
+    void insert_road_edge(roads::RoadEdgeWithNodes const& re);
     virtual ~RoadNetworkCreator();
 private:
     OsmDatabase& full;

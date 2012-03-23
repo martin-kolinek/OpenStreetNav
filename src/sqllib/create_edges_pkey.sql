@@ -11,4 +11,5 @@ ALTER TABLE Edges ADD CONSTRAINT PK_Edges PRIMARY KEY (WayID, StartSequenceNo, E
 
 CLUSTER Edges USING PK_Edges
 
+
         

@@ -33,6 +33,8 @@ public:
     bool operator>(WayRegion const& other) const;
     bool operator<(WayRegion const& other) const;
     osm::Way const& get_way() const;
+    int get_first_seq_no() const;
+    int get_last_seq_no() const;
 private:
     osm::Way w;
     std::vector<std::pair<unsigned int, unsigned int> > regions;

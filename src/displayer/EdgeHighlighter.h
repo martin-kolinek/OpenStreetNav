@@ -15,6 +15,7 @@ public:
     EdgeHighlighter(EdgeHighlightable& src, LineDisplayStyle const& style);
     element_range get_display_elements();
     void add_descriptible(Descriptible const& desc);
+    void add_way_region(osm::WayRegion const& reg);
     void clear();
     void set_bounds(geo::Point const& , geo::Point const& , int );
     std::vector<std::unique_ptr<Descriptible> > get_selected(geo::Point const& , geo::Point const& , int );

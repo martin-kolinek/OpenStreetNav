@@ -73,6 +73,12 @@ void EdgeHighlighter::add_descriptible(Descriptible const& desc)
     renew_cache = true;
 }
 
+void EdgeHighlighter::add_way_region(osm::WayRegion const& reg)
+{
+    highlight.insert(std::make_pair(reg.get_way(), reg));
+    renew_cache = true;
+}
+
 void EdgeHighlighter::clear()
 {
     highlight.clear();

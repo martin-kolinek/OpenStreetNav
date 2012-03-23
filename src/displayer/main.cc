@@ -13,6 +13,8 @@
 #include "../osmdb/osmdb.h"
 #include <memory>
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/button.h>
+#include <gtkmm/entry.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/textview.h>
 #include <glibmm/optioncontext.h>
@@ -22,6 +24,7 @@
 #include "../util/util.h"
 #include "EdgeHighlighter.h"
 #include "LineDisplayStyle.h"
+#include "../pathfinding/pathfinding.h"
 
 class ZoomerDrawAreaConnector
 {
@@ -57,11 +60,17 @@ void write_ptree(boost::property_tree::ptree const& ptree, std::ostream& ost, in
 std::string get_els_text(std::vector<std::unique_ptr<display::Descriptible> > const& els)
 {
     std::ostringstream str;
-    str << "clicked" << std::endl;
     for (unsigned int i = 0; i < els.size(); ++i)
     {
         write_ptree(els[i]->get_description(), str, 0);
     }
+    return str.str();
+}
+
+std::string get_els_text(display::Descriptible const& desc)
+{
+    std::ostringstream str;
+    write_ptree(desc.get_description(), str, 0);
     return str.str();
 }
 
@@ -79,6 +88,38 @@ osm::WayRegion get_way_region_from_el(osm::Element const& el)
     osm::Way const& w = static_cast<osm::Way const&>(el);
     return osm::WayRegion(w);
 }
+
+class SearchButtonConnector
+{
+private:
+    display::MapDrawingArea* area;
+    display::EdgeHighlighter& high;
+    pathfind::PathFinder& finder;
+    Gtk::Entry* startentry;
+    Gtk::Entry* endentry;
+    Gtk::TextView* view;
+public:
+    SearchButtonConnector(display::MapDrawingArea* area, display::EdgeHighlighter& high, pathfind::PathFinder& finder, Gtk::Entry* startentry, Gtk::Entry* endentry, Gtk::TextView* view):
+        area(area),
+        high(high),
+        finder(finder),
+        startentry(startentry),
+        endentry(endentry),
+        view(view)
+    {
+    }
+    void search_click()
+    {
+        high.clear();
+        int64_t start, end;
+        start = util::parse<int64_t>(startentry->get_text());
+        end = util::parse<int64_t>(startentry->get_text());
+        auto r = finder.find_way(start, end);
+        view->get_buffer()->set_text(get_els_text(r));
+        high.add_descriptible(r);
+        area->refresh();
+    }
+};
 
 int main(int argc, char** argv)
 {
@@ -108,7 +149,12 @@ int main(int argc, char** argv)
         bldr->get_widget("window1", wnd);
         display::MapDrawingArea* area = 0;
         bldr->get_widget_derived("drawingarea1", area);
-
+        Gtk::Button* searchbutton;
+        bldr->get_widget("searchbutton", searchbutton);
+        Gtk::Entry* startentry;
+        Gtk::Entry* endentry;
+        bldr->get_widget("startidentry", startentry);
+        bldr->get_widget("endidentry", endentry);
         Gtk::SpinButton* zoomer;
         bldr->get_widget("zoomspinbutton", zoomer);
         ZoomerDrawAreaConnector conn(zoomer, area);
@@ -130,7 +176,9 @@ int main(int argc, char** argv)
         std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, TO_SHOW_EDGES, 1, 15));
         area->add_dp(1, dispdb);
         std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(0, 1, 1, 1, 2, false)));
-        area->add_dp(2, high);
+        area->add_dp(3, high);
+        std::shared_ptr<display::EdgeHighlighter> high_path(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(1, 1, 1, 1, 5, false)));
+        area->add_dp(2, high_path);
         area->zoom_changed.connect([zoomer](int val)
         {
             zoomer->get_adjustment()->set_value(val);
@@ -151,6 +199,11 @@ int main(int argc, char** argv)
             area->set_latitude(lat);
         if (lon >= -180 && lon <= 180)
             area->set_longitude(lon);
+
+        osmdb::RoadLister rl(odb);
+        pathfind::PathFinder finder(rl);
+        SearchButtonConnector searchconn(area, *high_path, finder, startentry, endentry, view);
+        searchbutton->signal_clicked().connect(sigc::mem_fun(&searchconn, &SearchButtonConnector::search_click));
 
         area->show();
 

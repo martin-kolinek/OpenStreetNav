@@ -17,11 +17,11 @@ class LengthAssigner : public CostAssigner
 {
 public:
     LengthAssigner();
-    std::vector<roads::RoadEdge> extract_edges(osm::Way const& reduced, osm::Way const& full);
+    std::vector<roads::RoadEdgeWithNodes> extract_edges(osm::Way const& reduced, osm::Way const& full);
     virtual ~LengthAssigner();
 private:
-    template<typename Rng>
-    void insert_road_edges(std::vector<roads::RoadEdge>& v, Rng& r, int seq, int nextseq, osm::Way const& w)
+    template<typename Rng, typename It>
+    void insert_road_edges(std::vector<roads::RoadEdgeWithNodes>& v, Rng& r, It start, It end, osm::Way const& w)
     {
         double ln = 0;
         auto it = r.begin();
@@ -33,12 +33,12 @@ private:
         }
         if (one_way(w))
         {
-            v.push_back(roads::RoadEdge(w.id, seq, nextseq, get_dir(w), ln));
+            v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, get_dir(w), ln, start->second, end->second));
         }
         else
         {
-            v.push_back(roads::RoadEdge(w.id, seq, nextseq, true, ln));
-            v.push_back(roads::RoadEdge(w.id, seq, nextseq, false, ln));
+            v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, true, ln, start->second, end->second));
+            v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, false, ln, start->second, end->second));
         }
     }
 

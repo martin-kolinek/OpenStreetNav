@@ -38,22 +38,28 @@ auto sub_const_tie(Tup const& t) -> decltype(const_tie(std::get<indices>(t)...))
     return const_tie(std::get<indices>(t)...);
 }
 
-template<size_t... elems>
-class TupleEq
+template<template<typename T> class Func, size_t... elems>
+class TupleFunc
 {
 public:
-    typedef bool result_type;
+    typedef typename Func<int>::result_type result_type;
     template<typename Tup>
     bool operator()(Tup const& t1, Tup const& t2) const
     {
-        return sub_const_tie<elems...>(t1) == sub_const_tie<elems...>(t2);
+        return Func<decltype(sub_const_tie<elems...>(t1))>()(sub_const_tie<elems...>(t1), sub_const_tie<elems...>(t2));
     }
 };
 
 template<size_t... indices>
-TupleEq<indices...> get_tuple_comparer()
+TupleFunc<std::equal_to, indices...> get_tuple_comparer()
 {
-    return TupleEq<indices...>();
+    return TupleFunc<std::equal_to, indices...>();
+}
+
+template<size_t... indices>
+TupleFunc<std::less, indices...> get_tuple_less()
+{
+    return TupleFunc<std::less, indices...>();
 }
 
 template<typename... Args>

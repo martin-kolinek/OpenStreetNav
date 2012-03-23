@@ -1,6 +1,7 @@
 #include "WayRegion.h"
 #include "../util/util.h"
 #include "Edge.h"
+#include <boost/range/algorithm.hpp>
 
 namespace osm
 {
@@ -52,6 +53,15 @@ bool WayRegion::operator<(WayRegion const& other) const
 osm::Way const& WayRegion::get_way() const
 {
     return w;
+}
+
+int WayRegion::get_first_seq_no() const
+{
+    return boost::min_element(regions, util::get_tuple_less<0>())->first;
+}
+int WayRegion::get_last_seq_no() const
+{
+    return boost::max_element(regions, util::get_tuple_less<1>())->second;
 }
 
 }
