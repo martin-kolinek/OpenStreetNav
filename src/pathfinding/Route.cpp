@@ -1,4 +1,7 @@
 #include "Route.h"
+#include "../util/groupingiterator.h"
+#include "../util/range.h"
+#include "../util/materialize.h"
 
 namespace pathfind
 {
@@ -28,10 +31,10 @@ boost::property_tree::ptree Route::get_description() const
     {
         boost::property_tree::ptree t;
         t.put("start_node", it->start_node.id);
-        t.put("end_node", it->start_node.id);
-        t.put("start_seq", it->start_node.id);
-        t.put("end_seq", it->start_node.id);
-        t.put("way", it->start_node.id);
+        t.put("end_node", it->end_node.id);
+        t.put("start_seq", it->start_seq_no);
+        t.put("end_seq", it->end_seq_no);
+        t.put("way", it->way_id);
         t.put("cost", it->cost);
         t.put("forward", it->forward);
         ret.add_child("edge", t);
@@ -41,12 +44,29 @@ boost::property_tree::ptree Route::get_description() const
 
 std::vector<std::unique_ptr<osm::WayRegion> > Route::get_regions() const
 {
-    std::vector<std::unique_ptr<osm::WayRegion> > regions;
-    regions.reserve(edges.size());
-    for (auto it = edges.begin(); it != edges.end(); ++it)
+
+    auto ranges = edges | util::groupped(
+                      [](roads::RoadEdgeWithNodes const & a, roads::RoadEdgeWithNodes const & b)
     {
-        regions.push_back(std::unique_ptr<osm::WayRegion>(new osm::WayRegion(it->way_id, std::vector<std::pair<int, int> > {std::make_pair(it->start_seq_no, it->end_seq_no)})));
+        return a.way_id == b.way_id;
+    },
+    [](std::pair<int64_t, std::vector<std::pair<unsigned int, unsigned int> > >& res, roads::RoadEdgeWithNodes const & a)
+    {
+        res.first = a.way_id;
+        res.second.push_back(std::make_pair(a.start_seq_no, a.end_seq_no));
+    },
+    std::pair<int64_t, std::vector<std::pair<unsigned int, unsigned int> > >()
+                  );
+    auto ranges2 = ranges | util::selected([](std::pair<int64_t, std::vector<std::pair<unsigned int, unsigned int> > > const & v)
+    {
+        return osm::WayRegion(osm::Way(v.first), v.second);
     }
-    return regions;
+                                          );
+    std::vector<std::unique_ptr<osm::WayRegion> > vect;
+    for (auto it = ranges2.begin(); it != ranges2.end(); ++it)
+    {
+        vect.push_back(std::unique_ptr<osm::WayRegion>(new osm::WayRegion(*it)));
+    }
+    return vect;
 }
 }

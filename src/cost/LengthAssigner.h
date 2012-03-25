@@ -30,6 +30,7 @@ private:
         for (++it; it != r.end(); ++it)
         {
             ln += geo::get_point_distance(EARTH_RADIUS, it->second.position, last_pos);
+            last_pos = it->second.position;
         }
         if (one_way(w))
         {

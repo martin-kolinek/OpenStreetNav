@@ -80,7 +80,8 @@ double Point::angle_distance(Point const& other) const
 
 double get_point_distance(double radius, Point const& p1, Point const& p2)
 {
-    return radius * (p1.angle_distance(p2) * M_PI / 180.0);
+    double d = radius * (p1.angle_distance(p2) * M_PI / 180.0);
+    return d;
 }
 
 } /* namespace geo */

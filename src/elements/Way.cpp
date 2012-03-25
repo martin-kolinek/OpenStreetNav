@@ -59,9 +59,9 @@ void Way::fill(osmdb::PropertiesSelection& db)
         nodes.insert(std::make_pair(it->first, Node(it->second)));
     }
 
-    for (unsigned int i = 0; i < nodes.size(); ++i)
+    for (auto it = nodes.begin(); it != nodes.end(); ++it)
     {
-        nodes[i].fill(db);
+        it->second.fill(db);
     }
 }
 

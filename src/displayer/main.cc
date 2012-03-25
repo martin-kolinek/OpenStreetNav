@@ -25,6 +25,7 @@
 #include "EdgeHighlighter.h"
 #include "LineDisplayStyle.h"
 #include "../pathfinding/pathfinding.h"
+#include <ctime>
 
 class ZoomerDrawAreaConnector
 {
@@ -113,9 +114,13 @@ public:
         high.clear();
         int64_t start, end;
         start = util::parse<int64_t>(startentry->get_text());
-        end = util::parse<int64_t>(startentry->get_text());
+        end = util::parse<int64_t>(endentry->get_text());
+        std::clock_t stime = std::clock();
         auto r = finder.find_way(start, end);
-        view->get_buffer()->set_text(get_els_text(r));
+        stime = std::clock() - stime;
+        std::ostringstream str;
+        str << "Route searching took " << ((double)stime / CLOCKS_PER_SEC) << " seconds" << std::endl;
+        view->get_buffer()->set_text(str.str() + get_els_text(r));
         high.add_descriptible(r);
         area->refresh();
     }
@@ -125,6 +130,7 @@ int main(int argc, char** argv)
 {
     Glib::ustring dbname;
     Glib::ustring schema;
+    Glib::ustring road_sch;
     double lat = -500;
     double lon = -500;
     int zoom = -1;
@@ -134,11 +140,13 @@ int main(int argc, char** argv)
     auto e3 = make_entry("latitude", 'y', "starting center latitude");
     auto e4 = make_entry("longitude", 'x', "starting center longitude");
     auto e5 = make_entry("zoom", 'z', "starting zoom level");
+    auto e6 = make_entry("road_schema", 'r', "schema containing road edges");
     gr.add_entry(e1, dbname);
     gr.add_entry(e2, schema);
     gr.add_entry(e3, lat);
     gr.add_entry(e4, lon);
     gr.add_entry(e5, zoom);
+    gr.add_entry(e6, road_sch);
     Glib::OptionContext cxt;
     cxt.add_group(gr);
     try
@@ -175,9 +183,9 @@ int main(int argc, char** argv)
         zoomer->get_adjustment()->set_value(area->get_zoom());
         std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, TO_SHOW_EDGES, 1, 15));
         area->add_dp(1, dispdb);
-        std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(0, 1, 1, 1, 2, false)));
+        std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(0, 1, 1, 1, 2.5, false)));
         area->add_dp(3, high);
-        std::shared_ptr<display::EdgeHighlighter> high_path(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(1, 1, 1, 1, 5, false)));
+        std::shared_ptr<display::EdgeHighlighter> high_path(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(1, 1, 1, 1, 2.5, false)));
         area->add_dp(2, high_path);
         area->zoom_changed.connect([zoomer](int val)
         {
@@ -200,11 +208,18 @@ int main(int argc, char** argv)
         if (lon >= -180 && lon <= 180)
             area->set_longitude(lon);
 
-        osmdb::RoadLister rl(odb);
-        pathfind::PathFinder finder(rl);
-        SearchButtonConnector searchconn(area, *high_path, finder, startentry, endentry, view);
-        searchbutton->signal_clicked().connect(sigc::mem_fun(&searchconn, &SearchButtonConnector::search_click));
+        std::unique_ptr<pathfind::PathFinder> finder;
 
+        if (road_sch != "")
+        {
+            psql::Database rpdb(conninfo);
+            rpdb.set_schema(road_sch);
+            osmdb::OsmDatabase rdb(rpdb);
+            osmdb::RoadLister rl(rdb);
+            finder = std::unique_ptr<pathfind::PathFinder>(new pathfind::PathFinder(rl));
+            SearchButtonConnector searchconn(area, *high_path, *finder, startentry, endentry, view);
+            searchbutton->signal_clicked().connect(sigc::mem_fun(&searchconn, &SearchButtonConnector::search_click));
+        }
         area->show();
 
         kit.run(*wnd);

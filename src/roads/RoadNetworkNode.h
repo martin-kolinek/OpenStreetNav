@@ -10,6 +10,7 @@
 
 #include <vector>
 #include "../geoelements/geoelements.h"
+#include <cstdint>
 
 namespace roads
 {
@@ -20,6 +21,7 @@ public:
     virtual ~RoadNetworkNode();
     geo::Point position;
     std::vector<std::pair<double, RoadNetworkNode const*> > neighbours;
+    int64_t nd_id;
 };
 
 } /* namespace roads */

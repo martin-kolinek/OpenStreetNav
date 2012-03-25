@@ -8,7 +8,11 @@ namespace osm
 WayRegion::WayRegion(Way const& w):
     w(w)
 {
-    regions.push_back(std::make_pair(0, w.nodes.size() - 1));
+    if (w.nodes.begin() == w.nodes.end())
+        return;
+    int st = w.nodes.begin()->first;
+    int last = (--w.nodes.end())->first;
+    regions.push_back(std::make_pair(st, last));
 }
 
 bool WayRegion::contains(SeqEdge const& e) const

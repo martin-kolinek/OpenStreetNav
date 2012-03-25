@@ -88,6 +88,77 @@ BOOST_AUTO_TEST_CASE(astar_test)
     BOOST_CHECK(path == correct);
 }
 
+BOOST_AUTO_TEST_CASE(astar_test2)
+{
+    std::map<int, std::vector<std::pair<int, int> > > graph
+    {
+        std::make_pair(1, std::vector<std::pair<int, int> >{
+            std::make_pair(1, 2)
+        }),
+        std::make_pair(2, std::vector<std::pair<int, int> >{
+            std::make_pair(1, 3),
+            std::make_pair(1, 4)
+        }),
+        std::make_pair(3, std::vector<std::pair<int, int> >{
+            std::make_pair(1, 4)
+        }),
+        std::make_pair(4, std::vector<std::pair<int, int> >{
+            std::make_pair(2, 5)
+        })
+    };
+    class GetNeighbours
+    {
+    private:
+        std::map<int, std::vector<std::pair<int, int> > >& mp;
+    public:
+        GetNeighbours(std::map<int, std::vector<std::pair<int, int> > >& mp):
+            mp(mp)
+        {
+        }
+        std::vector<std::pair<int, int> > operator()(int nd) const
+        {
+            return mp[nd];
+        }
+    };
+
+    std::map<int, int> heur
+    {
+        std::make_pair(1, 3),
+        std::make_pair(2, 2),
+        std::make_pair(3, 1),
+        std::make_pair(4, 2),
+        std::make_pair(5, 0),
+    };
+
+    class Heuristic
+    {
+        std::map<int, int> heur;
+    public:
+        Heuristic(std::map<int, int> const& heur):
+            heur(heur)
+        {
+        }
+        int operator()(int i) const
+        {
+            return heur.find(i)->second;
+        }
+    };
+    class IsEnd
+    {
+    public:
+        bool operator()(int i) const
+        {
+            return i == 5;
+        }
+    };
+    auto path = pathfind::find_path(1, 0, GetNeighbours(graph), Heuristic(heur), IsEnd());
+    std::vector<int> correct
+    {
+        1, 2, 4, 5
+    };
+    BOOST_CHECK(path == correct);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 class dbfix

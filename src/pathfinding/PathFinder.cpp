@@ -38,7 +38,7 @@ Route PathFinder::find_way(const osm::Node& start_node, const osm::Node& end_nod
     auto cxt = net.get_path_find_context(start_node.id, end_node.id);
     if (!cxt.is_valid())
         return Route();
-    auto v = find_path(cxt.get_start_node(), 0,
+    auto v = find_path(cxt.get_start_node(), 0.0,
                        [](roads::RoadNetworkNode const * r)
     {
         return r->neighbours;
