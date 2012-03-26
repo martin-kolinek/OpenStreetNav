@@ -25,6 +25,8 @@
 #include "EdgeHighlighter.h"
 #include "LineDisplayStyle.h"
 #include "../pathfinding/pathfinding.h"
+#include <boost/regex.hpp>
+#include <fstream>
 #include <ctime>
 
 class ZoomerDrawAreaConnector
@@ -126,11 +128,39 @@ public:
     }
 };
 
+std::pair<int, std::vector<std::string> > extract_zooms(std::string const& file)
+{
+    std::pair<int, std::vector<std::string> > ret;
+    std::ifstream fs(file, std::ifstream::in);
+    std::string line;
+    boost::regex r("^\\s*(\\d+)\\s+(\\S+)\\s*$");
+    bool first = true;
+    while (!fs.eof())
+    {
+        std::getline(fs, line);
+        boost::smatch match;
+        if (!boost::regex_match(line, match, r))
+            continue;
+        unsigned int i = util::parse<int>(match[1]);
+        if (first)
+        {
+            ret.first = i;
+            first = false;
+        }
+        std::cout << ret.second.size() << " " << ret.first << " " << i << std::endl;
+        while (ret.second.size() + ret.first < i)
+            ret.second.push_back(ret.second.back());
+        ret.second.push_back(match[2]);
+    }
+    return ret;
+}
+
 int main(int argc, char** argv)
 {
     Glib::ustring dbname;
     Glib::ustring schema;
     Glib::ustring road_sch;
+    Glib::ustring config;
     double lat = -500;
     double lon = -500;
     int zoom = -1;
@@ -140,18 +170,25 @@ int main(int argc, char** argv)
     auto e3 = make_entry("latitude", 'y', "starting center latitude");
     auto e4 = make_entry("longitude", 'x', "starting center longitude");
     auto e5 = make_entry("zoom", 'z', "starting zoom level");
-    auto e6 = make_entry("road_schema", 'r', "schema containing road edges");
+    auto e6 = make_entry("road-schema", 'r', "schema containing road edges");
+    auto e7 = make_entry("config", 'c', "configuration file containing schemas for zooms");
     gr.add_entry(e1, dbname);
     gr.add_entry(e2, schema);
     gr.add_entry(e3, lat);
     gr.add_entry(e4, lon);
     gr.add_entry(e5, zoom);
     gr.add_entry(e6, road_sch);
+    gr.add_entry(e7, config);
     Glib::OptionContext cxt;
     cxt.add_group(gr);
     try
     {
         Gtk::Main kit(argc, argv, cxt);
+        if (config == "")
+        {
+            std::cout << "Config file required" << std::endl;
+            return 1;
+        }
         Glib::RefPtr<Gtk::Builder> bldr = Gtk::Builder::create_from_file(GLADE_PATH);
         Gtk::Window* wnd = 0;
         bldr->get_widget("window1", wnd);
@@ -178,10 +215,16 @@ int main(int argc, char** argv)
             conninfo = "dbname=" + dbname;
         psql::Database pdb(conninfo);
         if (schema != "")
-            psql::execute_sql(pdb, "SET search_path TO " + schema + ", public");
+            pdb.set_schema(schema);
         osmdb::OsmDatabase odb(pdb);
         zoomer->get_adjustment()->set_value(area->get_zoom());
-        std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, TO_SHOW_EDGES, 1, 15));
+        auto p = extract_zooms(config);
+        if (p.second.size() == 0)
+        {
+            std::cout << "Error extracting schemas for individual zoom levels" << std::endl;
+            return 1;
+        }
+        std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, p.second, p.first));
         area->add_dp(1, dispdb);
         std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(0, 1, 1, 1, 2.5, false)));
         area->add_dp(3, high);

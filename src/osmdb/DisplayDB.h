@@ -32,7 +32,7 @@ public:
      * @param min_zoom minimum zoom level to draw
      * @param max_zoom maximum zoom level to draw
      */
-    DisplayDB(osmdb::OsmDatabase& db, std::string const& path_base, int min_zoom, int max_zoom);
+    DisplayDB(osmdb::OsmDatabase& db, std::vector<std::string> schemas, int offset);
     virtual ~DisplayDB();
     element_range get_display_elements();
     edge_range get_edges();

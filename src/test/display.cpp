@@ -10,6 +10,7 @@
 #include "../osmdb/osmdb.h"
 #include "../displayer/EdgeHighlighter.h"
 #include "../util/range.h"
+#include <boost/property_tree/xml_parser.hpp>
 
 class disp_db_fix
 {
@@ -37,8 +38,7 @@ BOOST_AUTO_TEST_CASE(highlight)
     osmdb::OsmDatabase odb(pdb);
     odb.create_tables();
     odb.create_indexes_and_keys();
-    osmdb::DisplayDB db(odb, TEST_TO_SHOW_EDGES, 1, 1);
-    osmdb::ElementInsertion ins(db.get_db());
+    osmdb::ElementInsertion ins(odb);
     pdb.begin_transaction();
     osm::Node nd(1, 0.5, 0.5);
     nd.tags.insert(osm::Tag("key", "val"));
@@ -55,17 +55,20 @@ BOOST_AUTO_TEST_CASE(highlight)
     nd.position.lon = 0.5;
     ins.insert_node(nd);
     ins.insert_node(osm::Node(5, 0.6, 0.4));
-    display::EdgeHighlighter high(db, display::LineDisplayStyle(1, 1, 1, 1, 0, false));
-    high.add_descriptible(w);
-    w = osm::Way(2);
-    w.add_node(osm::Node(3));
-    w.add_node(osm::Node(5));
-    w.tags.insert(osm::Tag("key", "val"));
-    ins.insert_way(w);
-    osmdb::EdgeCreator ecr(odb);
+    osm::Way w2(2);
+    w2.add_node(osm::Node(3));
+    w2.add_node(osm::Node(5));
+    w2.tags.insert(osm::Tag("key", "val"));
+    ins.insert_way(w2);
+    boost::property_tree::ptree tr;
+    boost::property_tree::xml_parser::read_xml(TEST_TO_SHOW_EDGES, tr, boost::property_tree::xml_parser::trim_whitespace);
+    osmdb::EdgeCreator ecr(odb, tr);
     ecr.create_tables();
     ecr.insert_data();
     pdb.commit_transaction();
+    osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1);
+    display::EdgeHighlighter high(db, display::LineDisplayStyle(1, 1, 1, 1, 0, false));
+    high.add_descriptible(w);
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     high.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     BOOST_CHECK(util::count(high.get_display_elements()) == 1);

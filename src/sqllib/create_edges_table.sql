@@ -2,11 +2,18 @@
 --test-param
 
 CREATE TABLE Edges (
-    WayID bigint, 
+    WayID bigint,
+    StartSequenceNo int,
+    EndSequenceNo int, 
     StartNodeID bigint, 
     EndNodeID bigint, 
-    StartSequenceNo int,
-    EndSequenceNo int,
+    Red float8,
+    Green float8,
+    Blue float8,
+    Alpha float8,
+    Thickness float8,
+    Style int,
+    Priority int,
     Location geography(LINESTRING, 4326)
     )
 

@@ -15,6 +15,8 @@ namespace sqllib
 
 psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int, int64_t, double, double, int, int64_t, double, double, int64_t, double, double, double, double, double, int, int> > get_toshow_edges_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<> > get_edges_insert(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
+
 psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int, int> > get_selected_edges_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");
 
 psql::Statement<psql::BindTypes<>, psql::RetTypes<int64_t, int, int64_t, double, double, int64_t, std::string, std::string> > get_wayreduction_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named = false, std::string name = "");

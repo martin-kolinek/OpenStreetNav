@@ -11,8 +11,9 @@
 namespace osmdb
 {
 
-EdgeCreator::EdgeCreator(OsmDatabase& db):
-    db(db)
+EdgeCreator::EdgeCreator(OsmDatabase& db, boost::property_tree::ptree entries):
+    db(db),
+    entries(entries)
 {
 }
 
@@ -34,7 +35,7 @@ void EdgeCreator::create_keys_and_indexes()
 
 void EdgeCreator::insert_data()
 {
-    sqllib::get_insert_edges(db.get_db()).execute();
+    sqllib::get_edges_insert(entries, db.get_db()).execute();
 }
 
 void EdgeCreator::drop_keys_and_indexes()

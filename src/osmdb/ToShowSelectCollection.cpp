@@ -13,31 +13,22 @@
 namespace osmdb
 {
 
-ToShowSelectCollection::ToShowSelectCollection(const std::string& path_base, psql::Database& db, int min, int max)
+ToShowSelectCollection::ToShowSelectCollection(std::vector<std::string> const& schemas, int offset, psql::Database& db):
+    offset(offset)
 {
-    offset = min;
-    for (int i = min; i <= max; ++i)
+    std::string sch = db.get_schema();
+    int i = 0;
+    for (auto it = schemas.begin(); it != schemas.end(); ++it)
     {
-        std::ostringstream ss;
-        ss << path_base;
-        if (path_base[path_base.size() - 1] != '/')
-            ss << "/";
-        ss << i << ".xml";
-        boost::property_tree::ptree entries;
-        boost::property_tree::xml_parser::read_xml(ss.str(), entries, boost::property_tree::xml_parser::trim_whitespace);
-        statements.push_back(sqllib::get_toshow_edges_select(entries, db));
-        select_statements.push_back(sqllib::get_selected_edges_select(entries, db));
+        db.set_schema(*it);
+        statements.push_back(sqllib::get_select_edges_in_box(db, true, util::concatenate("", "select_edge_stmt", i++)));
     }
+    db.set_schema(sch);
 }
 
 psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int, int64_t, double, double, int, int64_t, double, double, int64_t, double, double, double, double, double, int, int> >& ToShowSelectCollection::get_edges_for_zoom(int zoom)
 {
     return statements[zoom - offset];
-}
-
-psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int, int> >& ToShowSelectCollection::get_select_edges(int zoom)
-{
-    return select_statements[zoom - offset];
 }
 
 }

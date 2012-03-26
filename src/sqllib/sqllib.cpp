@@ -18,6 +18,22 @@ psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<
         return psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int, int64_t, double, double, int, int64_t, double, double, int64_t, double, double, double, double, double, int, int> >(cr->create_sql(), db);
 }
 
+psql::Statement<psql::BindTypes<>, psql::RetTypes<> > get_edges_insert(boost::property_tree::ptree const& entries, psql::Database& db, bool named, std::string name)
+{
+    KeyValFilterTranslator tr("wn1.WayID, wn1.SequenceNo, wn1.NodeID, wn2.SequenceNo, wn2.NodeID, ST_MakeLine(n1.Location::geometry, n2.Location::geometry)",
+                              "WayNodes wn1 INNER JOIN Nodes n1 ON n1.ID = wn1.NodeID INNER JOIN WayNodes wn2 ON wn1.WayID = wn2.WayID AND wn1.NextSequenceNo = wn2.SequenceNo INNER JOIN Nodes n2 ON n2.ID = wn2.NodeID INNER JOIN WayAttributes a ON a.WayID = wn1.WayID",
+                              "",
+                              "a",
+                              std::vector<std::string> {"float8", "float8", "float8", "float8", "float8", "int", "int"},
+                              "order by priority desc");
+    auto cr = SqlCreatorFactory::create(tr.translate(entries));
+    std::string insert = "INSERT INTO Edges (WayID, StartSequenceNo, StartNodeID, EndSequenceNo, EndNodeID, Location, Red, Green, Blue, Alpha, Thickness, Style, Priority) ";
+    if (named)
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<> >(name, insert + cr->create_sql(), db);
+    else
+        return psql::Statement<psql::BindTypes<>, psql::RetTypes<> >(insert + cr->create_sql(), db);
+}
+
 psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int, int> > get_selected_edges_select(boost::property_tree::ptree const& entries, psql::Database& db, bool named, std::string name)
 {
     KeyValFilterTranslator tr("e.WayID",

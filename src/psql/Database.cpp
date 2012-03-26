@@ -45,6 +45,14 @@ void Database::analyze()
     execute_sql(*this, "ANALYZE");
 }
 
+std::string Database::get_schema()
+{
+    auto v = query_sql<std::string>(*this, "SHOW search_path");
+    if (v.size() == 0)
+        throw PgSqlException("Error retrieving current schema");
+    return std::get<0>(v[0]);
+}
+
 void Database::set_schema(std::string schema)
 {
     if (schema != "")

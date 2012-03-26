@@ -29,22 +29,15 @@ public:
      * @param min minimum zoom to look for
      * @param max maximum zoom to look for
      */
-    ToShowSelectCollection(std::string const& path_base, psql::Database& db, int min, int max);
+    ToShowSelectCollection(std::vector<std::string> const& schemas, int offset, psql::Database& db);
     /**
      *
      * @param zoom
      * @return Statement to use to get drawing information for zoom
      */
     psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int, int64_t, double, double, int, int64_t, double, double, int64_t, double, double, double, double, double, int, int> >& get_edges_for_zoom(int zoom);
-    /**
-     *
-     * @param zoom
-     * @return Statement to use to get selected element information for zoom
-     */
-    psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int, int> >& get_select_edges(int zoom);
 private:
     std::vector<psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int, int64_t, double, double, int, int64_t, double, double, int64_t, double, double, double, double, double, int, int> > > statements;
-    std::vector<psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t, double, double, double, double, double, int, int> > > select_statements;
     int offset;
 };
 

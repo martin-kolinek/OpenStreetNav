@@ -69,7 +69,6 @@ set(SQLFILES
     drop_waynodes_way_fkey.sql
     drop_ways_pkey.sql
     get_properties.sql
-    insert_edge.sql
     insert_node_attr.sql
     insert_node.sql
     insert_relation.sql
@@ -83,13 +82,11 @@ set(SQLFILES
     select_node_descr_in_box.sql
     select_nodes_in_box.sql
     select_wayattributes_between_wayids.sql
-    select_way_descr_in_box.sql
-    select_waynodes_for_ways_between.sql
     select_ways.sql
     test_select.sql
     import.sql
     road_network.sql
-    insert_edges.sql
+    insert_edge.sql
     )
 
 set(TEMPL ${CMAKE_BINARY_DIR}/templ)

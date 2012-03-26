@@ -14,12 +14,12 @@
 namespace osmdb
 {
 
-DisplayDB::DisplayDB(OsmDatabase& db, std::string const& path_base, int min_zoom, int max_zoom)
+DisplayDB::DisplayDB(osmdb::OsmDatabase& db, std::vector<std::string> schemas, int offset)
     : db(db),
       pdb(db),
-      minz(min_zoom),
-      maxz(max_zoom),
-      coll(path_base, db.get_db(), min_zoom, max_zoom),
+      minz(offset),
+      maxz(offset + schemas.size() - 1),
+      coll(schemas, offset, db.get_db()),
       get_bounds(sqllib::get_select_bounds(db.get_db()))
 {
     get_bounds.execute();
@@ -90,14 +90,14 @@ std::vector<std::unique_ptr<display::Descriptible> > DisplayDB::get_selected(con
     double higher = std::max(p1.lat, p2.lat);
 
     std::vector<std::unique_ptr<osm::Element> > ret;
-    auto& stmt = coll.get_select_edges(zoom);
+    auto& stmt = coll.get_edges_for_zoom(zoom);
     stmt.execute(left, lower, right, higher);
     for (int i = 0; i < stmt.row_count(); ++i)
     {
-        int64_t id;
-        double r, g, b, a, t;
-        int attr, p;
-        std::tie(id, r, g, b, a, t, attr, p) = stmt.get_row(i);
+        int64_t id, n1id, n2id;
+        double x1, y1, x2, y2, r, g, b, a, t;
+        int attr, p, sq1, sq2;
+        std::tie(n1id, sq1, x1, y1, n2id, sq2, x2, y2, id, r, g, b, a, t, attr, p) = stmt.get_row(i);
         ret.push_back(std::unique_ptr<osm::Element>(new osm::Way(id)));
     }
 

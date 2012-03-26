@@ -85,12 +85,8 @@ BOOST_AUTO_TEST_CASE(insert)
     r.add_way("rway", osm::Way(341));
     r.add_rel("rrel", osm::Relation(432));
     ins.insert_relation(r);
-    osmdb::EdgeCreator ecr(db);
-    ecr.create_tables();
-    ecr.insert_data();
     std::vector<std::tuple<int64_t, double, double> > nodes {std::make_tuple(123, 2, 1), std::make_tuple(124, 2, 1)};
     std::vector<std::tuple<int64_t> > ways {std::make_tuple(341)};
-    std::vector<std::tuple<int64_t, int64_t, int64_t, int, int> > edges {std::make_tuple(341, 123, 124, 0, 1)};
     std::vector<std::tuple<int64_t, int64_t, int, int> > waynodes
     {
         std::make_tuple(341, 123, 0, 1),
@@ -107,7 +103,6 @@ BOOST_AUTO_TEST_CASE(insert)
     auto nodes2 = psql::query_sql<int64_t, double, double>(db.get_db(), "SELECT ID, ST_X(Location::geometry), ST_Y(Location::geometry) FROM Nodes");
     auto ways2 = psql::query_sql<int64_t>(db.get_db(), "SELECT ID FROM Ways");
     auto waynodes2 = psql::query_sql<int64_t, int64_t, int, int>(db.get_db(), "SELECT WayID, NodeID, SequenceNo, COALESCE(NextSequenceNo, -1) FROM WayNodes");
-    auto edges2 = psql::query_sql<int64_t, int64_t, int64_t, int, int>(db.get_db(), "SELECT WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenceNo FROM Edges");
     std::sort(waynodes2.begin(), waynodes2.end());
     auto ndattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT NodeID, Key, Value FROM NodeAttributes");
     auto wattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT WayID, Key, Value FROM WayAttributes");
@@ -118,7 +113,6 @@ BOOST_AUTO_TEST_CASE(insert)
     auto rmembers2 = psql::query_sql<int64_t, std::string, int64_t>(db.get_db(), "SELECT ParentID, Role, ChildID FROM MemberRelations");
     BOOST_CHECK(nodes == nodes2);
     BOOST_CHECK(ways == ways2);
-    BOOST_CHECK(edges == edges2);
     BOOST_CHECK(waynodes == waynodes2);
     BOOST_CHECK(ndattrs == ndattrs2);
     BOOST_CHECK(wattrs == wattrs2);
@@ -161,13 +155,8 @@ BOOST_AUTO_TEST_CASE(new_import)
     ins.end_copy();
     osmdb::ImportTableProcessor proc(db);
     proc.process();
-    osmdb::EdgeCreator cr(db);
-    cr.create_tables();
-    cr.insert_data();
-    cr.create_keys_and_indexes();
     std::vector<std::tuple<int64_t, double, double> > nodes {std::make_tuple(123, 2, 1), std::make_tuple(124, 2, 1)};
     std::vector<std::tuple<int64_t> > ways {std::make_tuple(341)};
-    std::vector<std::tuple<int64_t, int64_t, int64_t, int, int> > edges {std::make_tuple(341, 123, 124, 0, 1)};
     std::vector<std::tuple<int64_t, int64_t, int, int> > waynodes
     {
         std::make_tuple(341, 123, 0, 1),
@@ -184,7 +173,6 @@ BOOST_AUTO_TEST_CASE(new_import)
     auto nodes2 = psql::query_sql<int64_t, double, double>(db.get_db(), "SELECT ID, ST_X(Location::geometry), ST_Y(Location::geometry) FROM Nodes");
     auto ways2 = psql::query_sql<int64_t>(db.get_db(), "SELECT ID FROM Ways");
     auto waynodes2 = psql::query_sql<int64_t, int64_t, int, int>(db.get_db(), "SELECT WayID, NodeID, SequenceNo, COALESCE(NextSequenceNo, -1) FROM WayNodes");
-    auto edges2 = psql::query_sql<int64_t, int64_t, int64_t, int, int>(db.get_db(), "SELECT WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenceNo FROM Edges");
     std::sort(waynodes2.begin(), waynodes2.end());
     auto ndattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT NodeID, Key, Value FROM NodeAttributes");
     auto wattrs2 = psql::query_sql<int64_t, std::string, std::string>(db.get_db(), "SELECT WayID, Key, Value FROM WayAttributes");
@@ -195,7 +183,6 @@ BOOST_AUTO_TEST_CASE(new_import)
     auto rmembers2 = psql::query_sql<int64_t, std::string, int64_t>(db.get_db(), "SELECT ParentID, Role, ChildID FROM MemberRelations");
     BOOST_CHECK(nodes == nodes2);
     BOOST_CHECK(ways == ways2);
-    BOOST_CHECK(edges == edges2);
     BOOST_CHECK(waynodes == waynodes2);
     BOOST_CHECK(ndattrs == ndattrs2);
     BOOST_CHECK(wattrs == wattrs2);
@@ -215,6 +202,7 @@ BOOST_AUTO_TEST_CASE(edge_creator)
     osm::Way w(2);
     w.add_node(1);
     w.add_node(2);
+    w.tags.insert(osm::Tag("key", "val"));
     ins.insert_node(1);
     ins.insert_node(2);
     ins.insert_node(3);
@@ -222,8 +210,11 @@ BOOST_AUTO_TEST_CASE(edge_creator)
     w = osm::Way(1);
     w.add_node(2);
     w.add_node(3);
+    w.tags.insert(osm::Tag("key", "val"));
     ins.insert_way(w);
-    osmdb::EdgeCreator ecr(db);
+    boost::property_tree::ptree tr;
+    boost::property_tree::xml_parser::read_xml(TEST_TO_SHOW_EDGES, tr, boost::property_tree::xml_parser::trim_whitespace);
+    osmdb::EdgeCreator ecr(db, tr);
     ecr.create_tables();
     ecr.create_keys_and_indexes();
     ecr.insert_data();
@@ -247,12 +238,14 @@ BOOST_AUTO_TEST_CASE(import_proc_dis)
 BOOST_AUTO_TEST_CASE(empty_displaydb)
 {
     osmdb::OsmDatabase odb(pdb);
-    osmdb::EdgeCreator ecr(odb);
+    boost::property_tree::ptree tr;
+    boost::property_tree::xml_parser::read_xml(TEST_TO_SHOW_EDGES, tr, boost::property_tree::xml_parser::trim_whitespace);
+    osmdb::EdgeCreator ecr(odb, tr);
     odb.create_tables();
     odb.create_indexes_and_keys();
     ecr.create_tables();
     ecr.create_keys_and_indexes();
-    osmdb::DisplayDB db(odb, TEST_TO_SHOW_EDGES, 1, 1);
+    osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1);
     db.set_bounds(geo::Point(0, 0), geo::Point(1, 1), 1);
 }
 
@@ -261,7 +254,11 @@ BOOST_AUTO_TEST_CASE(simple_dispdb)
     osmdb::OsmDatabase odb(pdb);
     odb.create_tables();
     odb.create_indexes_and_keys();
-    osmdb::DisplayDB db(odb, TEST_TO_SHOW_EDGES, 1, 1);
+    boost::property_tree::ptree tr;
+    boost::property_tree::xml_parser::read_xml(TEST_TO_SHOW_EDGES, tr, boost::property_tree::xml_parser::trim_whitespace);
+    osmdb::EdgeCreator ecr(odb, tr);
+    ecr.create_tables();
+    osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1);
     osmdb::ElementInsertion ins(db.get_db());
     pdb.begin_transaction();
     osm::Node nd(1, 0.5, 0.5);
@@ -283,8 +280,6 @@ BOOST_AUTO_TEST_CASE(simple_dispdb)
     w.add_node(osm::Node(3));
     w.add_node(osm::Node(5));
     ins.insert_way(w);
-    osmdb::EdgeCreator ecr(odb);
-    ecr.create_tables();
     ecr.insert_data();
     pdb.commit_transaction();
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);

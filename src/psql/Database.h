@@ -81,6 +81,8 @@ public:
      * Runs ANALYZE on database.
      */
     void analyze();
+
+    std::string get_schema();
     /**
      * Sets search path on this connection.
      * @param schema search path (can be single schema or comma separated search path)
