@@ -36,8 +36,11 @@ public:
      * @return Statement to use to get drawing information for zoom
      */
     psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int, int64_t, double, double, int, int64_t, double, double, int64_t, double, double, double, double, double, int, int> >& get_edges_for_zoom(int zoom);
+
+    psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t> >& get_select_statement(int zoom);
 private:
     std::vector<psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int, int64_t, double, double, int, int64_t, double, double, int64_t, double, double, double, double, double, int, int> > > statements;
+    std::vector<psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t> > > select_statements;
     int offset;
 };
 

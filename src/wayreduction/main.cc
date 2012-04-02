@@ -41,7 +41,7 @@ void action_handler(osmdb::ImportTableAction act, int64_t amount)
     }
 }
 
-int reduce(std::string const& dbname, std::string const& base, std::string dest, std::multimap<std::string, std::string> mp)
+int reduce(std::string const& dbname, std::string const& base, std::string dest, std::multimap<std::string, std::string> mp, double d)
 {
     try
     {
@@ -60,7 +60,7 @@ int reduce(std::string const& dbname, std::string const& base, std::string dest,
         odb2.create_edge_tables();
         osmdb::ElementCopy cp(odb2);
 
-        wayred::WayNodeFilter flt;
+        wayred::WayNodeFilter flt(d);
         for (auto it = mp.begin(); it != mp.end(); ++it)
             flt.add_important(it->first, it->second);
         cp.start_copy();
@@ -107,6 +107,7 @@ int main (int argc, char** argv)
     ("base-schema,b", boost::program_options::value<std::string>(), "base schema name - this needs to exist")
     ("dest-schema,s", boost::program_options::value<std::string>(), "destination schema name - this shouldn't exist")
     ("important,i", boost::program_options::value<std::string>(), "pipe separated key value pairs to consider e.g. (key1/val1|key2/val2)")
+    ("distance-limit,l", boost::program_options::value<double>(), "node will not be filtered if it is this far from last non filtered node")
     ("important-file,I", boost::program_options::value<std::string>(), "file listing key value pairs to consider (newline separated)");
     boost::program_options::variables_map vm;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
@@ -126,6 +127,9 @@ int main (int argc, char** argv)
     {
         std::cout << "You need to specify destination schema" << std::endl << desc << std::endl;
     }
+    double d = std::numeric_limits<double>::infinity();
+    if (vm.count("distance-limit"))
+        d = vm["distance-limit"].as<double>();
     std::string dest(vm["dest-schema"].as<std::string>());
     std::multimap<std::string, std::string> mp;
     boost::regex r("\\|");
@@ -163,5 +167,5 @@ int main (int argc, char** argv)
             mp.insert(std::make_pair(v2[0], v2[1]));
         }
     }
-    return reduce(dbname, base, dest, mp);
+    return reduce(dbname, base, dest, mp, d);
 }

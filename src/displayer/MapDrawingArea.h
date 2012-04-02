@@ -93,6 +93,7 @@ private:
     proj::FlatPoint bottomright;
     double lat;
     double lon;
+    int min_z, max_z;
     Cairo::Matrix matrix;
     Cairo::Matrix inverse;
 

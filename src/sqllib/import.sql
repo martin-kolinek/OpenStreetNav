@@ -528,7 +528,6 @@ DELETE FROM Import WHERE EntryType = 10 AND EXISTS
 DELETE FROM Import WHERE EntryType = 2 AND EXISTS(
 											SELECT i.biginta FROM Import i WHERE i.EntryType = 7 AND i.biginta = Import.biginta 
 												AND NOT EXISTS(SELECT n.ID FROM Nodes n WHERE i.bigintb=n.ID) 
-												AND NOT EXISTS(SELECT i2.biginta FROM Import i2 where i2.biginta = i.bigintb AND i2.EntryType=1)
 										)
 
 --name delete_incomplete_rels1
@@ -550,7 +549,6 @@ DELETE FROM Import WHERE EntryType = 2 AND EXISTS(
 DELETE FROM Import WHERE EntryType = 3 AND EXISTS(
 											SELECT i.biginta FROM Import i WHERE i.biginta = Import.biginta AND i.EntryType = 8
 												AND NOT EXISTS(SELECT n.ID FROM Nodes n WHERE i.bigintb=n.ID) 
-												AND NOT EXISTS(SELECT i2.biginta FROM Import i2 where i2.biginta = i.bigintb AND i2.EntryType=1)
 										)
 
 --name delete_incomplete_rels2
@@ -572,7 +570,6 @@ DELETE FROM Import WHERE EntryType = 3 AND EXISTS(
 DELETE FROM Import WHERE EntryType = 3 AND EXISTS(
 											SELECT i.biginta FROM Import i WHERE i.biginta = Import.biginta AND i.EntryType = 9
 												AND NOT EXISTS(SELECT w.ID FROM Ways w WHERE i.bigintb=w.ID) 
-												AND NOT EXISTS(SELECT i2.biginta FROM Import i2 where i2.biginta = i.bigintb AND i2.EntryType=2)
 										)
 
 --name delete_incomplete_rels3

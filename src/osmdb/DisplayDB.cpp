@@ -90,14 +90,12 @@ std::vector<std::unique_ptr<display::Descriptible> > DisplayDB::get_selected(con
     double higher = std::max(p1.lat, p2.lat);
 
     std::vector<std::unique_ptr<osm::Element> > ret;
-    auto& stmt = coll.get_edges_for_zoom(zoom);
+    auto& stmt = coll.get_select_statement(zoom);
     stmt.execute(left, lower, right, higher);
     for (int i = 0; i < stmt.row_count(); ++i)
     {
-        int64_t id, n1id, n2id;
-        double x1, y1, x2, y2, r, g, b, a, t;
-        int attr, p, sq1, sq2;
-        std::tie(n1id, sq1, x1, y1, n2id, sq2, x2, y2, id, r, g, b, a, t, attr, p) = stmt.get_row(i);
+        int64_t id;
+        std::tie(id) = stmt.get_row(i);
         ret.push_back(std::unique_ptr<osm::Element>(new osm::Way(id)));
     }
 
@@ -123,6 +121,16 @@ double DisplayDB::center_lat()
 double DisplayDB::center_lon()
 {
     return clon;
+}
+
+int DisplayDB::get_min_zoom()
+{
+    return minz;
+}
+
+int DisplayDB::get_max_zoom()
+{
+    return maxz;
 }
 
 } /* namespace display */

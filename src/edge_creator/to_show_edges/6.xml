@@ -6,7 +6,7 @@
 			</red>
 			<green>
 				0.2
-			</gree>
+			</green>
 			<blue>
 				0.2
 			</blue>
@@ -41,7 +41,7 @@
 			</red>
 			<green>
 				0.2
-			</gree>
+			</green>
 			<blue>
 				0.2
 			</blue>
@@ -76,7 +76,7 @@
 			</red>
 			<green>
 				0.2
-			</gree>
+			</green>
 			<blue>
 				0.8
 			</blue>
@@ -111,7 +111,7 @@
 			</red>
 			<green>
 				0.2
-			</gree>
+			</green>
 			<blue>
 				0.8
 			</blue>
@@ -146,7 +146,7 @@
 			</red>
 			<green>
 				0.8
-			</gree>
+			</green>
 			<blue>
 				0.2
 			</blue>
@@ -181,7 +181,7 @@
 			</red>
 			<green>
 				0.8
-			</gree>
+			</green>
 			<blue>
 				0.2
 			</blue>
@@ -216,7 +216,7 @@
 			</red>
 			<green>
 				0.6
-			</gree>
+			</green>
 			<blue>
 				0.1
 			</blue>
@@ -251,7 +251,7 @@
 			</red>
 			<green>
 				0.6
-			</gree>
+			</green>
 			<blue>
 				0.1
 			</blue>
@@ -352,11 +352,46 @@
     <entry>
 		<add>
 			<red>
+				0.8
+			</red>
+			<green>
+				0.2
+			</green>
+			<blue>
+				0.8
+			</blue>
+			<alpha>
+				1.0
+			</alpha>
+			<thickness>
+				1.5
+			</thickness>
+			<style>
+				2
+			</style>
+			<priority>
+				-19
+			</priority>
+		</add>
+		<elements>
+			<el>
+				<key>
+					admin_level
+				</key>
+				<value>
+                    2
+				</value>
+			</el>
+		</elements>
+	</entry>
+    <entry>
+		<add>
+			<red>
 				0.5
 			</red>
 			<green>
 				0.7
-			</gree>
+			</green>
 			<blue>
 				1.0
 			</blue>
@@ -391,7 +426,7 @@
 			</red>
 			<green>
 				0.7
-			</gree>
+			</green>
 			<blue>
 				1.0
 			</blue>
@@ -415,41 +450,6 @@
 				</key>
 				<value>
                     stream
-				</value>
-			</el>
-		</elements>
-	</entry>
-    <entry>
-		<add>
-			<red>
-				0.8
-			</red>
-			<green>
-				0.2
-			</gree>
-			<blue>
-				0.8
-			</blue>
-			<alpha>
-				1.0
-			</alpha>
-			<thickness>
-				1.5
-			</thickness>
-			<style>
-				2
-			</style>
-			<priority>
-				-19
-			</priority>
-		</add>
-		<elements>
-			<el>
-				<key>
-					admin_level
-				</key>
-				<value>
-                    2
 				</value>
 			</el>
 		</elements>

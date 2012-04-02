@@ -128,7 +128,14 @@ void OsmDatabase::create_tables()
     sqllib::get_create_relation_members(db).execute();
     sqllib::get_create_import_seq(db).execute();
     sqllib::get_create_import_table(db).execute();
+    sqllib::get_create_bounds_table(db).execute();
 
+}
+
+void OsmDatabase::update_metadata()
+{
+    sqllib::get_delete_bounds(db).execute();
+    sqllib::get_insert_bounds(db).execute();
 }
 
 void OsmDatabase::create_edge_tables()

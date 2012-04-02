@@ -41,6 +41,8 @@ public:
     std::vector<std::unique_ptr<display::Descriptible> > get_selected(geo::Point const& topleft, geo::Point const& bottomright, int zoom);
     double center_lat();
     double center_lon();
+    int get_min_zoom();
+    int get_max_zoom();
 private:
     osmdb::OsmDatabase& db;
     osmdb::PropertiesSelection pdb;

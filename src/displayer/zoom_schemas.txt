@@ -1,5 +1,8 @@
 1	zoom1
+2	zoom2
 3	zoom3
+4	zoom4
 5	zoom5
-9	zoom9
-15	zoom9
+6	zoom6
+8	zoom8
+15	zoom8

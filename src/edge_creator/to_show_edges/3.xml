@@ -6,7 +6,7 @@
 			</red>
 			<green>
 				0.2
-			</gree>
+			</green>
 			<blue>
 				0.2
 			</blue>
@@ -37,25 +37,25 @@
 	<entry>
 		<add>
 			<red>
-				0.8
+				0.9
 			</red>
 			<green>
-				0.2
-			</gree>
+				0.5
+			</green>
 			<blue>
-				0.2
+				0.1
 			</blue>
 			<alpha>
 				1.0
 			</alpha>
 			<thickness>
-				2.0
+				1.5
 			</thickness>
 			<style>
 				0
 			</style>
 			<priority>
-				0
+				1
 			</priority>
 		</add>
 		<elements>
@@ -64,7 +64,7 @@
 					highway
 				</key>
 				<value>
-					primary_link
+					secondary
 				</value>
 			</el>
 		</elements>
@@ -76,7 +76,7 @@
 			</red>
 			<green>
 				0.2
-			</gree>
+			</green>
 			<blue>
 				0.8
 			</blue>
@@ -104,41 +104,6 @@
 			</el>
 		</elements>
 	</entry>
-	<entry>
-		<add>
-			<red>
-				0.2
-			</red>
-			<green>
-				0.2
-			</gree>
-			<blue>
-				0.8
-			</blue>
-			<alpha>
-				1.0
-			</alpha>
-			<thickness>
-				2.0
-			</thickness>
-			<style>
-				0
-			</style>
-			<priority>
-				-2
-			</priority>
-		</add>
-		<elements>
-			<el>
-				<key>
-					highway
-				</key>
-				<value>
-					motorway_link
-				</value>
-			</el>
-		</elements>
-	</entry>
     <entry>
 		<add>
 			<red>
@@ -146,7 +111,7 @@
 			</red>
 			<green>
 				0.8
-			</gree>
+			</green>
 			<blue>
 				0.2
 			</blue>
@@ -174,41 +139,6 @@
 			</el>
 		</elements>
 	</entry>
-	<entry>
-		<add>
-			<red>
-				0.2
-			</red>
-			<green>
-				0.8
-			</gree>
-			<blue>
-				0.2
-			</blue>
-			<alpha>
-				1.0
-			</alpha>
-			<thickness>
-				3.0
-			</thickness>
-			<style>
-				0
-			</style>
-			<priority>
-				-1
-			</priority>
-		</add>
-		<elements>
-			<el>
-				<key>
-					highway
-				</key>
-				<value>
-                    trunk_link
-				</value>
-			</el>
-		</elements>
-	</entry>
     <entry>
 		<add>
 			<red>
@@ -216,7 +146,7 @@
 			</red>
 			<green>
 				0.7
-			</gree>
+			</green>
 			<blue>
 				1.0
 			</blue>
@@ -251,7 +181,7 @@
 			</red>
 			<green>
 				0.2
-			</gree>
+			</green>
 			<blue>
 				0.8
 			</blue>

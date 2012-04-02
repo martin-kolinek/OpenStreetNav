@@ -169,6 +169,19 @@ void ImportTableProcessor::process()
         action_signal(ImportTableAction::DELETE_DUPLICIT_RELATION, st.affected_rows());
     }
 
+    st = sqllib::get_do_import1(db.get_db());
+    if (enabled[ImportTableAction::IMPORT_NODE])
+    {
+        st.execute();
+        action_signal(ImportTableAction::IMPORT_NODE, st.affected_rows());
+    }
+    st = sqllib::get_do_import2(db.get_db());
+    if (enabled[ImportTableAction::IMPORT_WAY])
+    {
+        st.execute();
+        action_signal(ImportTableAction::IMPORT_WAY, st.affected_rows());
+    }
+
     //incomplete
     st = sqllib::get_delete_incomplete_ways(db.get_db());
     if (enabled[ImportTableAction::DELETE_INCOMPLETE_WAY])
@@ -260,18 +273,7 @@ void ImportTableProcessor::process()
     if (proceed_signal())
     {
         //import
-        st = sqllib::get_do_import1(db.get_db());
-        if (enabled[ImportTableAction::IMPORT_NODE])
-        {
-            st.execute();
-            action_signal(ImportTableAction::IMPORT_NODE, st.affected_rows());
-        }
-        st = sqllib::get_do_import2(db.get_db());
-        if (enabled[ImportTableAction::IMPORT_WAY])
-        {
-            st.execute();
-            action_signal(ImportTableAction::IMPORT_WAY, st.affected_rows());
-        }
+
         st = sqllib::get_do_import3(db.get_db());
         if (enabled[ImportTableAction::IMPORT_RELATION])
         {

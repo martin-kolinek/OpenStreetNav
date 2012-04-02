@@ -56,6 +56,10 @@ public:
      * @return center longitude of all data this DisplayProvider can get
      */
     virtual double center_lon() = 0;
+
+    virtual int get_min_zoom() = 0;
+    virtual int get_max_zoom() = 0;
+
     virtual ~DisplayProvider();
 };
 

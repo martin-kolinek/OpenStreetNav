@@ -1,0 +1,4 @@
+highway/motorway
+highway/trunk
+waterway/river
+admin_level/2

@@ -11,7 +11,8 @@
 namespace wayred
 {
 
-WayNodeFilter::WayNodeFilter()
+WayNodeFilter::WayNodeFilter(double dist_limit):
+    dist_limit(dist_limit)
 {
 }
 
@@ -24,8 +25,12 @@ osm::Way WayNodeFilter::process_way(const osm::Way& w, const std::multimap<osm::
     osm::Way ret(w.id);
     for (auto it = w.nodes.begin(); it != w.nodes.end(); ++it)
     {
-        if (it == w.nodes.begin() || has_important_ways(it->second, ndmap) || it == --w.nodes.end())
+        geo::Point last_point = (*w.nodes.begin()).second.position;
+        if (it == w.nodes.begin() || has_important_ways(it->second, ndmap) || geo::get_point_distance(EARTH_RADIUS, last_point, it->second.position) > dist_limit || it == --w.nodes.end())
+        {
+            last_point = it->second.position;
             ret.add_node(it->second, it->first);
+        }
     }
     return ret;
 }

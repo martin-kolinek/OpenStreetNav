@@ -22,6 +22,7 @@ ToShowSelectCollection::ToShowSelectCollection(std::vector<std::string> const& s
     {
         db.set_schema(*it);
         statements.push_back(sqllib::get_select_edges_in_box(db, true, util::concatenate("", "select_edge_stmt", i++)));
+        select_statements.push_back(sqllib::get_select_edges_in_exact_box(db, true, util::concatenate("", "select_edge_stmt2", i++)));
     }
     db.set_schema(sch);
 }
@@ -29,6 +30,11 @@ ToShowSelectCollection::ToShowSelectCollection(std::vector<std::string> const& s
 psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int, int64_t, double, double, int, int64_t, double, double, int64_t, double, double, double, double, double, int, int> >& ToShowSelectCollection::get_edges_for_zoom(int zoom)
 {
     return statements[zoom - offset];
+}
+
+psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t> >& ToShowSelectCollection::get_select_statement(int zoom)
+{
+    return select_statements[zoom-offset];
 }
 
 }

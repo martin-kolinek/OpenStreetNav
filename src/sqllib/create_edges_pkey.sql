@@ -2,7 +2,7 @@
 --test-depend create_edges_table
 --test-param
 
-ALTER TABLE Edges ADD CONSTRAINT PK_Edges PRIMARY KEY (WayID, StartSequenceNo, EndSequenceNo)
+ALTER TABLE Edges ADD CONSTRAINT PK_Edges PRIMARY KEY (WayID, StartSequenceNo, EndSequenceNo, Priority)
 
 --name cluster_edges
 --type psql::BindTypes<>, psql::RetTypes<>

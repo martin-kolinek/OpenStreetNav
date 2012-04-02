@@ -1,0 +1,7 @@
+highway/primary
+highway/secondary
+highway/tertiary
+highway/motorway
+highway/trunk
+waterway/river
+admin_level/2

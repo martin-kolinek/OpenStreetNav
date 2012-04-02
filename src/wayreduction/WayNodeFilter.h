@@ -26,7 +26,7 @@ namespace wayred
 class WayNodeFilter
 {
 public:
-    WayNodeFilter();
+    WayNodeFilter(double dist_limit = std::numeric_limits<double>::infinity());
     virtual ~WayNodeFilter();
     /**
      * Process individual way.
@@ -55,6 +55,7 @@ public:
      */
     void add_important(std::string const& key, std::string const& val);
 private:
+    double dist_limit;
     std::set<std::pair<std::string, std::string> > important;
     bool has_important_ways(osm::Node const& n, std::multimap<osm::Node, osm::Way, osm::LtByID> const& ndmap);
 };

@@ -216,7 +216,14 @@ int import(std::string const& inp, std::string const& dbname, std::string const&
         if (copy)
             copy_to_db(inp, db);
         if (import)
+        {
             status = process_import_table(db, quiet, recreate);
+            if (status)
+            {
+                std::cout << "Updating metadata" << std::endl;
+                db.update_metadata();
+            }
+        }
         if (recreate)
         {
             std::cout << "Recreating indexes and keys" << std::endl;

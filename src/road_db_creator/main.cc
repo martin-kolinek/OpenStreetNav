@@ -60,6 +60,10 @@ int main(int argc, char** argv)
     r_db.set_schema(reduced + "," + full);
     osmdb::OsmDatabase r_odb(r_db);
     psql::Database o_db(conn_str);
+    if (vm.count("initialize"))
+    {
+        o_db.create_schema(output);
+    }
     o_db.set_schema(output + "," + reduced + "," + full);
     osmdb::OsmDatabase o_odb(o_db);
 

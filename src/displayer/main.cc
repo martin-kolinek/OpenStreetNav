@@ -147,7 +147,6 @@ std::pair<int, std::vector<std::string> > extract_zooms(std::string const& file)
             ret.first = i;
             first = false;
         }
-        std::cout << ret.second.size() << " " << ret.first << " " << i << std::endl;
         while (ret.second.size() + ret.first < i)
             ret.second.push_back(ret.second.back());
         ret.second.push_back(match[2]);
@@ -224,16 +223,17 @@ int main(int argc, char** argv)
             std::cout << "Error extracting schemas for individual zoom levels" << std::endl;
             return 1;
         }
+        area->zoom_changed.connect([zoomer](int val)
+        {
+            zoomer->get_adjustment()->set_value(val);
+        });
         std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, p.second, p.first));
         area->add_dp(1, dispdb);
         std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(0, 1, 1, 1, 2.5, false)));
         area->add_dp(3, high);
         std::shared_ptr<display::EdgeHighlighter> high_path(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(1, 1, 1, 1, 2.5, false)));
         area->add_dp(2, high_path);
-        area->zoom_changed.connect([zoomer](int val)
-        {
-            zoomer->get_adjustment()->set_value(val);
-        });
+
         area->element_clicked.connect([view, &high, area](std::vector<std::unique_ptr<display::Descriptible> > const & els)
         {
             view->get_buffer()->set_text(get_els_text(els));

@@ -75,6 +75,8 @@ public:
 
     void drop_edge_keys_and_indexes();
 
+    void update_metadata();
+
 private:
     psql::Database& db;
 };

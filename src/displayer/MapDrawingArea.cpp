@@ -17,7 +17,7 @@ namespace display
 MapDrawingArea::MapDrawingArea(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> &):
     Gtk::DrawingArea(cobject),
     pressed(false),
-    zoom(6),
+    zoom(1),
     tran_x(0),
     tran_y(0),
     topleft(-1, -1),
@@ -36,8 +36,11 @@ void MapDrawingArea::add_dp(int priority, std::shared_ptr<DisplayProvider> dp)
     dps.insert(std::pair<int, std::shared_ptr<DisplayProvider> >(-priority, dp));
     if (dps.size() == 1)
     {
+        min_z = dp->get_min_zoom();
+        max_z = dp->get_max_zoom();
         lat = dp->center_lat();
         lon = dp->center_lon();
+        set_zoom(min_z);
     }
     after_change();
 }
@@ -205,6 +208,7 @@ void MapDrawingArea::redraw_from_db()
         }
     };
     std::set<std::shared_ptr<DisplayElement>, DisplayElemPtrLess> displayed;
+    std::vector<std::shared_ptr<DisplayElement> > to_draw;
     for (auto it = dps.begin(); it != dps.end(); ++it)
     {
         auto els = it->second->get_display_elements();
@@ -212,11 +216,17 @@ void MapDrawingArea::redraw_from_db()
         {
             if (displayed.find(*it2) == displayed.end())
             {
-                (*it2)->draw(cr, *proj);
+                to_draw.push_back(*it2);
                 displayed.insert(*it2);
             }
         }
     }
+
+    for (auto it = to_draw.rbegin(); it != to_draw.rend(); ++it)
+    {
+        (*it)->draw(cr, *proj);
+    }
+
     invalidate();
 }
 
@@ -264,7 +274,7 @@ void MapDrawingArea::setup_db()
 
 int MapDrawingArea::set_zoom(int z)
 {
-    zoom = std::max(std::min(z, 15), 1);
+    zoom = std::max(std::min(z, max_z), min_z);
     after_change();
     zoom_changed(zoom);
     return zoom;

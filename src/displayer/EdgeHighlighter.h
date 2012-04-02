@@ -21,6 +21,8 @@ public:
     std::vector<std::unique_ptr<Descriptible> > get_selected(geo::Point const& , geo::Point const& , int );
     double center_lat();
     double center_lon();
+    int get_min_zoom();
+    int get_max_zoom();
     virtual ~EdgeHighlighter();
 private:
     EdgeHighlightable& src;

@@ -85,4 +85,14 @@ void EdgeHighlighter::clear()
     renew_cache = true;
 }
 
+int EdgeHighlighter::get_min_zoom()
+{
+    return 0;
+}
+
+int EdgeHighlighter::get_max_zoom()
+{
+    return 0;
+}
+
 }

@@ -1,0 +1,15 @@
+highway/primary
+highway/secondary
+highway/tertiary
+highway/motorway
+highway/trunk
+waterway/river
+waterway/stream
+admin_level/2
+highway/trunk_link
+highway/residential
+highway/unclassified
+highway/primary_link
+highway/secondary_link
+highway/tertiary_link
+highway/motorway_link
