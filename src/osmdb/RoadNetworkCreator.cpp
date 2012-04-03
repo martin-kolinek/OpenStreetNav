@@ -69,11 +69,6 @@ void RoadNetworkCreator::copy_road_network_data()
     sqllib::get_create_road_edges_fkey(destination.get_db()).execute();
 }
 
-void RoadNetworkCreator::insert_road_edge(roads::RoadEdgeWithNodes const& re)
-{
-    sqllib::get_insert_road_edge(destination.get_db()).execute(re.way_id, re.start_node.id, re.end_node.id, re.start_seq_no, re.end_seq_no, re.forward, re.cost);
-}
-
 RoadNetworkCreator::~RoadNetworkCreator()
 {
 }

@@ -8,6 +8,10 @@ CREATE TABLE RoadEdges (
     EndNodeID bigint,
     StartSequenceNo int,
     EndSequenceNo int,
+    StartLon float8,
+    StartLat float8,
+    EndLon float8,
+    EndLat float8,
     Forward boolean,
     Cost float8
 )
@@ -20,18 +24,14 @@ CREATE TABLE RoadEdges (
 --test-param
 
 CREATE VIEW ViewRoadEdges AS
-    SELECT n1.ID as StartNodeID, n1.Location as StartNodeLocation,
-           n2.ID as EndNodeID, n2.Location as EndNodeLocation,
+    SELECT r.StartNodeID as StartNodeID, r.StartLon as StartLon, r.StartLat as StartLat,
+           r.EndNodeID as EndNodeID, r.EndLon as EndLon, r.EndLat as EndLat,
            r.WayID as WayID, r.StartSequenceNo as StartSequenceNo, r.EndSequenceNo as EndSequenceNo, r.Forward as Forward, r.Cost as Cost FROM RoadEdges r 
-        INNER JOIN Nodes n1 ON r.StartNodeID = n1.ID
-        INNER JOIN Nodes n2 ON r.EndNodeID = n2.ID
             WHERE r.Forward = TRUE
-    UNION
-    SELECT n1.ID as StartNodeID, n1.Location as StartNodeLocation,
-           n2.ID as EndNodeID, n2.Location as EndNodeLocation,
+    UNION ALL
+    SELECT r.EndNodeID as StartNodeID, r.EndLon as StartLon, r.EndLat as StartLat,
+           r.StartNodeID as EndNodeID, r.StartLon as EndLon, r.StartLat as EndLat,
            r.WayID as WayID, r.StartSequenceNo as StartSequenceNo, r.EndSequenceNo as EndSequenceNo, r.Forward as Forward, r.Cost as Cost FROM RoadEdges r  
-        INNER JOIN Nodes n1 ON r.EndNodeID = n1.ID 
-        INNER JOIN Nodes n2 ON r.StartNodeID = n2.ID 
             WHERE r.Forward = FALSE 
 
 --name create_road_edges_pkey
@@ -69,18 +69,19 @@ ALTER TABLE RoadEdges ADD CONSTRAINT FK_RoadEdgesEdges FOREIGN KEY (WayID, Start
 ALTER TABLE RoadEdges DROP CONSTRAINT FK_RoadEdgesEdges
 
 --name copy_road_network
---type psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int64_t, int64_t, int64_t, int, int, bool, double>
+--type psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int64_t, int64_t, int64_t, int, int, double, double, double, double, bool, double>
 --test-depend create_road_edges_table
 --test-param
 
-COPY RoadEdges (WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenceNo, Forward, Cost) FROM STDIN
+COPY RoadEdges (WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenceNo, StartLon, StartLat, EndLon, EndLat, Forward, Cost) FROM STDIN
 
 --name insert_road_edge
---type psql::BindTypes<int64_t, int64_t, int64_t, int, int, bool, double>, psql::RetTypes<>
+--type psql::BindTypes<int64_t, int64_t, int64_t, int, int, double, double, double, double, bool, double>, psql::RetTypes<>
 --test-depend create_road_edges_table
---test-param 1, 2, 1, 0, 1, true, 1.0
+--test-param 1, 2, 1, 0, 1, 1, 0, 2, 1, true, 1.0
 
-INSERT INTO RoadEdges(WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenceNo, Forward, Cost) VALUES ($1, $2, $3, $4, $5, $6, $7)
+INSERT INTO RoadEdges(WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenceNo, StartLon, StartLat, EndLon, EndLat, Forward, Cost) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
                   
 --name select_road_edges
 --type psql::BindTypes<>, psql::RetTypes<int64_t, double, double, int64_t, double, double, int64_t, int, int, bool, double>
@@ -92,12 +93,12 @@ INSERT INTO RoadEdges(WayID, StartNodeID, EndNodeID, StartSequenceNo, EndSequenc
 --test-depend insert_node 2, 2, 2
 --test-depend insert_way_node 1, 2, 0, 1
 --test-depend insert_way_node 1, 1, 1, -1
---test-depend insert_road_edge 1, 2, 1, 0, 1, 1, 1
+--test-depend insert_road_edge 1, 2, 1, 0, 1, 1, 2, 2, 2, true, 1
 --test-param
 --test-result 0
                             
 SELECT 
-    StartNodeID, ST_X(StartNodeLocation::geometry), ST_Y(StartNodeLocation::geometry), 
-    EndNodeID, ST_X(EndNodeLocation::geometry), ST_Y(EndNodeLocation::geometry), 
+    StartNodeID, StartLon, StartLat,
+    EndNodeID, EndLon, EndLat,
     WayID, StartSequenceNo, EndSequenceNo, Forward, Cost FROM ViewRoadEdges
        

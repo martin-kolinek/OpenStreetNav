@@ -27,19 +27,23 @@ private:
         auto it = r.begin();
         assert(it != r.end());
         auto last_pos = it->second.position;
+        osm::Node st_node(start->second);
+        st_node.position=last_pos;
+        osm::Node en_node(end->second);
         for (++it; it != r.end(); ++it)
         {
             ln += geo::get_point_distance(EARTH_RADIUS, it->second.position, last_pos);
             last_pos = it->second.position;
         }
+        en_node.position=last_pos;
         if (one_way(w))
         {
-            v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, get_dir(w), ln, start->second, end->second));
+            v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, get_dir(w), ln, st_node, en_node));
         }
         else
         {
-            v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, true, ln, start->second, end->second));
-            v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, false, ln, start->second, end->second));
+            v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, true, ln, st_node, en_node));
+            v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, false, ln, st_node, en_node));
         }
     }
 

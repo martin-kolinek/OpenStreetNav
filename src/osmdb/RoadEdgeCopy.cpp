@@ -24,7 +24,7 @@ void RoadEdgeCopy::start_copy()
 
 void RoadEdgeCopy::copy_edge(const roads::RoadEdgeWithNodes& re)
 {
-    st.copy_data(re.way_id, re.start_node.id, re.end_node.id, re.start_seq_no, re.end_seq_no, re.forward, re.cost);
+    st.copy_data(re.way_id, re.start_node.id, re.end_node.id, re.start_seq_no, re.end_seq_no, re.start_node.position.lon, re.start_node.position.lat, re.end_node.position.lon, re.end_node.position.lat, re.forward, re.cost);
 }
 
 void RoadEdgeCopy::end_copy()

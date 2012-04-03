@@ -24,7 +24,7 @@ public:
     virtual ~RoadEdgeCopy();
 private:
     OsmDatabase& db;
-    psql::Statement<psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int64_t, int64_t, int64_t, int, int, bool, double> > st;
+    psql::Statement<psql::BindTypes<>, psql::RetTypes<>, psql::CopyTypes<int64_t, int64_t, int64_t, int, int, double, double, double, double, bool, double> > st;
 };
 
 } /* namespace osmdb */
