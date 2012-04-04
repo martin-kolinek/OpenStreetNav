@@ -20,4 +20,4 @@ SCHBASE=$1
 #wayreduction for roads
 ./bin/wayreduction -b ${SCHBASE} -s ${SCHBASE}_red -I share/way.txt
 #roads
-./bin/roaddbcreate -f ${SCHBASE} -r ${SCHBASE}_red -o roads -n -I share/way.txt
+./bin/roaddbcreate -f ${SCHBASE} -r ${SCHBASE}_red -o ${SCHBASE}_roads -n -I share/way.txt

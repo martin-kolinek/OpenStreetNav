@@ -14,7 +14,7 @@ CREATE TABLE Edges (
     Thickness float8,
     Style int,
     Priority int,
-    Location geography(LINESTRING, 4326)
+    Location geography(LINESTRING)
     )
 
 --name create_edges_start_waynode_fkey

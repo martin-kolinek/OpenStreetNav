@@ -96,9 +96,9 @@ BOOST_AUTO_TEST_CASE(wayregion)
     BOOST_CHECK(!wr.intersects(e2));
     BOOST_CHECK(wr.intersects(e3));
     BOOST_CHECK(wr.intersects(e4));
-    BOOST_CHECK(!wr.intersects(e5));
+    BOOST_CHECK(wr.intersects(e5));
     BOOST_CHECK(!wr.intersects(e6));
-    BOOST_CHECK(!wr.intersects(e7));
+    BOOST_CHECK(wr.intersects(e7));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

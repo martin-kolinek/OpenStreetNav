@@ -28,14 +28,14 @@ private:
         assert(it != r.end());
         auto last_pos = it->second.position;
         osm::Node st_node(start->second);
-        st_node.position=last_pos;
+        st_node.position = last_pos;
         osm::Node en_node(end->second);
         for (++it; it != r.end(); ++it)
         {
             ln += geo::get_point_distance(EARTH_RADIUS, it->second.position, last_pos);
             last_pos = it->second.position;
         }
-        en_node.position=last_pos;
+        en_node.position = last_pos;
         if (one_way(w))
         {
             v.push_back(roads::RoadEdgeWithNodes(w.id, start->first, end->first, get_dir(w), ln, st_node, en_node));

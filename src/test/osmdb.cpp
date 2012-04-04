@@ -549,7 +549,7 @@ BOOST_AUTO_TEST_CASE(road_create)
     osm::Node n2(2, 1, 0);
     osm::Node n3(3, 1, 1);
     osm::Node n4(4, 0, 1);
-    std::vector<geo::Point> positions{n1.position, n2.position, n3.position, n4.position};
+    std::vector<geo::Point> positions {n1.position, n2.position, n3.position, n4.position};
     full_ins.insert_node(n1);
     full_ins.insert_node(n2);
     full_ins.insert_node(n3);
@@ -580,8 +580,8 @@ BOOST_AUTO_TEST_CASE(road_create)
         auto tup = st.get_row(i);
         geo::Point p1(std::get<2>(tup), std::get<1>(tup));
         geo::Point p2(std::get<5>(tup), std::get<4>(tup));
-        BOOST_CHECK(boost::range::find(positions, p1)!=positions.end());
-        BOOST_CHECK(boost::range::find(positions, p2)!=positions.end());
+        BOOST_CHECK(boost::range::find(positions, p1) != positions.end());
+        BOOST_CHECK(boost::range::find(positions, p2) != positions.end());
         int i1 = std::get<7>(tup);
         int i2 = std::get<8>(tup);
         if (i2 - i1 == 2)
