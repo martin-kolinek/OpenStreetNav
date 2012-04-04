@@ -92,13 +92,13 @@ BOOST_AUTO_TEST_CASE(wayregion)
     osm::Edge e5(osm::Node(1), 1, osm::Node(5), 5, osm::Way(1));
     osm::Edge e6(osm::Node(5), 5, osm::Node(6), 6, osm::Way(1));
     osm::Edge e7(osm::Node(7), 7, osm::Node(9), 9, osm::Way(1));
-    BOOST_CHECK(!wr.contains(e1));
-    BOOST_CHECK(!wr.contains(e2));
-    BOOST_CHECK(wr.contains(e3));
-    BOOST_CHECK(wr.contains(e4));
-    BOOST_CHECK(!wr.contains(e5));
-    BOOST_CHECK(!wr.contains(e6));
-    BOOST_CHECK(!wr.contains(e7));
+    BOOST_CHECK(!wr.intersects(e1));
+    BOOST_CHECK(!wr.intersects(e2));
+    BOOST_CHECK(wr.intersects(e3));
+    BOOST_CHECK(wr.intersects(e4));
+    BOOST_CHECK(!wr.intersects(e5));
+    BOOST_CHECK(!wr.intersects(e6));
+    BOOST_CHECK(!wr.intersects(e7));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

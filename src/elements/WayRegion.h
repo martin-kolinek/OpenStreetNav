@@ -24,7 +24,7 @@ public:
         std::sort(this->regions.begin(), this->regions.end());
     }
 
-    bool contains(SeqEdge const& e) const;
+    bool intersects(SeqEdge const& e) const;
 
     bool operator==(WayRegion const& other) const;
     bool operator!=(WayRegion const& other) const;

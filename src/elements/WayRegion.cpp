@@ -15,7 +15,7 @@ WayRegion::WayRegion(Way const& w):
     regions.push_back(std::make_pair(st, last));
 }
 
-bool WayRegion::contains(SeqEdge const& e) const
+bool WayRegion::intersects(SeqEdge const& e) const
 {
     if (e.get_way().id != w.id)
         return false;
@@ -23,7 +23,7 @@ bool WayRegion::contains(SeqEdge const& e) const
     {
         int st = regions[i].first;
         int en = regions[i].second;
-        if (e.get_start_seq_no() >= st && e.get_end_seq_no() <= en)
+        if (e.get_end_seq_no() > st && e.get_start_seq_no() < en)
             return true;
     }
     return false;
