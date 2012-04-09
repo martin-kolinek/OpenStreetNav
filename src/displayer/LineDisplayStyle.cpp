@@ -11,7 +11,7 @@
 namespace display
 {
 
-LineDisplayStyle::LineDisplayStyle(double red, double green, double blue, double alpha, double thickness, bool arrow):
+LineDisplayStyle::LineDisplayStyle(double red, double green, double blue, double alpha, double thickness, ArrowStyle arrow):
     red(red),
     green(green),
     blue(blue),
@@ -21,7 +21,7 @@ LineDisplayStyle::LineDisplayStyle(double red, double green, double blue, double
 {
 }
 
-bool LineDisplayStyle::draw_arrow() const
+ArrowStyle LineDisplayStyle::draw_arrow() const
 {
     return arrow;
 }

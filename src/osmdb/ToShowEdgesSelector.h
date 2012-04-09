@@ -35,10 +35,14 @@ public:
             double lon1, lat1, lon2, lat2, r, g, b, a, t;
             int64_t id1, id2, wid;
             int attrs, p, sq1, sq2;
-            bool arrow = attrs & 1;
             std::tie(sq1, id1, lon1, lat1, sq2, id2, lon2, lat2, wid, r, g, b, a, t, attrs, p) = st.get_row(i);
+            display::ArrowStyle arr = display::ArrowStyle::None;
+            if (attrs & 1)
+                arr = display::ArrowStyle::Forward;
+            if (attrs & 2)
+                arr = display::ArrowStyle::Reversed;
             ret.push_back(std::make_pair(osm::Edge(osm::Node(id1, lat1, lon1), sq1, osm::Node(id2, lat2, lon2), sq2, osm::Way(wid)),
-                                         display::LineDisplayStyle(r, g, b, a, t, arrow)));
+                                         display::LineDisplayStyle(r, g, b, a, t, arr)));
         }
         return ret;
     }

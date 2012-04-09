@@ -65,11 +65,16 @@ void DisplayLine::draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProje
 {
     auto pp1 = pr.project(edge.get_start_node().position);
     auto pp2 = pr.project(edge.get_end_node().position);
-    if (style->draw_arrow())
+    if (style->draw_arrow() != ArrowStyle::None)
     {
         double l = sqrt((pp2.x - pp1.x) * (pp2.x - pp1.x) + (pp2.y - pp1.y) * (pp2.y - pp1.y));
         double norm_x = (pp2.x - pp1.x) / (l * 100);
         double norm_y = (pp2.y - pp1.y) / (l * 100);
+        if (style->draw_arrow() != ArrowStyle::Forward)
+        {
+            norm_x = -norm_x;
+            norm_y = -norm_y;
+        }
         if (isnan(norm_x))
             norm_x = 0;
         if (isnan(norm_y))

@@ -13,18 +13,19 @@
 namespace display
 {
 
+
 class LineDisplayStyle : public DisplayStyle
 {
 public:
-    LineDisplayStyle(double red, double green, double blue, double alpha, double thickness, bool arrow);
+    LineDisplayStyle(double red, double green, double blue, double alpha, double thickness, ArrowStyle arrow);
     virtual ~LineDisplayStyle();
     void prepare(Cairo::RefPtr<Cairo::Context> cr) const;
     void exec(Cairo::RefPtr<Cairo::Context> cr) const;
-    bool draw_arrow() const;
+    ArrowStyle draw_arrow() const;
     std::shared_ptr<DisplayStyle> copy() const;
     std::shared_ptr<DisplayStyle> accept(DisplayStyleChanger const& c) const;
     double red, green, blue, alpha;
-    bool arrow;
+    ArrowStyle arrow;
     double get_thickness() const;
 private:
     double thickness;
