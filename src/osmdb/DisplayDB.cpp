@@ -15,14 +15,16 @@
 namespace osmdb
 {
 
-DisplayDB::DisplayDB(osmdb::OsmDatabase& db, std::vector<std::string> schemas, int offset)
+DisplayDB::DisplayDB(osmdb::OsmDatabase& db, std::vector<std::string> schemas, int offset, std::shared_ptr<EdgeTranslator> const& transl)
     : db(db),
-      pdb(db),
       minz(offset),
       maxz(offset + schemas.size() - 1),
       coll(schemas, offset, db.get_db()),
+      transl(transl),
       get_bounds(sqllib::get_select_bounds(db.get_db()))
 {
+    if (!this->transl)
+        this->transl = std::shared_ptr<EdgeTranslator>(new EdgeTranslator());
     get_bounds.execute();
     if (get_bounds.row_count() == 0)
     {
@@ -75,28 +77,18 @@ std::vector<std::shared_ptr<display::Descriptible> > DisplayDB::get_selected(con
     double lower = std::min(p1.lat, p2.lat);
     double higher = std::max(p1.lat, p2.lat);
 
-    std::vector<std::shared_ptr<osm::Element> > ret;
+    std::vector<osm::Edge> edges;
     auto& stmt = coll.get_select_statement(zoom);
     stmt.execute(left, lower, right, higher);
     for (int i = 0; i < stmt.row_count(); ++i)
     {
-        int64_t id;
-        std::tie(id) = stmt.get_row(i);
-        ret.push_back(std::shared_ptr<osm::Element>(new osm::Way(id)));
+        int64_t wid, sid, eid;
+        int ssq, esq;
+        std::tie(wid, ssq, sid, esq, eid) = stmt.get_row(i);
+        edges.push_back(osm::Edge(osm::Node(sid), ssq, osm::Node(eid), esq, osm::Way(wid)));
     }
 
-    for (unsigned int i = 0; i < ret.size(); ++i)
-    {
-        ret[i]->fill(pdb);
-    }
-    std::vector<std::shared_ptr<display::Descriptible> > ret2;
-    ret2.reserve(ret.size());
-    for (auto it = ret.begin(); it != ret.end(); ++it)
-    {
-        ret2.push_back(std::shared_ptr<display::Descriptible>(new display::DescriptibleElement(*it)));
-    }
-
-    return ret2;
+    return transl->translate(edges);
 }
 
 double DisplayDB::center_lat()

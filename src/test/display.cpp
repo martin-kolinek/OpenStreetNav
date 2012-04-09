@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(highlight)
     ecr.create_tables();
     ecr.insert_data();
     pdb.commit_transaction();
-    osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1);
+    osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1, std::shared_ptr<osmdb::EdgeTranslator>(new osmdb::ElementEdgeTranslator(odb)));
     display::EdgeHighlighter high(db, std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(1, 1, 1, 1)));
     high.add_descriptible(display::DescriptibleElement(std::shared_ptr<osm::Element>(new osm::Way(w))));
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);

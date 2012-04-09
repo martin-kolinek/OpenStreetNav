@@ -20,5 +20,6 @@
 #include "RoadNetworkCreator.h"
 #include "EdgeCreator.h"
 #include "RoadLister.h"
+#include "ElementEdgeTranslator.h"
 
 #endif /* OSMDB_H_ */

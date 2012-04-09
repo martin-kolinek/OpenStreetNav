@@ -166,7 +166,7 @@ int main(int argc, char** argv)
     int zoom = -1;
     Glib::OptionGroup gr("displayer", "displayer options");
     auto e1 = make_entry("database", 'd', "database to connect to");
-    auto e2 = make_entry("schema", 's', "additional schema to look into");
+    auto e2 = make_entry("schema", 's', "map properties schema");
     auto e3 = make_entry("latitude", 'y', "starting center latitude");
     auto e4 = make_entry("longitude", 'x', "starting center longitude");
     auto e5 = make_entry("zoom", 'z', "starting zoom level");
@@ -228,7 +228,15 @@ int main(int argc, char** argv)
         {
             zoomer->get_adjustment()->set_value(val);
         });
-        std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, p.second, p.first));
+        std::shared_ptr<osmdb::EdgeTranslator> tr;
+        psql::Database addpdb(conninfo);
+        osmdb::OsmDatabase addodb(addpdb);
+        if (schema != "")
+        {
+            addpdb.set_schema(schema);
+            tr = std::shared_ptr<osmdb::EdgeTranslator>(new osmdb::ElementEdgeTranslator(addodb));
+        }
+        std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, p.second, p.first, tr));
         area->add_dp(1, dispdb);
         std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb,
                 std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0, 1, 1, 1, 0.5))));

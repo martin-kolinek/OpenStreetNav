@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE(empty_displaydb)
     odb.create_indexes_and_keys();
     ecr.create_tables();
     ecr.create_keys_and_indexes();
-    osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1);
+    osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1, std::shared_ptr<osmdb::EdgeTranslator>(new osmdb::ElementEdgeTranslator(odb)));
     db.set_bounds(geo::Point(0, 0), geo::Point(1, 1), 1);
 }
 
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE(simple_dispdb)
     boost::property_tree::xml_parser::read_xml(TEST_TO_SHOW_EDGES, tr, boost::property_tree::xml_parser::trim_whitespace);
     osmdb::EdgeCreator ecr(odb, tr);
     ecr.create_tables();
-    osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1);
+    osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1, std::shared_ptr<osmdb::EdgeTranslator>(new osmdb::ElementEdgeTranslator(odb)));
     osmdb::ElementInsertion ins(db.get_db());
     pdb.begin_transaction();
     osm::Node nd(1, 0.5, 0.5);

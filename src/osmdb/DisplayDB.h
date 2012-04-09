@@ -13,6 +13,7 @@
 #include "ToShowSelectCollection.h"
 #include "PropertiesSelection.h"
 #include "../displayer/LineDisplayStyle.h"
+#include "EdgeTranslator.h"
 #include "../displayer/Descriptible.h"
 
 namespace osmdb
@@ -32,7 +33,7 @@ public:
      * @param min_zoom minimum zoom level to draw
      * @param max_zoom maximum zoom level to draw
      */
-    DisplayDB(osmdb::OsmDatabase& db, std::vector<std::string> schemas, int offset);
+    DisplayDB(osmdb::OsmDatabase& db, std::vector<std::string> schemas, int offset, std::shared_ptr<EdgeTranslator> const& transl);
     virtual ~DisplayDB();
     element_range get_display_elements();
     osmdb::OsmDatabase& get_db();
@@ -44,12 +45,12 @@ public:
     int get_max_zoom();
 private:
     osmdb::OsmDatabase& db;
-    osmdb::PropertiesSelection pdb;
     std::vector<std::pair<osm::Edge, display::LineDisplayStyle> > display_elements;
     double clat;
     double clon;
     int minz, maxz;
     ToShowSelectCollection coll;
+    std::shared_ptr<EdgeTranslator> transl;
     psql::Statement<psql::BindTypes<>, psql::RetTypes<double, double, double, double> > get_bounds;
 };
 
