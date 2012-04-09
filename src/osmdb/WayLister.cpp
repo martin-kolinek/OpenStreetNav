@@ -20,7 +20,7 @@ void test_changed(int64_t , int64_t , double , double , int64_t , const std::str
 {
 }
 
-void cross_way_attr_comb(std::tuple<int64_t, int, int64_t, double, double, osm::Way>& res, const std::tuple<int64_t, int, int64_t, double, double, int64_t, std::string, std::string> & row)
+void cross_way_attr_comb(std::tuple<int64_t, int, int64_t, double, double, osm::Way>& res, const std::tuple<int64_t, int, int64_t, double, double, int64_t, std::string, std::string>& row)
 {
     util::sub_tie<0, 1, 2, 3, 4>(res) = util::sub_const_tie<0, 1, 2, 3, 4>(row);
     std::get<5>(res).id = std::get<5>(row);
@@ -28,7 +28,7 @@ void cross_way_attr_comb(std::tuple<int64_t, int, int64_t, double, double, osm::
         std::get<5>(res).tags.insert(osm::Tag(std::get<6>(row), std::get<7>(row)));
 }
 
-void cross_way_comb(std::tuple<int64_t, int, osm::Node, std::vector<osm::Way> > & res, const std::tuple<int64_t, int, int64_t, double, double, osm::Way> & row)
+void cross_way_comb(std::tuple<int64_t, int, osm::Node, std::vector<osm::Way> >& res, const std::tuple<int64_t, int, int64_t, double, double, osm::Way>& row)
 {
     util::sub_tie<0, 1>(res) = util::sub_const_tie<0, 1>(row);
     osm::Node& nd = std::get<2>(res);
@@ -39,7 +39,7 @@ void cross_way_comb(std::tuple<int64_t, int, osm::Node, std::vector<osm::Way> > 
         std::get<3>(res).push_back(std::get<5>(row));
 }
 
-void node_comb(std::pair<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID> > & res, const std::tuple<int64_t, int, osm::Node, std::vector<osm::Way> > & row)
+void node_comb(std::pair<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByID> >& res, const std::tuple<int64_t, int, osm::Node, std::vector<osm::Way> >& row)
 {
     osm::Way& w = res.first;
     w.id = std::get<0>(row);
@@ -49,7 +49,7 @@ void node_comb(std::pair<osm::Way, std::multimap<osm::Node, osm::Way, osm::LtByI
         mp.insert(std::make_pair(std::get<2>(row), *it));
 
 }
-WayLister::WayLister(OsmDatabase& db, const std::multimap<std::string, std::string> & attributes)
+WayLister::WayLister(OsmDatabase& db, const std::multimap<std::string, std::string>& attributes)
     : db(db)
 {
     boost::property_tree::ptree ptree = util::get_entries(attributes);

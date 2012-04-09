@@ -6,9 +6,9 @@
 
 namespace display
 {
-EdgeHighlighter::EdgeHighlighter(EdgeHighlightable& src, LineDisplayStyle const& style):
+EdgeHighlighter::EdgeHighlighter(DisplayProvider& src, std::unique_ptr<DisplayStyleChanger> && style):
     src(src),
-    style(style),
+    style(std::move(style)),
     renew_cache(true)
 {
 }
@@ -21,20 +21,20 @@ bool highlight_edge_filter(osm::Edge const& e, std::map<osm::Way, osm::WayRegion
     return it->second.intersects(e);
 }
 
-std::shared_ptr<DisplayElement> elem_from_edge(osm::Edge const& e, LineDisplayStyle const& s)
+std::shared_ptr<DisplayElement> elem_from_edge(std::shared_ptr<DisplayElement> const& de, std::unique_ptr<DisplayStyleChanger> const& s)
 {
-    return std::shared_ptr<DisplayElement>(new DisplayLine(e.get_start_node().position, e.get_end_node().position,
-                                           std::unique_ptr<LineDisplayStyle>(new LineDisplayStyle(s))));
+    return std::shared_ptr<DisplayElement>(new DisplayLine(de->get_edge(),
+                                           std::shared_ptr<DisplayStyle>(de->get_style().accept(*s))));
 }
 
 EdgeHighlighter::element_range EdgeHighlighter::get_display_elements()
 {
     if (!renew_cache)
         return cache;
-    auto rng = src.get_edges() |
-               boost::adaptors::filtered([&](osm::Edge const & e)
+    auto rng = src.get_display_elements() |
+               boost::adaptors::filtered([&](std::shared_ptr<DisplayElement> const & ptr)
     {
-        return highlight_edge_filter(e, highlight);
+        return highlight_edge_filter(ptr->get_edge(), highlight);
     });
     cache.clear();
     for (auto it = rng.begin(); it != rng.end(); ++it)

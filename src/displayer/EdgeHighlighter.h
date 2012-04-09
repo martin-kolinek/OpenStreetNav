@@ -4,7 +4,7 @@
 #include "DisplayProvider.h"
 #include <vector>
 #include "LineDisplayStyle.h"
-#include "EdgeHighlightable.h"
+#include "DisplayStyleChanger.h"
 
 namespace display
 {
@@ -12,7 +12,7 @@ namespace display
 class EdgeHighlighter : public DisplayProvider
 {
 public:
-    EdgeHighlighter(EdgeHighlightable& src, LineDisplayStyle const& style);
+    EdgeHighlighter(DisplayProvider& src, std::unique_ptr<DisplayStyleChanger> && style);
     element_range get_display_elements();
     void add_descriptible(Descriptible const& desc);
     void add_way_region(osm::WayRegion const& reg);
@@ -25,10 +25,10 @@ public:
     int get_max_zoom();
     virtual ~EdgeHighlighter();
 private:
-    EdgeHighlightable& src;
+    DisplayProvider& src;
     std::vector<std::shared_ptr<DisplayElement> > cache;
     std::map<osm::Way, osm::WayRegion, osm::LtByID> highlight;
-    LineDisplayStyle style;
+    std::unique_ptr<DisplayStyleChanger> style;
     bool renew_cache;
 };
 

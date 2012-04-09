@@ -34,7 +34,7 @@ boost::property_tree::ptree Route::get_description() const
         t.put("end_node", it->end_node.id);
         t.put("start_seq", it->start_seq_no);
         t.put("end_seq", it->end_seq_no);
-        t.put("way", it->way_id);
+        t.put("way", it->way.id);
         t.put("cost", it->cost);
         t.put("forward", it->forward);
         ret.add_child("edge", t);
@@ -48,11 +48,11 @@ std::vector<std::unique_ptr<osm::WayRegion> > Route::get_regions() const
     auto ranges = edges | util::groupped(
                       [](roads::RoadEdgeWithNodes const & a, roads::RoadEdgeWithNodes const & b)
     {
-        return a.way_id == b.way_id;
+        return a.way.id == b.way.id;
     },
     [](std::pair<int64_t, std::vector<std::pair<unsigned int, unsigned int> > >& res, roads::RoadEdgeWithNodes const & a)
     {
-        res.first = a.way_id;
+        res.first = a.way.id;
         res.second.push_back(std::make_pair(a.start_seq_no, a.end_seq_no));
     },
     std::pair<int64_t, std::vector<std::pair<unsigned int, unsigned int> > >()

@@ -10,6 +10,7 @@
 
 #include "DisplayElement.h"
 #include "LineDisplayStyle.h"
+#include "../elements/osmelements.h"
 
 namespace display
 {
@@ -17,7 +18,7 @@ namespace display
 class DisplayLine : public DisplayElement
 {
 public:
-    DisplayLine(geo::Point p1, geo::Point p2, std::unique_ptr<LineDisplayStyle> && style);
+    DisplayLine(osm::Edge const& edge, std::shared_ptr<DisplayStyle> style);
     DisplayElementType get_type() const;
     bool operator<(DisplayElement const& other) const;
     bool operator>(DisplayElement const& other) const;
@@ -25,13 +26,14 @@ public:
     bool operator>=(DisplayElement const& other) const;
     bool operator==(DisplayElement const& other) const;
     bool operator!=(DisplayElement const& other) const;
+    osm::Edge const& get_edge() const;
     virtual ~DisplayLine();
-protected:
     virtual DisplayStyle const& get_style() const;
-    std::unique_ptr<LineDisplayStyle> style;
+protected:
+    std::shared_ptr<DisplayStyle> style;
     virtual void draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const;
 private:
-    geo::Point p1, p2;
+    osm::Edge const& edge;
 };
 
 } /* namespace display */

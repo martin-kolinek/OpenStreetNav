@@ -24,8 +24,8 @@ BOOST_AUTO_TEST_CASE(roadnet)
     BOOST_CHECK(c.is_end_node(p));
     auto edges = net.resolve_path(v);
     BOOST_CHECK(edges.size() == 2);
-    BOOST_CHECK(edges[0].way_id == 1);
-    BOOST_CHECK(edges[1].way_id == 2);
+    BOOST_CHECK(edges[0].way.id == 1);
+    BOOST_CHECK(edges[1].way.id == 2);
     BOOST_CHECK(edges[0].start_seq_no == 0);
     BOOST_CHECK(edges[1].start_seq_no == 1);
 }

@@ -13,7 +13,6 @@
 #include "ToShowSelectCollection.h"
 #include "PropertiesSelection.h"
 #include "../displayer/LineDisplayStyle.h"
-#include "../displayer/EdgeHighlightable.h"
 
 namespace osmdb
 {
@@ -22,7 +21,7 @@ namespace osmdb
  * \class DisplayDB
  * Class that allows for drawing of data from database. Uses xml files to specify what to draw.
  */
-class DisplayDB : public display::DisplayProvider, public display::EdgeHighlightable
+class DisplayDB : public display::DisplayProvider
 {
 public:
     /**
@@ -35,7 +34,6 @@ public:
     DisplayDB(osmdb::OsmDatabase& db, std::vector<std::string> schemas, int offset);
     virtual ~DisplayDB();
     element_range get_display_elements();
-    edge_range get_edges();
     osmdb::OsmDatabase& get_db();
     void set_bounds(geo::Point const& topleft, geo::Point const& bottomright, int zoom);
     std::vector<std::unique_ptr<display::Descriptible> > get_selected(geo::Point const& topleft, geo::Point const& bottomright, int zoom);

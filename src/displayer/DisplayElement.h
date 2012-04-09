@@ -12,6 +12,7 @@
 #include <memory>
 #include <cairomm/context.h>
 #include "../projection/projection.h"
+#include "../elements/osmelements.h"
 
 namespace display
 {
@@ -34,8 +35,9 @@ public:
     virtual bool operator>=(DisplayElement const& other) const = 0;
     virtual bool operator==(DisplayElement const& other) const = 0;
     virtual bool operator!=(DisplayElement const& other) const = 0;
-protected:
+    virtual osm::Edge const& get_edge() const = 0;
     virtual DisplayStyle const& get_style() const = 0;
+protected:
     virtual void draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const = 0;
 
 };

@@ -29,7 +29,7 @@ auto sub_tuple(Tup const& t) -> decltype(std::tie(std::get<indices>(t)...))
 template<typename... Args>
 std::tuple<Args const& ...> const_tie(Args const& ... args)
 {
-    return std::tuple<Args const & ...>(args...);
+    return std::tuple<Args const& ...>(args...);
 }
 
 template<size_t... indices, typename Tup>

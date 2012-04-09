@@ -19,7 +19,7 @@ template<typename BTypes, typename RTypes>
 class CursorIterator : public boost::iterator_facade<CursorIterator<BTypes, RTypes>, const typename RTypes::RowType, boost::single_pass_traversal_tag>
 {
 private:
-    Cursor<BTypes, RTypes> * crs;
+    Cursor<BTypes, RTypes>* crs;
     typename std::vector<typename RTypes::RowType>::const_iterator it;
     bool is_end;
 
@@ -36,7 +36,7 @@ private:
         }
     }
 public:
-    CursorIterator(Cursor<BTypes, RTypes> & crs, bool is_end)
+    CursorIterator(Cursor<BTypes, RTypes>& crs, bool is_end)
         : crs(&crs),
           it(crs.get_buffer().begin()),
           is_end(is_end)

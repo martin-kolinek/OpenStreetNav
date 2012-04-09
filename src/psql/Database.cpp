@@ -211,7 +211,7 @@ void Database::unregist(const std::string& name, IStatement* st)
         to_dealloc.push_back(name);
     }
 }
-boost::signal<void(const PGresult& )> & Database::notice_signal()
+boost::signal<void(const PGresult& )>& Database::notice_signal()
 {
     return notice_sig;
 }

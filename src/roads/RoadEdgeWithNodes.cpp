@@ -21,4 +21,24 @@ RoadEdgeWithNodes::~RoadEdgeWithNodes()
 {
 }
 
+osm::Node& RoadEdgeWithNodes::get_start_node()
+{
+    return start_node;
+}
+
+osm::Node& RoadEdgeWithNodes::get_end_node()
+{
+    return end_node;
+}
+
+const osm::Node& RoadEdgeWithNodes::get_start_node() const
+{
+    return start_node;
+}
+
+const osm::Node& RoadEdgeWithNodes::get_end_node() const
+{
+    return end_node;
+}
+
 } /* namespace roads */

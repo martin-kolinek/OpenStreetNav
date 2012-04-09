@@ -10,10 +10,9 @@
 namespace display
 {
 
-DisplayLine::DisplayLine(geo::Point p1, geo::Point p2, std::unique_ptr<LineDisplayStyle> && style):
+DisplayLine::DisplayLine(osm::Edge const& edge, std::shared_ptr<DisplayStyle> style):
     style(std::move(style)),
-    p1(p1),
-    p2(p2)
+    edge(edge)
 {
 }
 
@@ -31,7 +30,7 @@ bool DisplayLine::operator <(const DisplayElement& other) const
     if (other.get_type() != DisplayElementType::Line)
         return DisplayElementType::Line < other.get_type();
     DisplayLine const& ln = static_cast<DisplayLine const&>(other);
-    return std::pair<geo::Point, geo::Point>(p1, p2) < std::pair<geo::Point, geo::Point>(ln.p1, ln.p2);
+    return std::pair<geo::Point, geo::Point>(edge.get_start_node().position, edge.get_end_node().position) < std::pair<geo::Point, geo::Point>(ln.edge.get_start_node().position, ln.edge.get_end_node().position);
 }
 
 bool DisplayLine::operator >(const DisplayElement& other) const
@@ -54,7 +53,7 @@ bool DisplayLine::operator ==(const DisplayElement& other) const
     if (other.get_type() != DisplayElementType::Line)
         return false;
     DisplayLine const& ln = static_cast<DisplayLine const&>(other);
-    return std::pair<geo::Point, geo::Point>(p1, p2) == std::pair<geo::Point, geo::Point>(ln.p1, ln.p2);
+    return std::pair<geo::Point, geo::Point>(edge.get_start_node().position, edge.get_end_node().position) == std::pair<geo::Point, geo::Point>(ln.edge.get_start_node().position, ln.edge.get_end_node().position);
 }
 
 bool DisplayLine::operator !=(const DisplayElement& other) const
@@ -64,8 +63,8 @@ bool DisplayLine::operator !=(const DisplayElement& other) const
 
 void DisplayLine::draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const
 {
-    auto pp1 = pr.project(p1);
-    auto pp2 = pr.project(p2);
+    auto pp1 = pr.project(edge.get_start_node().position);
+    auto pp2 = pr.project(edge.get_end_node().position);
     if (style->draw_arrow())
     {
         double l = sqrt((pp2.x - pp1.x) * (pp2.x - pp1.x) + (pp2.y - pp1.y) * (pp2.y - pp1.y));
@@ -94,6 +93,11 @@ void DisplayLine::draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProje
 DisplayStyle const& DisplayLine::get_style() const
 {
     return *style;
+}
+
+osm::Edge const& DisplayLine::get_edge() const
+{
+    return edge;
 }
 
 /* namespace display */

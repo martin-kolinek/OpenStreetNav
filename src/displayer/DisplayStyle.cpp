@@ -14,4 +14,9 @@ DisplayStyle::~DisplayStyle()
 {
 }
 
+bool DisplayStyle::draw_arrow() const
+{
+    return false;
+}
+
 } /* namespace display */

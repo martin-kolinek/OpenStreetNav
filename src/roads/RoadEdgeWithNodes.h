@@ -19,6 +19,10 @@ class RoadEdgeWithNodes : public RoadEdge
 public:
     RoadEdgeWithNodes(int64_t way_id, int start_seq_no, int end_seq_no, bool forward, double cost, osm::Node start_node, osm::Node end_node);
     virtual ~RoadEdgeWithNodes();
+    osm::Node& get_start_node();
+    osm::Node& get_end_node();
+    osm::Node const& get_start_node() const;
+    osm::Node const& get_end_node() const;
     osm::Node start_node, end_node;
 };
 

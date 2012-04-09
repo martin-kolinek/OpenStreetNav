@@ -6,6 +6,7 @@
  */
 
 #include "LineDisplayStyle.h"
+#include "DisplayStyleChanger.h"
 
 namespace display
 {
@@ -15,8 +16,8 @@ LineDisplayStyle::LineDisplayStyle(double red, double green, double blue, double
     green(green),
     blue(blue),
     alpha(alpha),
-    thickness(thickness * 0.005),
-    arrow(arrow)
+    arrow(arrow),
+    thickness(thickness * 0.005)
 {
 }
 
@@ -41,6 +42,20 @@ void LineDisplayStyle::exec(Cairo::RefPtr<Cairo::Context> cr) const
     cr->stroke();
 }
 
+std::shared_ptr<DisplayStyle> LineDisplayStyle::copy() const
+{
+    return std::shared_ptr<DisplayStyle>(new LineDisplayStyle(*this));
 }
 
-/* namespace display */
+std::shared_ptr<DisplayStyle> LineDisplayStyle::accept(const DisplayStyleChanger& c) const
+{
+    return c.visit(*this);
+}
+
+double LineDisplayStyle::get_thickness() const
+{
+    return thickness / 0.005;
+}
+
+} /* namespace display */
+

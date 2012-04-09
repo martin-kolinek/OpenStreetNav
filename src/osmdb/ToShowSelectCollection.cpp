@@ -34,7 +34,7 @@ psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<
 
 psql::Statement<psql::BindTypes<double, double, double, double>, psql::RetTypes<int64_t> >& ToShowSelectCollection::get_select_statement(int zoom)
 {
-    return select_statements[zoom-offset];
+    return select_statements[zoom - offset];
 }
 
 }

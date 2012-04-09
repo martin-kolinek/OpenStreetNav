@@ -14,7 +14,7 @@
 namespace display
 {
 
-MapDrawingArea::MapDrawingArea(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> &):
+MapDrawingArea::MapDrawingArea(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>&):
     Gtk::DrawingArea(cobject),
     pressed(false),
     zoom(1),
@@ -54,7 +54,7 @@ void MapDrawingArea::refresh()
     redraw_from_db();
 }
 
-bool MapDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> & cr)
+bool MapDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
     cr->translate(tran_x, tran_y);
     cr->set_source(surface, 0, 0);

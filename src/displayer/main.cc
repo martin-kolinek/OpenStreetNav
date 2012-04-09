@@ -23,6 +23,7 @@
 #include <osmdisp_config.h>
 #include "../util/util.h"
 #include "EdgeHighlighter.h"
+#include "ColorStyleChanger.h"
 #include "LineDisplayStyle.h"
 #include "../pathfinding/pathfinding.h"
 #include <boost/regex.hpp>
@@ -229,9 +230,11 @@ int main(int argc, char** argv)
         });
         std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, p.second, p.first));
         area->add_dp(1, dispdb);
-        std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(0, 1, 1, 1, 2.5, false)));
+        std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb,
+                std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0, 1, 1, 1, 0.5))));
         area->add_dp(3, high);
-        std::shared_ptr<display::EdgeHighlighter> high_path(new display::EdgeHighlighter(*dispdb, display::LineDisplayStyle(1, 1, 1, 1, 2.5, false)));
+        std::shared_ptr<display::EdgeHighlighter> high_path(new display::EdgeHighlighter(*dispdb,
+                std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0.5, 0.3, 0, 1, 0.5))));
         area->add_dp(2, high_path);
 
         area->element_clicked.connect([view, &high, area](std::vector<std::unique_ptr<display::Descriptible> > const & els)

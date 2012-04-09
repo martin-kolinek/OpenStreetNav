@@ -7,7 +7,7 @@ IDFunc
 private:
     T t;
 public:
-    IDFunc(T const& t):
+    IDFunc(T const & t):
         t(t)
     {
     }

@@ -9,6 +9,7 @@
 #define ROADEDGE_H_
 
 #include <cstdint>
+#include "../elements/osmelements.h"
 
 namespace roads
 {
@@ -16,9 +17,15 @@ namespace roads
 class RoadEdge
 {
 public:
-    RoadEdge(int64_t way_id, int start_seq_no, int end_seq_no, bool forward, double cost);
+    osm::Way const& get_way() const;
+    osm::Way& get_way();
+    int& get_start_seq_no();
+    int const& get_start_seq_no() const;
+    int& get_end_seq_no();
+    int const& get_end_seq_no() const;
+    RoadEdge(osm::Way const& way, int start_seq_no, int end_seq_no, bool forward, double cost);
     virtual ~RoadEdge();
-    int64_t way_id;
+    osm::Way way;
     int start_seq_no, end_seq_no;
     bool forward;
     double cost;

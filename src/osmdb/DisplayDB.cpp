@@ -46,7 +46,7 @@ OsmDatabase& DisplayDB::get_db()
 
 std::shared_ptr<display::DisplayElement> extract_disp_el(std::pair<osm::Edge, display::LineDisplayStyle> const& p)
 {
-    display::DisplayLine* ret = new display::DisplayLine(p.first.get_start_node().position, p.first.get_end_node().position,
+    display::DisplayLine* ret = new display::DisplayLine(p.first,
             std::unique_ptr<display::LineDisplayStyle>(new display::LineDisplayStyle(p.second)));
     return std::shared_ptr<display::DisplayElement>(ret);
 }
@@ -54,16 +54,6 @@ std::shared_ptr<display::DisplayElement> extract_disp_el(std::pair<osm::Edge, di
 DisplayDB::element_range DisplayDB::get_display_elements()
 {
     return display_elements | boost::adaptors::transformed(extract_disp_el);
-}
-
-osm::Edge extract_edge(std::pair<osm::Edge, display::LineDisplayStyle> const& p)
-{
-    return p.first;
-}
-
-DisplayDB::edge_range DisplayDB::get_edges()
-{
-    return display_elements | boost::adaptors::transformed(extract_edge);
 }
 
 void DisplayDB::set_bounds(const geo::Point& p1, const geo::Point& p2, int zoom)

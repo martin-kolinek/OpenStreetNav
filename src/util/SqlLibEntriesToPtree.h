@@ -8,7 +8,7 @@
 namespace util
 {
 
-boost::property_tree::ptree get_entries(const std::multimap<std::string, std::string> & attributes);
+boost::property_tree::ptree get_entries(const std::multimap<std::string, std::string>& attributes);
 
 }
 

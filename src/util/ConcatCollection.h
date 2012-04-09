@@ -92,12 +92,12 @@ public:
         auto dereference() const -> value_t
         {
             if (it1 != end1)
-            return *it1;
+                return *it1;
             return *it2;
         }
 
     };
-ConcatCollection(It1 begin1, It1 end1, It2 begin2, It2 end2):
+    ConcatCollection(It1 begin1, It1 end1, It2 begin2, It2 end2):
         begin1(begin1),
         end1(end1),
         begin2(begin2),

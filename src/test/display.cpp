@@ -9,6 +9,7 @@
 #include <test_config.h>
 #include "../osmdb/osmdb.h"
 #include "../displayer/EdgeHighlighter.h"
+#include "../displayer/ColorStyleChanger.h"
 #include "../util/range.h"
 #include <boost/property_tree/xml_parser.hpp>
 
@@ -67,7 +68,7 @@ BOOST_AUTO_TEST_CASE(highlight)
     ecr.insert_data();
     pdb.commit_transaction();
     osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1);
-    display::EdgeHighlighter high(db, display::LineDisplayStyle(1, 1, 1, 1, 0, false));
+    display::EdgeHighlighter high(db, std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(1, 1, 1, 1)));
     high.add_descriptible(w);
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     high.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);

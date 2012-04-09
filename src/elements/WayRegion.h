@@ -2,9 +2,9 @@
 #define WAYREGION_H_
 
 #include "Way.h"
+#include "Edge.h"
 #include <vector>
 #include <algorithm>
-#include "SeqEdge.h"
 
 namespace osm
 {
@@ -24,7 +24,7 @@ public:
         std::sort(this->regions.begin(), this->regions.end());
     }
 
-    bool intersects(SeqEdge const& e) const;
+    bool intersects(Edge const& e) const;
 
     bool operator==(WayRegion const& other) const;
     bool operator!=(WayRegion const& other) const;

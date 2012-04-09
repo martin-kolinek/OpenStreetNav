@@ -21,9 +21,13 @@ public:
     void prepare(Cairo::RefPtr<Cairo::Context> cr) const;
     void exec(Cairo::RefPtr<Cairo::Context> cr) const;
     bool draw_arrow() const;
-private:
-    double red, green, blue, alpha, thickness;
+    std::shared_ptr<DisplayStyle> copy() const;
+    std::shared_ptr<DisplayStyle> accept(DisplayStyleChanger const& c) const;
+    double red, green, blue, alpha;
     bool arrow;
+    double get_thickness() const;
+private:
+    double thickness;
 };
 
 } /* namespace display */
