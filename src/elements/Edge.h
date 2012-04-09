@@ -11,11 +11,14 @@
 #include <stdint.h>
 #include "Node.h"
 #include "Way.h"
+#include "ContainedElement.h"
 
 namespace osm
 {
 
-class Edge
+class Way;
+
+class Edge : public ContainedElement
 {
 public:
     Edge(Node const& start_node, int start_seq_no, Node const& end_node, int end_seq_no, osm::Way const& way);
@@ -59,6 +62,7 @@ public:
     {
         return end_node;
     }
+    bool is_intersected(ElementContainer const& c) const;
     virtual ~Edge();
 private:
     Node start_node;

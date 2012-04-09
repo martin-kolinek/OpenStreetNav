@@ -15,5 +15,6 @@
 #include "Relation.h"
 #include "Edge.h"
 #include "CompByID.h"
+#include "CompositeElementContainer.h"
 
 #endif /* OSMELEMENTS_H_ */

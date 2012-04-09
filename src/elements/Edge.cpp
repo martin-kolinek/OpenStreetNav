@@ -6,6 +6,7 @@
  */
 
 #include "Edge.h"
+#include "ElementContainer.h"
 
 namespace osm
 {
@@ -17,6 +18,11 @@ Edge::Edge(Node const& start_node, int start_seq_no, Node const& end_node, int e
     end_seq_no(end_seq_no),
     way(way)
 {
+}
+
+bool Edge::is_intersected(ElementContainer const& c) const
+{
+    return c.intersects(*this);
 }
 
 Edge::~Edge()

@@ -3,14 +3,13 @@
 
 namespace display
 {
+std::shared_ptr<osm::HashElementContainer> Descriptible::get_highlighted() const
+{
+    return std::shared_ptr<osm::HashElementContainer>(new osm::HashElementContainer());
+}
 
 Descriptible::~Descriptible()
 {
-}
-
-std::vector<std::unique_ptr<osm::WayRegion> > Descriptible::get_regions() const
-{
-    return std::vector<std::unique_ptr<osm::WayRegion> >();
 }
 
 }

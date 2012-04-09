@@ -5,11 +5,13 @@
 #include "Edge.h"
 #include <vector>
 #include <algorithm>
+#include "ElementContainer.h"
+#include "HashElementContainer.h"
 
 namespace osm
 {
 
-class WayRegion
+class WayRegion : public HashElementContainer
 {
 public:
     WayRegion(osm::Way const& w);
@@ -24,6 +26,7 @@ public:
         std::sort(this->regions.begin(), this->regions.end());
     }
 
+    bool intersects(ContainedElement const& e) const;
     bool intersects(Edge const& e) const;
 
     bool operator==(WayRegion const& other) const;
@@ -33,6 +36,7 @@ public:
     bool operator>(WayRegion const& other) const;
     bool operator<(WayRegion const& other) const;
     osm::Way const& get_way() const;
+    int64_t get_way_id() const;
     int get_first_seq_no() const;
     int get_last_seq_no() const;
 private:

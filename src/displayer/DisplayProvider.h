@@ -12,8 +12,8 @@
 #include <boost/range/any_range.hpp>
 #include <vector>
 #include "../geoelements/geoelements.h"
-#include "../elements/osmelements.h"
 #include "DisplayElement.h"
+#include "Descriptible.h"
 #include <memory>
 
 namespace display
@@ -45,7 +45,7 @@ public:
      * @param zoom
      * @return displayed Descriptibles in box
      */
-    virtual std::vector<std::unique_ptr<Descriptible> > get_selected(geo::Point const& topleft, geo::Point const& bottomright, int zoom) = 0;
+    virtual std::vector<std::shared_ptr<Descriptible> > get_selected(geo::Point const& topleft, geo::Point const& bottomright, int zoom) = 0;
     /**
      *
      * @return center latitude of all data this DisplayProvider can get

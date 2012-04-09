@@ -9,6 +9,7 @@
 #include "../sqllib/sqllib.h"
 #include "ToShowEdgesSelector.h"
 #include "../displayer/DisplayLine.h"
+#include "../displayer/DescriptibleElement.h"
 #include <boost/range/adaptors.hpp>
 
 namespace osmdb
@@ -67,37 +68,32 @@ void DisplayDB::set_bounds(const geo::Point& p1, const geo::Point& p2, int zoom)
     display_elements = std::move(ToShowEdgesSelector::get_edges(stmt, left, lower, right, higher));
 }
 
-std::unique_ptr<display::Descriptible> transform_ptr(std::unique_ptr<osm::Element> && p)
-{
-    return std::unique_ptr<display::Descriptible>(std::move(p));
-}
-
-std::vector<std::unique_ptr<display::Descriptible> > DisplayDB::get_selected(const geo::Point& p1, const geo::Point& p2, int zoom)
+std::vector<std::shared_ptr<display::Descriptible> > DisplayDB::get_selected(const geo::Point& p1, const geo::Point& p2, int zoom)
 {
     double left = std::min(p1.lon, p2.lon);
     double right = std::max(p1.lon, p2.lon);
     double lower = std::min(p1.lat, p2.lat);
     double higher = std::max(p1.lat, p2.lat);
 
-    std::vector<std::unique_ptr<osm::Element> > ret;
+    std::vector<std::shared_ptr<osm::Element> > ret;
     auto& stmt = coll.get_select_statement(zoom);
     stmt.execute(left, lower, right, higher);
     for (int i = 0; i < stmt.row_count(); ++i)
     {
         int64_t id;
         std::tie(id) = stmt.get_row(i);
-        ret.push_back(std::unique_ptr<osm::Element>(new osm::Way(id)));
+        ret.push_back(std::shared_ptr<osm::Element>(new osm::Way(id)));
     }
 
     for (unsigned int i = 0; i < ret.size(); ++i)
     {
         ret[i]->fill(pdb);
     }
-    std::vector<std::unique_ptr<display::Descriptible> > ret2;
+    std::vector<std::shared_ptr<display::Descriptible> > ret2;
     ret2.reserve(ret.size());
     for (auto it = ret.begin(); it != ret.end(); ++it)
     {
-        ret2.push_back(std::move(*it));
+        ret2.push_back(std::shared_ptr<display::Descriptible>(new display::DescriptibleElement(*it)));
     }
 
     return ret2;

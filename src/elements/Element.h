@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include "ObjectType.h"
 #include "Tag.h"
-#include "../displayer/Descriptible.h"
+#include <boost/property_tree/ptree.hpp>
 
 namespace osmdb
 {
@@ -26,11 +26,13 @@ class ElementImporter;
 namespace osm
 {
 
+class HashElementContainer;
+
 /**
  * \class Element
  * Represents an element in OpenStreetMap data.
  */
-class Element : public display::Descriptible
+class Element
 {
 public:
     virtual ~Element();
@@ -56,6 +58,7 @@ public:
      * @param role role to use when inserting
      */
     virtual void add_to_relation(osmdb::ElementImporter& db, int64_t parentid, std::string const& role) = 0;
+    virtual std::shared_ptr<HashElementContainer> get_highlighted() const;
     /**
      *
      * @return id of this element

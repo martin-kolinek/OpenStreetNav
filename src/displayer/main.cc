@@ -61,7 +61,7 @@ void write_ptree(boost::property_tree::ptree const& ptree, std::ostream& ost, in
     }
 }
 
-std::string get_els_text(std::vector<std::unique_ptr<display::Descriptible> > const& els)
+std::string get_els_text(std::vector<std::shared_ptr<display::Descriptible> > const& els)
 {
     std::ostringstream str;
     for (unsigned int i = 0; i < els.size(); ++i)
@@ -237,7 +237,7 @@ int main(int argc, char** argv)
                 std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0.5, 0.3, 0, 1, 0.5))));
         area->add_dp(2, high_path);
 
-        area->element_clicked.connect([view, &high, area](std::vector<std::unique_ptr<display::Descriptible> > const & els)
+        area->element_clicked.connect([view, &high, area](std::vector<std::shared_ptr<display::Descriptible> > const & els)
         {
             view->get_buffer()->set_text(get_els_text(els));
             high->clear();

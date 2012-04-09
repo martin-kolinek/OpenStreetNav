@@ -67,7 +67,7 @@ public:
      * This signal gets signalled when element is clicked. The parameter is a vector of displayed elements
      * that are in the vicinity of point clicked.
      */
-    boost::signal<void (std::vector<std::unique_ptr<Descriptible> > const& elem)> element_clicked;
+    boost::signal<void (std::vector<std::shared_ptr<Descriptible> > const& elem)> element_clicked;
 
     void refresh();
     virtual ~MapDrawingArea();
@@ -110,7 +110,7 @@ private:
 
     double get_radius_for_zoom();
 
-    std::vector<std::unique_ptr<Descriptible> > get_selected(geo::Point const& p1, geo::Point const& p2, int zoom);
+    std::vector<std::shared_ptr<Descriptible> > get_selected(geo::Point const& p1, geo::Point const& p2, int zoom);
 };
 
 } /* namespace display */

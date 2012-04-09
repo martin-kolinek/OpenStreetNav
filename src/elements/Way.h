@@ -41,12 +41,12 @@ public:
      */
     void add_node(osm::Node const& nd, int seq = -1);
     std::set<osm::Tag> tags;
-    std::vector<std::unique_ptr<osm::WayRegion> > get_regions() const;
     boost::property_tree::ptree get_description() const;
     osm::ObjectType get_type() const;
     bool operator==(Way const& e) const;
     bool operator!=(Way const& e) const;
     void fill(osmdb::PropertiesSelection& db);
+    virtual std::shared_ptr<HashElementContainer> get_highlighted() const;
     virtual int64_t get_id() const;
     void add_to_relation(osmdb::ElementImporter& db, int64_t relation, std::string const& role);
 };

@@ -13,6 +13,7 @@
 #include "ToShowSelectCollection.h"
 #include "PropertiesSelection.h"
 #include "../displayer/LineDisplayStyle.h"
+#include "../displayer/Descriptible.h"
 
 namespace osmdb
 {
@@ -36,7 +37,7 @@ public:
     element_range get_display_elements();
     osmdb::OsmDatabase& get_db();
     void set_bounds(geo::Point const& topleft, geo::Point const& bottomright, int zoom);
-    std::vector<std::unique_ptr<display::Descriptible> > get_selected(geo::Point const& topleft, geo::Point const& bottomright, int zoom);
+    std::vector<std::shared_ptr<display::Descriptible> > get_selected(geo::Point const& topleft, geo::Point const& bottomright, int zoom);
     double center_lat();
     double center_lon();
     int get_min_zoom();

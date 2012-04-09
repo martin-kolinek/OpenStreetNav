@@ -7,6 +7,7 @@
 
 #include "Way.h"
 #include "../osmdb/osmdb.h"
+#include "WayRegion.h"
 
 namespace osm
 {
@@ -65,11 +66,9 @@ void Way::fill(osmdb::PropertiesSelection& db)
     }
 }
 
-std::vector<std::unique_ptr<osm::WayRegion> > Way::get_regions() const
+std::shared_ptr<HashElementContainer> Way::get_highlighted() const
 {
-    std::vector<std::unique_ptr<osm::WayRegion> > ret;
-    ret.push_back(std::unique_ptr<osm::WayRegion>(new osm::WayRegion(*this)));
-    return ret;
+    return std::unique_ptr<osm::HashElementContainer>(new osm::WayRegion(*this));
 }
 
 int64_t Way::get_id() const

@@ -15,6 +15,11 @@ WayRegion::WayRegion(Way const& w):
     regions.push_back(std::make_pair(st, last));
 }
 
+bool WayRegion::intersects(ContainedElement const& e) const
+{
+    return e.is_intersected(*this);
+}
+
 bool WayRegion::intersects(Edge const& e) const
 {
     if (e.get_way().id != w.id)
@@ -66,6 +71,11 @@ int WayRegion::get_first_seq_no() const
 int WayRegion::get_last_seq_no() const
 {
     return boost::max_element(regions, util::get_tuple_less<1>())->second;
+}
+
+int64_t WayRegion::get_way_id() const
+{
+    return w.id;
 }
 
 }

@@ -13,12 +13,9 @@ EdgeHighlighter::EdgeHighlighter(DisplayProvider& src, std::unique_ptr<DisplaySt
 {
 }
 
-bool highlight_edge_filter(osm::Edge const& e, std::map<osm::Way, osm::WayRegion, osm::LtByID> const& highlight)
+bool highlight_edge_filter(osm::ContainedElement const& e, osm::ElementContainer const& highlight)
 {
-    auto it = highlight.find(e.get_way());
-    if (it == highlight.end())
-        return false;
-    return it->second.intersects(e);
+    return e.is_intersected(highlight);
 }
 
 std::shared_ptr<DisplayElement> elem_from_edge(std::shared_ptr<DisplayElement> const& de, std::unique_ptr<DisplayStyleChanger> const& s)
@@ -49,9 +46,9 @@ void EdgeHighlighter::set_bounds(geo::Point const& , geo::Point const& , int )
 {
     renew_cache = true;
 }
-std::vector<std::unique_ptr<Descriptible> > EdgeHighlighter::get_selected(geo::Point const& , geo::Point const& , int )
+std::vector<std::shared_ptr<Descriptible> > EdgeHighlighter::get_selected(geo::Point const& , geo::Point const& , int )
 {
-    return std::vector<std::unique_ptr<Descriptible> >();
+    return std::vector<std::shared_ptr<Descriptible> >();
 }
 double EdgeHighlighter::center_lat()
 {
@@ -67,15 +64,7 @@ EdgeHighlighter::~EdgeHighlighter()
 
 void EdgeHighlighter::add_descriptible(Descriptible const& desc)
 {
-    auto v = desc.get_regions();
-    for (auto it = v.begin(); it != v.end(); ++it)
-        highlight.insert(std::make_pair(osm::Way((*it)->get_way().id), **it));
-    renew_cache = true;
-}
-
-void EdgeHighlighter::add_way_region(osm::WayRegion const& reg)
-{
-    highlight.insert(std::make_pair(reg.get_way(), reg));
+    highlight.add_way_container(desc.get_highlighted());
     renew_cache = true;
 }
 

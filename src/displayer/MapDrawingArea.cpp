@@ -295,9 +295,9 @@ int MapDrawingArea::get_zoom()
     return zoom;
 }
 
-std::vector<std::unique_ptr<display::Descriptible> > MapDrawingArea::get_selected(const geo::Point& p1, const geo::Point& p2, int zoom)
+std::vector<std::shared_ptr<display::Descriptible> > MapDrawingArea::get_selected(const geo::Point& p1, const geo::Point& p2, int zoom)
 {
-    std::vector<std::unique_ptr<display::Descriptible> > ret;
+    std::vector<std::shared_ptr<display::Descriptible> > ret;
 
     for (auto it = dps.begin(); it != dps.end(); ++it)
     {

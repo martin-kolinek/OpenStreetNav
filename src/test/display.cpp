@@ -10,6 +10,7 @@
 #include "../osmdb/osmdb.h"
 #include "../displayer/EdgeHighlighter.h"
 #include "../displayer/ColorStyleChanger.h"
+#include "../displayer/DescriptibleElement.h"
 #include "../util/range.h"
 #include <boost/property_tree/xml_parser.hpp>
 
@@ -69,7 +70,16 @@ BOOST_AUTO_TEST_CASE(highlight)
     pdb.commit_transaction();
     osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1);
     display::EdgeHighlighter high(db, std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(1, 1, 1, 1)));
-    high.add_descriptible(w);
+    high.add_descriptible(display::DescriptibleElement(std::shared_ptr<osm::Element>(new osm::Way(w))));
+    db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
+    high.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
+    BOOST_CHECK(util::count(high.get_display_elements()) == 1);
+    high.add_descriptible(display::DescriptibleElement(std::shared_ptr<osm::Element>(new osm::Way(w2))));
+    db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
+    high.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
+    BOOST_CHECK(util::count(high.get_display_elements()) == 2);
+    high.clear();
+    high.add_descriptible(display::DescriptibleElement(std::shared_ptr<osm::Element>(new osm::Way(w))));
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     high.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     BOOST_CHECK(util::count(high.get_display_elements()) == 1);
