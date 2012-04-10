@@ -19,7 +19,7 @@ class DescriptibleElement : public Descriptible
 public:
     DescriptibleElement(std::shared_ptr<osm::Element> const& el);
     boost::property_tree::ptree get_description() const;
-    std::shared_ptr<osm::HashElementContainer> get_highlighted() const;
+    std::vector<std::shared_ptr<osm::HashElementContainer> > get_highlighted() const;
     virtual ~DescriptibleElement();
 private:
     std::shared_ptr<osm::Element> el;

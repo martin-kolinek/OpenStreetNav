@@ -64,7 +64,11 @@ EdgeHighlighter::~EdgeHighlighter()
 
 void EdgeHighlighter::add_descriptible(Descriptible const& desc)
 {
-    highlight.add_way_container(desc.get_highlighted());
+    auto v = desc.get_highlighted();
+    for (auto it = v.begin(); it != v.end(); ++it)
+    {
+        highlight.add_way_container(*it);
+    }
     renew_cache = true;
 }
 

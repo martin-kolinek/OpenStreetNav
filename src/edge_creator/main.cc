@@ -22,6 +22,7 @@ int main(int argc, char** argv)
     ("database,d", boost::program_options::value<std::string>(), "database to work with")
     ("xml-file,x", boost::program_options::value<std::string>(), "edge description xml")
     ("input-schema,i", boost::program_options::value<std::string>(), "schema containing data")
+    ("road-schema,r", boost::program_options::value<std::string>(), "schema containing road data")
     ("output-schema,o", boost::program_options::value<std::string>(), "output schema")
     ("create-schema,c", "create output schema");
     boost::program_options::variables_map vm;
@@ -32,26 +33,33 @@ int main(int argc, char** argv)
         std::cout << desc << std::endl;
         return 0;
     }
-    if (!vm.count("xml-file"))
+    if (!vm.count("xml-file") && !vm.count("road-schema"))
     {
-        std::cout << "xml-file required" << std::endl;
+        std::cout << "xml-file or road-schema required" << std::endl;
         std::cout << desc << std::endl;
     }
-    if (!vm.count("input-schema") && !vm.count("output-schema"))
+    if (!vm.count("input-schema") && !vm.count("output-schema") && !vm.count("road-schema"))
     {
-        std::cout << "output schema or input schema required" << std::endl;
+        std::cout << "output schema, road schema or input schema required" << std::endl;
+        std::cout << desc << std::endl;
+    }
+    if ((vm.count("input-schema") || vm.count("xml-schema")) && vm.count("road-schema"))
+    {
+        std::cout << "you may specify only one of input-schema and road-schema and when specifying road-schema don't specify xml-file" << std::endl;
         std::cout << desc << std::endl;
     }
     std::string input;
     std::string output;
     if (vm.count("input-schema"))
         input = vm["input-schema"].as<std::string>();
+    else if (vm.count("road-schema"))
+        input = vm["road-schema"].as<std::string>();
     else
         input = vm["output-schema"].as<std::string>();
     if (vm.count("output-schema"))
         output = vm["output-schema"].as<std::string>();
     else
-        output = vm["input-schema"].as<std::string>();
+        output = input;
     std::string conn_str;
     if (vm.count("database"))
         conn_str = "dbname" + vm["database"].as<std::string>();
@@ -60,13 +68,21 @@ int main(int argc, char** argv)
         pdb.create_schema(output);
     pdb.set_schema(output + "," + input);
     osmdb::OsmDatabase db(pdb);
-    boost::property_tree::ptree tr;
-    boost::property_tree::xml_parser::read_xml(vm["xml-file"].as<std::string>(), tr, boost::property_tree::xml_parser::trim_whitespace);
-    osmdb::EdgeCreator ecr(db, tr);
+
+    osmdb::EdgeCreator ecr(db);
     std::cout << "Creating tables" << std::endl;
     ecr.create_tables();
     std::cout << "Inserting data" << std::endl;
-    ecr.insert_data();
+    if (vm.count("xml-file"))
+    {
+        boost::property_tree::ptree tr;
+        boost::property_tree::xml_parser::read_xml(vm["xml-file"].as<std::string>(), tr, boost::property_tree::xml_parser::trim_whitespace);
+        ecr.insert_data(tr);
+    }
+    else
+    {
+        ecr.insert_data_from_roads();
+    }
     std::cout << "Creating keys and indexes" << std::endl;
     ecr.create_keys_and_indexes();
     std::cout << "Done" << std::endl;

@@ -220,44 +220,11 @@ BOOST_AUTO_TEST_CASE(pathfinder)
     pathfind::PathFinder pf(rl);
 
     auto r = pf.find_way(5, 2);
-    bool node2 = util::any(r.get_regions() | util::selected([](std::unique_ptr<osm::WayRegion> const & w)
+    bool node = util::any(r.get_highlighted() | util::selected([](std::shared_ptr<osm::HashElementContainer> const & w)
     {
-        return w->get_last_seq_no() == 2;
+        return w->intersects(osm::Edge(osm::Node(0), 0, osm::Node(2), 2, osm::Way(2)));
     }));
-    bool node0 = util::any(r.get_regions() | util::selected([](std::unique_ptr<osm::WayRegion> const & w)
-    {
-        return w->get_first_seq_no() == 0;
-    }));
-    BOOST_CHECK(node0);
-    BOOST_CHECK(node2);
-    bool right_way = util::all(r.get_regions() | util::selected([](std::unique_ptr<osm::WayRegion> const & w)
-    {
-        return w->get_way().id == 2;
-    }));
-    BOOST_CHECK(right_way);
-    BOOST_CHECK(r.get_description().size() > 0);
-
-    r = pf.find_way(1, 4);
-    bool node1 = util::any(r.get_regions() | util::selected([](std::unique_ptr<osm::WayRegion> const & w)
-    {
-        return w->get_first_seq_no() == 1;
-    }));
-    node0 = util::any(r.get_regions() | util::selected([](std::unique_ptr<osm::WayRegion> const & w)
-    {
-        return w->get_first_seq_no() == 0;
-    }));
-    right_way = util::any(r.get_regions() | util::selected([](std::unique_ptr<osm::WayRegion> const & w)
-    {
-        return w->get_way().id == 1;
-    }));
-    bool right_way2 = util::any(r.get_regions() | util::selected([](std::unique_ptr<osm::WayRegion> const & w)
-    {
-        return w->get_way().id == 3;
-    }));
-    BOOST_CHECK(node1);
-    BOOST_CHECK(node0);
-    BOOST_CHECK(right_way);
-    BOOST_CHECK(right_way2);
+    BOOST_CHECK(node);
     BOOST_CHECK(r.get_description().size() > 0);
 }
 

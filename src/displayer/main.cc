@@ -24,6 +24,7 @@
 #include "../util/util.h"
 #include "EdgeHighlighter.h"
 #include "ColorStyleChanger.h"
+#include "Thickener.h"
 #include "LineDisplayStyle.h"
 #include "../pathfinding/pathfinding.h"
 #include <boost/regex.hpp>
@@ -164,6 +165,7 @@ int main(int argc, char** argv)
     double lat = -500;
     double lon = -500;
     int zoom = -1;
+    bool road_desc = false;
     Glib::OptionGroup gr("displayer", "displayer options");
     auto e1 = make_entry("database", 'd', "database to connect to");
     auto e2 = make_entry("schema", 's', "map properties schema");
@@ -172,6 +174,7 @@ int main(int argc, char** argv)
     auto e5 = make_entry("zoom", 'z', "starting zoom level");
     auto e6 = make_entry("road-schema", 'r', "schema containing road edges");
     auto e7 = make_entry("config", 'c', "configuration file containing schemas for zooms");
+    auto e8 = make_entry("road-description", 'a', "whether to show road description or map description");
     gr.add_entry(e1, dbname);
     gr.add_entry(e2, schema);
     gr.add_entry(e3, lat);
@@ -179,6 +182,7 @@ int main(int argc, char** argv)
     gr.add_entry(e5, zoom);
     gr.add_entry(e6, road_sch);
     gr.add_entry(e7, config);
+    gr.add_entry(e8, road_desc);
     Glib::OptionContext cxt;
     cxt.add_group(gr);
     try
@@ -234,15 +238,23 @@ int main(int argc, char** argv)
         if (schema != "")
         {
             addpdb.set_schema(schema);
-            tr = std::shared_ptr<osmdb::EdgeTranslator>(new osmdb::ElementEdgeTranslator(addodb));
+            if (road_desc)
+                tr = std::shared_ptr<osmdb::EdgeTranslator>(new osmdb::RoadEdgeTranslator(addodb));
+            else
+                tr = std::shared_ptr<osmdb::EdgeTranslator>(new osmdb::ElementEdgeTranslator(addodb));
         }
         std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, p.second, p.first, tr));
         area->add_dp(1, dispdb);
         std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb,
                 std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0, 1, 1, 1, 0.5))));
         area->add_dp(3, high);
+        std::unique_ptr<display::DisplayStyleChanger> path_style_changer;
+        if (road_desc)
+            path_style_changer = std::unique_ptr<display::DisplayStyleChanger>(new display::Thickener(2));
+        else
+            path_style_changer = std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0.5, 0.3, 0, 1, 0.5));
         std::shared_ptr<display::EdgeHighlighter> high_path(new display::EdgeHighlighter(*dispdb,
-                std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0.5, 0.3, 0, 1, 0.5))));
+                std::move(path_style_changer)));
         area->add_dp(2, high_path);
 
         area->element_clicked.connect([view, &high, area](std::vector<std::shared_ptr<display::Descriptible> > const & els)

@@ -47,6 +47,7 @@ template<typename Sep, typename... Args>
 std::string concatenate(Sep sep, Args... args)
 {
     std::ostringstream ss;
+    ss.precision(10);
     concat_impl(ss, sep, args...);
     return ss.str();
 }

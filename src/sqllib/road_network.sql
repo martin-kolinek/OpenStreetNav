@@ -101,4 +101,16 @@ SELECT
     StartNodeID, StartLon, StartLat,
     EndNodeID, EndLon, EndLat,
     WayID, StartSequenceNo, EndSequenceNo, Forward, Cost FROM ViewRoadEdges
+
+--name select_road_edge_properties
+--type psql::BindTypes<int64_t, int, int>, psql::RetTypes<int64_t, int, int64_t, int, int64_t, int, double>
+--test-depend create_road_edges_table
+--test-depend insert_road_edge 1, 2, 1, 0, 1, 1, 2, 2, 2, true, 1
+--test-param 1, 0, 1
+--test-result 0
        
+SELECT r.WayID, r.StartSequenceNo, MIN(r.StartNodeID), r.EndSequenceNo, MIN(r.EndNodeID),  
+    CASE WHEN BOOL_OR(Forward) AND NOT BOOL_AND(Forward) THEN 0 WHEN BOOL_OR(Forward) THEN 1 ELSE 2 END::int,
+    MIN(r.Cost)
+    FROM RoadEdges r WHERE r.WayID = $1 AND r.StartSequenceNo = $2 AND r.EndSequenceNo = $3 GROUP BY r.WayID, r.StartSequenceNo, r.EndSequenceNo 
+

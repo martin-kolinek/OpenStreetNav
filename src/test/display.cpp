@@ -64,9 +64,9 @@ BOOST_AUTO_TEST_CASE(highlight)
     ins.insert_way(w2);
     boost::property_tree::ptree tr;
     boost::property_tree::xml_parser::read_xml(TEST_TO_SHOW_EDGES, tr, boost::property_tree::xml_parser::trim_whitespace);
-    osmdb::EdgeCreator ecr(odb, tr);
+    osmdb::EdgeCreator ecr(odb);
     ecr.create_tables();
-    ecr.insert_data();
+    ecr.insert_data(tr);
     pdb.commit_transaction();
     osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1, std::shared_ptr<osmdb::EdgeTranslator>(new osmdb::ElementEdgeTranslator(odb)));
     display::EdgeHighlighter high(db, std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(1, 1, 1, 1)));

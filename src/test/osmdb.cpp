@@ -215,10 +215,10 @@ BOOST_AUTO_TEST_CASE(edge_creator)
     ins.insert_way(w);
     boost::property_tree::ptree tr;
     boost::property_tree::xml_parser::read_xml(TEST_TO_SHOW_EDGES, tr, boost::property_tree::xml_parser::trim_whitespace);
-    osmdb::EdgeCreator ecr(db, tr);
+    osmdb::EdgeCreator ecr(db);
     ecr.create_tables();
     ecr.create_keys_and_indexes();
-    ecr.insert_data();
+    ecr.insert_data(tr);
     auto v = psql::query_sql<int64_t, int, int, int64_t, int64_t>(db.get_db(), "SELECT WayID, StartSequenceNo, EndSequenceNo, StartNodeID, EndNodeID FROM Edges");
     BOOST_CHECK(v.size() == 2);
 }
@@ -241,7 +241,7 @@ BOOST_AUTO_TEST_CASE(empty_displaydb)
     osmdb::OsmDatabase odb(pdb);
     boost::property_tree::ptree tr;
     boost::property_tree::xml_parser::read_xml(TEST_TO_SHOW_EDGES, tr, boost::property_tree::xml_parser::trim_whitespace);
-    osmdb::EdgeCreator ecr(odb, tr);
+    osmdb::EdgeCreator ecr(odb);
     odb.create_tables();
     odb.create_indexes_and_keys();
     ecr.create_tables();
@@ -257,7 +257,7 @@ BOOST_AUTO_TEST_CASE(simple_dispdb)
     odb.create_indexes_and_keys();
     boost::property_tree::ptree tr;
     boost::property_tree::xml_parser::read_xml(TEST_TO_SHOW_EDGES, tr, boost::property_tree::xml_parser::trim_whitespace);
-    osmdb::EdgeCreator ecr(odb, tr);
+    osmdb::EdgeCreator ecr(odb);
     ecr.create_tables();
     osmdb::DisplayDB db(odb, std::vector<std::string> {"testing"}, 1, std::shared_ptr<osmdb::EdgeTranslator>(new osmdb::ElementEdgeTranslator(odb)));
     osmdb::ElementInsertion ins(db.get_db());
@@ -281,7 +281,7 @@ BOOST_AUTO_TEST_CASE(simple_dispdb)
     w.add_node(osm::Node(3));
     w.add_node(osm::Node(5));
     ins.insert_way(w);
-    ecr.insert_data();
+    ecr.insert_data(tr);
     pdb.commit_transaction();
     db.set_bounds(geo::Point(1, 0), geo::Point(0, 1), 1);
     BOOST_CHECK(util::count(db.get_display_elements()) == 1);

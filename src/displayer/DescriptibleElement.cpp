@@ -21,9 +21,9 @@ boost::property_tree::ptree DescriptibleElement::get_description() const
     return el->get_description();
 }
 
-std::shared_ptr<osm::HashElementContainer> DescriptibleElement::get_highlighted() const
+std::vector<std::shared_ptr<osm::HashElementContainer> >  DescriptibleElement::get_highlighted() const
 {
-    return el->get_highlighted();
+    return std::vector<std::shared_ptr<osm::HashElementContainer> > {el->get_highlighted()};
 }
 
 DescriptibleElement::~DescriptibleElement()

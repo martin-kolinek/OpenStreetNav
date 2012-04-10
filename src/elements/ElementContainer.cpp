@@ -10,7 +10,7 @@
 namespace osm
 {
 
-bool ElementContainer::intersects(const Edge& el) const
+bool ElementContainer::intersects(const Edge&) const
 {
     return false;
 }

@@ -42,7 +42,7 @@ boost::property_tree::ptree Route::get_description() const
     return ret;
 }
 
-std::vector<std::unique_ptr<osm::WayRegion> > Route::get_regions() const
+std::vector<std::shared_ptr<osm::HashElementContainer> > Route::get_highlighted() const
 {
 
     auto ranges = edges | util::groupped(
@@ -62,10 +62,10 @@ std::vector<std::unique_ptr<osm::WayRegion> > Route::get_regions() const
         return osm::WayRegion(osm::Way(v.first), v.second);
     }
                                           );
-    std::vector<std::unique_ptr<osm::WayRegion> > vect;
+    std::vector<std::shared_ptr<osm::HashElementContainer> >  vect;
     for (auto it = ranges2.begin(); it != ranges2.end(); ++it)
     {
-        vect.push_back(std::unique_ptr<osm::WayRegion>(new osm::WayRegion(*it)));
+        vect.push_back(std::shared_ptr<osm::HashElementContainer>(new osm::WayRegion(*it)));
     }
     return vect;
 }

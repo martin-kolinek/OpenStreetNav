@@ -11,7 +11,7 @@ class Descriptible
 {
 public:
     virtual boost::property_tree::ptree get_description() const = 0;
-    virtual std::shared_ptr<osm::HashElementContainer> get_highlighted() const;
+    virtual std::vector<std::shared_ptr<osm::HashElementContainer> > get_highlighted() const;
     virtual ~Descriptible();
 };
 

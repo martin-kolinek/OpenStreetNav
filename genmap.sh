@@ -21,3 +21,4 @@ SCHBASE=$1
 ./bin/wayreduction -b ${SCHBASE} -s ${SCHBASE}_red -I share/way.txt
 #roads
 ./bin/roaddbcreate -f ${SCHBASE} -r ${SCHBASE}_red -o ${SCHBASE}_roads -n -I share/way.txt
+./bin/edgecreate -r ${SCHBASE}_roads,${SCHBASE} -o zoom_roads -c

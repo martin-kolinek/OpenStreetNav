@@ -16,15 +16,15 @@ namespace osmdb
 class EdgeCreator
 {
 public:
-    EdgeCreator(OsmDatabase& db, boost::property_tree::ptree entries);
+    EdgeCreator(OsmDatabase& db);
     void create_tables();
     void create_keys_and_indexes();
-    void insert_data();
+    void insert_data(boost::property_tree::ptree entries);
+    void insert_data_from_roads();
     void drop_keys_and_indexes();
     virtual ~EdgeCreator();
 private:
     OsmDatabase& db;
-    boost::property_tree::ptree entries;
 };
 
 } /* namespace osmdb */
