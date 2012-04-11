@@ -584,10 +584,19 @@ BOOST_AUTO_TEST_CASE(road_create)
         BOOST_CHECK(boost::range::find(positions, p2) != positions.end());
         int i1 = std::get<7>(tup);
         int i2 = std::get<8>(tup);
+        double c = std::get<10>(tup);
+        BOOST_CHECK(c > 0.1);
         if (i2 - i1 == 2)
             b = true;
     }
     BOOST_CHECK(b);
+
+    osmdb::RoadLister l(dest_odb);
+    auto v = l.get_edges();
+    for (auto it = v.begin(); it != v.end(); ++it)
+    {
+        BOOST_CHECK(it->cost > 0.1);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
