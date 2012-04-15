@@ -11,9 +11,18 @@
 #include <istream>
 #include <sstream>
 #include <map>
+#include "ParsingException.h"
 
 namespace util
 {
+
+template<typename T>
+bool try_parse(std::string const& str, T& t)
+{
+    std::istringstream ss(str);
+    ss >> t;
+    return ss.eof();
+}
 
 /**
  * Parse type from std::string using istringstream
@@ -24,18 +33,10 @@ template<typename T>
 T parse(std::string const& str)
 {
     T ret;
-    std::istringstream ss(str);
-    ss >> ret;
-    if (!ss.eof())
-        throw std::exception();//TODO
+    if (!try_parse(str, ret))
+        throw ParsingException(str);
     return ret;
 }
-
-template<>
-double parse<double>(std::string const& str);
-
-template<>
-int64_t parse<int64_t>(std::string const& str);
 
 /**
  * Concatenate args, inserting sep in between using std::ostringstream

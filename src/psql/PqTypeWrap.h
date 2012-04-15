@@ -8,16 +8,24 @@
 #ifndef PQTYPEWRAP_H_
 #define PQTYPEWRAP_H_
 
-#include <libpqtypes.h>
+#include <libpq-fe.h>
+#include <postgres_ext.h>
+#include <postgres.h>
+#include <catalog/pg_type.h>
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include "../util/util.h"
+#include "StatementParams.h"
 
 namespace psql
 {
 
 void zero_get_check(int);
 void zero_put_check(int);
+void check_type(Oid, Oid);
+void check_type(Oid, std::vector<Oid> const& oids);
+void check_text(int);
 
 template<typename T>
 class PqTypeWrap
@@ -30,14 +38,18 @@ class PqTypeWrap<double>
 public:
     double get(PGresult* res, int row, int col)
     {
-        PGfloat8 d;
-        zero_get_check(PQgetf(res, row, "%float8", col, &d));
-        return d;
+        return util::parse<double>(PQgetvalue(res, row, col));
     }
 
-    void put(PGparam* param, double val)
+    void check(PGresult* res, int col)
     {
-        zero_put_check(PQputf(param, "%float8", val));
+        check_type(PQftype(res, col), FLOAT8OID);
+        check_text(PQfformat(res, col));
+    }
+
+    void put(StatementParams& p, int index, double val)
+    {
+        p.set(index, FLOAT8OID, util::to_str(val));
     }
 };
 
@@ -47,14 +59,19 @@ class PqTypeWrap<bool>
 public:
     bool get(PGresult* res, int row, int col)
     {
-        PGbool b;
-        zero_get_check(PQgetf(res, row, "%bool", col, &b));
-        return b == 1;
+        std::string s(PQgetvalue(res, row, col));
+        return s == "t";
     }
-    void put(PGparam* param, bool val)
+
+    void check(PGresult* res, int col)
     {
-        PGbool b = val ? 1 : 0;
-        zero_put_check(PQputf(param, "%bool", b));
+        check_type(PQftype(res, col), BOOLOID);
+        check_text(PQfformat(res, col));
+    }
+
+    void put(StatementParams& p, int index, bool val)
+    {
+        p.set(index, BOOLOID, util::to_str(val));
     }
 };
 
@@ -64,13 +81,18 @@ class PqTypeWrap<int>
 public:
     int get(PGresult* res, int row, int col)
     {
-        PGint4 i;
-        zero_get_check(PQgetf(res, row, "%int4", col, &i));
-        return i;
+        return util::parse<int>(PQgetvalue(res, row, col));
     }
-    void put(PGparam* param, int val)
+
+    void check(PGresult* res, int col)
     {
-        zero_put_check(PQputf(param, "%int4", val));
+        check_type(PQftype(res, col), INT4OID);
+        check_text(PQfformat(res, col));
+    }
+
+    void put(StatementParams& p, int index, int val)
+    {
+        p.set(index, INT4OID, util::to_str(val));
     }
 };
 
@@ -78,39 +100,20 @@ template<>
 class PqTypeWrap<int64_t>
 {
 public:
-    int64_t get(PGresult* res, int row, int col)
+    int get(PGresult* res, int row, int col)
     {
-        PGint8 i;
-        zero_get_check(PQgetf(res, row, "%int8", col, &i));
-        return i;
+        return util::parse<int64_t>(PQgetvalue(res, row, col));
     }
-    void put(PGparam* param, int64_t val)
-    {
-        zero_put_check(PQputf(param, "%int8", val));
-    }
-};
 
-template<>
-class PqTypeWrap<std::vector<char> >
-{
-public:
-    std::vector<char> get(PGresult* res, int row, int col)
+    void check(PGresult* res, int col)
     {
-        PGbytea ret;
-        zero_get_check(PQgetf(res, row, "%bytea", col, &ret));
-        std::vector<char> v(ret.len);
-        for (int i = 0; i < ret.len; ++i)
-        {
-            v[i] = ret.data[i];
-        }
-        return v;
+        check_type(PQftype(res, col), INT8OID);
+        check_text(PQfformat(res, col));
     }
-    void put(PGparam* param, std::vector<char>& vect)
+
+    void put(StatementParams& p, int index, int64_t val)
     {
-        PGbytea bytea;
-        bytea.len = vect.size();
-        bytea.data = &vect[0];
-        zero_put_check(PQputf(param, "%bytea", &bytea));
+        p.set(index, INT8OID, util::to_str(val));
     }
 };
 
@@ -120,13 +123,18 @@ class PqTypeWrap<std::string>
 public:
     std::string get(PGresult* res, int row, int col)
     {
-        PGtext txt;
-        zero_get_check(PQgetf(res, row, "%text", col, &txt));
-        return std::string(txt);
+        return std::string(PQgetvalue(res, row, col));
     }
-    void put(PGparam* param, std::string& str)
+
+    void check(PGresult* res, int col)
     {
-        zero_put_check(PQputf(param, "%text", str.c_str()));
+        check_type(PQftype(res, col), std::vector<Oid> {TEXTOID, VARCHAROID});
+        check_text(PQfformat(res, col));
+    }
+
+    void put(StatementParams& p, int index, std::string const& val)
+    {
+        p.set(index, TEXTOID, val);
     }
 };
 

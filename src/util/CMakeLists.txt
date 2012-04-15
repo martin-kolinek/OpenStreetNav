@@ -1,1 +1,1 @@
-add_library(util util.cpp SqlLibEntriesToPtree.cpp)
+add_library(util util.cpp SqlLibEntriesToPtree.cpp ParsingException.cpp)

@@ -1,7 +1,6 @@
 #include "Database.h"
 
 #include <poll.h>
-#include <libpqtypes.h>
 #include "psql.h"
 #include "PgSqlException.h"
 
@@ -116,9 +115,6 @@ Database::Database(const std::string& conninfo, bool synchr)
     if (PQstatus(conn) == CONNECTION_BAD)
         throw PgSqlException("Unable to connect to postgresql server: " + std::string(PQerrorMessage(conn)));
 
-    if (!async && PQinitTypes(conn) == 0)
-        throw PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
-
     if (!async)
     {
         PQsetNoticeReceiver(conn, noticeReceiver, (void*)((((((this)))))));
@@ -142,8 +138,6 @@ PGconn* Database::get_db()
         if (PQstatus(conn) == CONNECTION_BAD)
             throw PgSqlException("Unable to connect to postgresql server: " + std::string(PQerrorMessage(conn)));
         async = false;
-        if (PQinitTypes(conn) == 0)
-            throw PgSqlException("Error initializing libpqtypes: " + std::string(PQgeterror()));
         PQsetNoticeReceiver(conn, noticeReceiver, (void*)this);
     }
     else

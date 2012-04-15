@@ -9,7 +9,6 @@
 #define RETTYPES_H_
 
 #include <tuple>
-#include <libpqtypes.h>
 #include "PqTypeWrap.h"
 #include "PgSqlException.h"
 
@@ -30,6 +29,12 @@ protected:
     {
         return std::tuple_cat(std::make_tuple(tw.get(res, row, col)), RetTypes<Tail...>::get_values_prot(res, row, col + 1));
     }
+
+    void check_prot(PGresult* res, int col)
+    {
+        tw.check(res, col);
+        RetTypes<Tail...>::check_prot(col + 1);
+    }
 public:
     typedef std::tuple<Head, Tail...> RowType;
 
@@ -37,17 +42,25 @@ public:
     {
         return get_values_prot(res, row, 0);
     }
+
+    void check(PGresult* res)
+    {
+        return check_prot(res, 0);
+    }
 };
 
 template<>
 class RetTypes<>
 {
 protected:
-    std::tuple<> get_values_prot(PGresult* res, int, int col)
+    std::tuple<> get_values_prot(PGresult*, int, int)
+    {
+        return std::tuple<>();
+    }
+    void check_prot(PGresult* res, int col)
     {
         if (PQnfields(res) != col)
             throw PgSqlException("Statement not retrieving all data in result");
-        return std::tuple<>();
     }
 public:
     typedef std::tuple<> RowType;

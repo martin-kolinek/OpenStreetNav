@@ -9,6 +9,7 @@
 #define BINDTYPES_H_
 
 #include "PqTypeWrap.h"
+#include "StatementParams.h"
 
 namespace psql
 {
@@ -24,16 +25,17 @@ class BindTypes<Head, Tail...> : private BindTypes<Tail...>
 private:
     PqTypeWrap<Head> tw;
 protected:
-    void put_prot(PGparam* param, Head h, Tail... t)
+    void put(StatementParams& p, int index, Head h, Tail... t)
     {
-        tw.put(param, h);
-        BindTypes<Tail...>::put_prot(param, t...);
+        tw.put(p, index, h);
+        BindTypes<Tail...>::put(p, index + 1, t...);
     }
 public:
-    void put(PGparam* param, Head h, Tail... t)
+    StatementParams get_params(Head h, Tail... t)
     {
-        PQparamReset(param);
-        put_prot(param, h, t...);
+        StatementParams ret(sizeof...(t) + 1);
+        put(ret, 0, h, t...);
+        return ret;
     }
 };
 
@@ -41,13 +43,13 @@ template<>
 class BindTypes<>
 {
 protected:
-    void put_prot(PGparam*)
+    void put(StatementParams&, int)
     {
     }
 public:
-    void put(PGparam* param)
+    StatementParams get_params()
     {
-        PQparamReset(param);
+        return StatementParams(0);
     }
 };
 

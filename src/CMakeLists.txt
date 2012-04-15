@@ -5,8 +5,9 @@ find_package(GTKmm REQUIRED)
 include_directories(${GTKmm_INCLUDE_DIRS})
 
 find_package(PostgreSQL REQUIRED)
-include_directories(${PostgreSQL_INCLUDE_DIRS})
-link_directories(${PostgreSQL_LIBRARY_DIRS})
+message(${POSTGRESQL_INCLUDE_DIR} ${LIBPQ_INCLUDE_DIR})
+include_directories(${POSTGRESQL_INCLUDE_DIR} ${LIBPQ_INCLUDE_DIR})
+link_directories(${POSTGRESQL_LIBRARY_DIR})
 
 find_package(EXPAT REQUIRED)
 include_directories(${EXPAT_INCLUDE_DIRS})

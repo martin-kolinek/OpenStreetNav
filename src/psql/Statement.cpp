@@ -4,7 +4,7 @@ namespace psql
 {
 
 template<>
-PGresult* execBT<BindTypes<> >(PGconn* conn, PGparam*, std::string const& sql)
+PGresult* execBT<BindTypes<> >(PGconn* conn, StatementParams&, std::string const& sql)
 {
     auto res = PQexec(conn, sql.c_str());
     if (res == NULL
@@ -15,7 +15,7 @@ PGresult* execBT<BindTypes<> >(PGconn* conn, PGparam*, std::string const& sql)
 }
 
 template<>
-PGresult* execPrepBT<BindTypes<> >(PGconn* conn, PGparam*, std::string const& name)
+PGresult* execPrepBT<BindTypes<> >(PGconn* conn, StatementParams&, std::string const& name)
 {
     auto res = PQexecPrepared(conn, name.c_str(), 0, NULL, NULL, NULL, 1);
     if (res == NULL

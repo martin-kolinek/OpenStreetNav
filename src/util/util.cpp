@@ -4,18 +4,6 @@
 namespace util
 {
 
-template<>
-double parse<double>(std::string const& str)
-{
-    return atof(str.c_str());
-}
-
-template<>
-int64_t parse<int64_t>(std::string const& str)
-{
-    return atol(str.c_str());
-}
-
 std::string replace(std::string const& input, std::map<char, std::string> const& repl)
 {
     std::ostringstream stream;

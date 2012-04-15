@@ -5,7 +5,6 @@
 #include "PgSqlException.h"
 #include "CopyTypes.h"
 #include "BindTypes.h"
-#include <libpqtypes.h>
 #include <tuple>
 #include "../util/util.h"
 
@@ -17,28 +16,32 @@ class IStatement
 };
 
 template<typename BindTypes>
-PGresult* execBT(PGconn* conn, PGparam* param, std::string const& sql)
+PGresult* execBT(PGconn* conn, StatementParams& param, std::string const& sql)
 {
-    auto res = PQparamExec(conn, param, sql.c_str(), 1);
-    if (res == NULL)
-        throw PgSqlException("Error retrieving statement result: " + std::string(PQgeterror()));
+    auto res = PQexecParams(conn, sql.c_str(), param.nparams(), param.paramTypes(), param.paramValues(), NULL, NULL, 0);
+    if (res == NULL
+            || PQresultStatus(res) == PGRES_BAD_RESPONSE
+            || PQresultStatus(res) == PGRES_FATAL_ERROR)
+        throw PgSqlException("Error retrieving statement result: " + std::string(PQerrorMessage(conn)));
     return res;
 }
 
 template<>
-PGresult* execBT<BindTypes<> >(PGconn* conn, PGparam*, std::string const& sql);
+PGresult* execBT<BindTypes<> >(PGconn* conn, StatementParams&, std::string const& sql);
 
 template<typename BindTypes>
-PGresult* execPrepBT(PGconn* conn, PGparam* param, std::string const& name)
+PGresult* execPrepBT(PGconn* conn, StatementParams& param, std::string const& name)
 {
-    auto res = PQparamExecPrepared(conn, param, name.c_str(), 1);
-    if (res == NULL)
-        throw PgSqlException("Error retrieving statement result: " + std::string(PQgeterror()));
+    auto res = PQexecPrepared(conn, name.c_str(), param.nparams(), param.paramValues(), NULL, NULL, 0);
+    if (res == NULL
+            || PQresultStatus(res) == PGRES_BAD_RESPONSE
+            || PQresultStatus(res) == PGRES_FATAL_ERROR)
+        throw PgSqlException("Error retrieving statement result: " + std::string(PQerrorMessage(conn)));
     return res;
 }
 
 template<>
-PGresult* execPrepBT<BindTypes<> >(PGconn* conn, PGparam*, std::string const& name);
+PGresult* execPrepBT<BindTypes<> >(PGconn* conn, StatementParams&, std::string const& name);
 
 
 /**
@@ -50,19 +53,12 @@ PGresult* execPrepBT<BindTypes<> >(PGconn* conn, PGparam*, std::string const& na
 template < typename BindTypes, typename RetTypes, typename CopyTypes = CopyTypes<> >
 class Statement : IStatement
 {
-private:
-    void check_param()
-    {
-        if (param == NULL)
-            throw PgSqlException("Error creating PGparam object: " + std::string(PQgeterror()));
-    }
 public:
     /**
      * Constructs an empty statement
      */
     Statement():
         db(NULL),
-        param(NULL),
         res(NULL),
         cp(false)
     {
@@ -77,11 +73,9 @@ public:
         db(&db),
         sql(sql),
         prep(false),
-        param(PQparamCreate(db.get_db())),
         res(NULL),
         cp(false)
     {
-        check_param();
     }
     /**
      * Constructs a server side prepared statement
@@ -94,12 +88,10 @@ public:
         name(name),
         sql(sql),
         prep(true),
-        param(PQparamCreate(db.get_db())),
         res(NULL),
         cp(false)
     {
         db.regist(name, sql, this);
-        check_param();
     }
     ~Statement()
     {
@@ -111,7 +103,6 @@ public:
             PQclear(res);
         if (cp)
             end_copy();
-        PQparamClear(param);
     }
 
     Statement& operator=(Statement const&) = delete;
@@ -136,7 +127,6 @@ public:
         prep = other.prep;
         sql = other.sql;
         name = other.name;
-        param = other.param;
         cp = other.cp;
         return *this;
     }
@@ -146,7 +136,6 @@ public:
      */
     Statement(Statement && other):
         db(NULL),
-        param(NULL),
         res(NULL)
     {
         *this = std::move(other);
@@ -164,7 +153,7 @@ public:
             PQclear(res);
         res = NULL;
 
-        bt.put(param, args...);
+        auto param = bt.get_params(args...);
         if (prep)
             res = execPrepBT<BindTypes>(db->get_db(), param, name);
         else
@@ -269,7 +258,6 @@ private:
     BindTypes bt;
     RetTypes rt;
     CopyTypes ct;
-    PGparam* param;
     PGresult* res;
     bool cp;
 };
