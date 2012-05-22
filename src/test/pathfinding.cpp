@@ -67,20 +67,13 @@ BOOST_AUTO_TEST_CASE(astar_test)
     class Heuristic
     {
     public:
-        int operator()(int) const
+        int operator()(int, std::vector<int> const&) const
         {
             return 0;
         }
     };
-    class IsEnd
-    {
-    public:
-        bool operator()(int i) const
-        {
-            return i == 7;
-        }
-    };
-    auto path = pathfind::find_path(1, 0, GetNeighbours(graph), Heuristic(), IsEnd());
+    auto pf = pathfind::get_astar<int, int>(1, GetNeighbours(graph), Heuristic());
+    auto path = pf->find_path(std::vector<int> {1}, std::vector<int> {7});
     std::vector<int> correct
     {
         1, 3, 6, 7
@@ -138,20 +131,14 @@ BOOST_AUTO_TEST_CASE(astar_test2)
             heur(heur)
         {
         }
-        int operator()(int i) const
+        int operator()(int i, std::vector<int> const&) const
         {
             return heur.find(i)->second;
         }
     };
-    class IsEnd
-    {
-    public:
-        bool operator()(int i) const
-        {
-            return i == 5;
-        }
-    };
-    auto path = pathfind::find_path(1, 0, GetNeighbours(graph), Heuristic(heur), IsEnd());
+
+    auto pf = pathfind::get_astar<int, int>(1, GetNeighbours(graph), Heuristic(heur));
+    auto path = pf->find_path(std::vector<int> {1}, std::vector<int> {5});
     std::vector<int> correct
     {
         1, 2, 4, 5
@@ -181,6 +168,21 @@ public:
 };
 
 BOOST_FIXTURE_TEST_SUITE(pathfind_db, dbfix)
+
+void write_ptree(boost::property_tree::ptree const& ptree, std::ostream& ost, int depth)
+{
+    for (auto it = ptree.begin(); it != ptree.end(); ++it)
+    {
+        if (it->second.data() == "" && it->second.size() == 0)
+            continue;
+        for (int i = 0; i < depth; ++i)
+            ost << "\t";
+        ost << it->first << " ";
+        ost << it->second.data();
+        ost << std::endl;
+        write_ptree(it->second, ost, depth + 1);
+    }
+}
 
 BOOST_AUTO_TEST_CASE(pathfinder)
 {
@@ -217,7 +219,7 @@ BOOST_AUTO_TEST_CASE(pathfinder)
     rnc.create_road_network_table();
     rnc.copy_road_network_data();
     osmdb::RoadLister rl(db);
-    pathfind::PathFinder pf(rl);
+    pathfind::PathFinder pf(rl, pathfind::PathFindAlgorithmFactory::get_astar_algorithm(1));
 
     auto r = pf.find_way(5, 2);
     bool node = util::any(r.get_highlighted() | util::selected([](std::shared_ptr<osm::HashElementContainer> const & w)

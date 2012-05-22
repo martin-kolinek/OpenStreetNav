@@ -11,5 +11,7 @@
 #include "OrderedCostNodeSet.h"
 #include "AStar.h"
 #include "PathFinder.h"
+#include "AStarPathFinding.h"
+#include "PathFindAlgorithmFactory.h"
 
 #endif /* PATHFINDING_H_ */

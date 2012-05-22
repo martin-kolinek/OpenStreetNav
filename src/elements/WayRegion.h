@@ -26,7 +26,6 @@ public:
         std::sort(this->regions.begin(), this->regions.end());
     }
 
-    bool intersects(ContainedElement const& e) const;
     bool intersects(Edge const& e) const;
 
     bool operator==(WayRegion const& other) const;

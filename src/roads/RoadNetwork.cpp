@@ -24,7 +24,6 @@ void RoadNetwork::add_edge(RoadEdgeWithNodes const& e)
     std::unique_ptr<RoadNetworkNode> end(new RoadNetworkNode());
     end->position = e.end_node.position;
     end->nd_id = e.end_node.id;
-
     nodes_to_edges.insert(std::make_pair(std::make_pair(start.get(), end.get()), e));
     edge_starts.insert(std::make_pair(e.start_node.id, start.get()));
     edge_ends.insert(std::make_pair(e.end_node.id, end.get()));

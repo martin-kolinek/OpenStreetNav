@@ -15,25 +15,21 @@ public:
     template<typename Rng1, typename Rng2>
     PathFindContext(Rng1 const& start_nodes, Rng2 const& end_nodes)
     {
-        std::unique_ptr<RoadNetworkNode> ptr(new RoadNetworkNode());
         for (auto it = start_nodes.begin(); it != start_nodes.end(); ++it)
         {
-            ptr->neighbours.push_back(std::make_pair(0, *it));
+            this->start_nodes.push_back(*it);
         }
-        start_node = std::shared_ptr<RoadNetworkNode const>(std::move(ptr));
 
         for (auto it = end_nodes.begin(); it != end_nodes.end(); ++it)
         {
-            this->end_nodes.push_back(*it );
+            this->end_nodes.push_back(*it);
         }
-        std::sort(this->end_nodes.begin(), this->end_nodes.end());
     }
-    RoadNetworkNode const* get_start_node() const;
-    bool is_end_node(RoadNetworkNode const* ptr) const;
     bool is_valid();
+    std::vector<RoadNetworkNode const*> const& get_start_nodes() const;
     std::vector<RoadNetworkNode const*> const& get_end_nodes() const;
 private:
-    std::shared_ptr<RoadNetworkNode const> start_node;
+    std::vector<RoadNetworkNode const*> start_nodes;
     std::vector<RoadNetworkNode const*> end_nodes;
 };
 

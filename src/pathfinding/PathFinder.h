@@ -11,6 +11,7 @@
 #include "../osmdb/osmdb.h"
 #include "../roads/roads.h"
 #include "Route.h"
+#include "PathFindingAlgorithm.h"
 
 namespace pathfind
 {
@@ -18,11 +19,12 @@ namespace pathfind
 class PathFinder
 {
 public:
-    PathFinder(osmdb::RoadLister& db);
+    PathFinder(osmdb::RoadLister& db, std::shared_ptr<PathFindingAlgorithm<roads::RoadNetworkNode const*> > alg);
     Route find_way(osm::Node const& start_node, osm::Node const& end_node);
     virtual ~PathFinder();
 private:
     roads::RoadNetwork net;
+    std::shared_ptr<PathFindingAlgorithm<roads::RoadNetworkNode const*> > alg;
 };
 
 } /* namespace pathfind */

@@ -15,11 +15,6 @@ WayRegion::WayRegion(Way const& w):
     regions.push_back(std::make_pair(st, last));
 }
 
-bool WayRegion::intersects(ContainedElement const& e) const
-{
-    return e.is_intersected(*this);
-}
-
 bool WayRegion::intersects(Edge const& e) const
 {
     if (e.get_way().id != w.id)

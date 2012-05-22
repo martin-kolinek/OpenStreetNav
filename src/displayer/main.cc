@@ -282,7 +282,8 @@ int main(int argc, char** argv)
             rpdb.set_schema(road_sch);
             osmdb::OsmDatabase rdb(rpdb);
             osmdb::RoadLister rl(rdb);
-            finder = std::unique_ptr<pathfind::PathFinder>(new pathfind::PathFinder(rl));
+            finder = std::unique_ptr<pathfind::PathFinder>(new pathfind::PathFinder(rl,
+                     pathfind::PathFindAlgorithmFactory::get_astar_algorithm(1)));
             SearchButtonConnector searchconn(area, *high_path, *finder, startentry, endentry, view);
             searchbutton->signal_clicked().connect(sigc::mem_fun(&searchconn, &SearchButtonConnector::search_click));
         }

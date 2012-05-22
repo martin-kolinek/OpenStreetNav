@@ -12,43 +12,41 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <boost/optional.hpp>
 
 namespace pathfind
 {
 
-template<typename Node, typename NodeMap>
-std::vector<Node> reconstruct_path(Node const& last, NodeMap const& ndmap)
+template<typename Node, typename Cost, typename NeighFunc, typename HeuristicEstimate, typename CostCompare = std::less<Cost>, typename ClosedSet = std::unordered_set<Node>, typename OpenSet = OrderedCostNodeSet<Node, Cost, CostCompare>, typename CostMap = std::unordered_map<Node, Cost>, typename NodeMap = std::unordered_map<Node, Node> >
+class AStar
 {
-    std::vector<Node> ret;
-    ret.push_back(last);
-    auto it = ndmap.find(last);
-    while (it != ndmap.end())
-    {
-        ret.push_back(it->second);
-        it = ndmap.find(it->second);
-    }
-    return ret;
-}
-
-template < typename Node, typename Cost, typename NeighFunc, typename HeuristicEstimate, typename IsEndFunc, typename CostCompare = std::less<Cost>, typename ClosedSet = std::unordered_set<Node>, typename OpenSet = OrderedCostNodeSet<Node, Cost, CostCompare>, typename CostMap = std::unordered_map<Node, Cost>, typename NodeMap = std::unordered_map<Node, Node> >
-std::vector<Node> find_path(Node const& start, Cost initial_cost, NeighFunc get_neighbours = NeighFunc(), HeuristicEstimate cost_estimate = HeuristicEstimate(), IsEndFunc is_end = IsEndFunc(), CostCompare cost_less = CostCompare())
-{
-
+private:
     ClosedSet closed;
     OpenSet open;
-    open.insert(initial_cost + cost_estimate(start), start);
     CostMap costs;
-    costs[start] = initial_cost;
     NodeMap came_from;
-    while (!open.empty())
+    NeighFunc get_neighbours;
+    HeuristicEstimate cost_estimate;
+    CostCompare cost_less;
+public:
+    AStar(NeighFunc get_neighbours = NeighFunc(), HeuristicEstimate cost_estimate = HeuristicEstimate(), CostCompare cost_less = CostCompare()):
+        get_neighbours(get_neighbours),
+        cost_estimate(cost_estimate),
+        cost_less(cost_less)
     {
+    }
+
+    void add_start(Node const& nd, Cost initial_cost)
+    {
+        open.insert(initial_cost + cost_estimate(nd), nd);
+        costs[nd] = initial_cost;
+    }
+
+    void step()
+    {
+        if (open.empty())
+            return;
         Node n = open.top();
-        if (is_end(n))
-        {
-            auto vect = reconstruct_path(n, came_from);
-            std::reverse(vect.begin(), vect.end());
-            return vect;
-        }
         open.pop();
         closed.insert(n);
         auto neighs = get_neighbours(n);
@@ -56,7 +54,7 @@ std::vector<Node> find_path(Node const& start, Cost initial_cost, NeighFunc get_
         {
             Node n2 = it->second;
             Cost c = it->first;
-            if (closed.find(n2) != closed.end())
+            if (is_closed(n2))
                 continue;
             Cost new_cost = c + costs[n];
             auto open_pos = open.find(n2);
@@ -68,8 +66,42 @@ std::vector<Node> find_path(Node const& start, Cost initial_cost, NeighFunc get_
             }
         }
     }
-    return std::vector<Node>();
-}
+
+    Cost get_cost(Node const& nd)
+    {
+        return costs[nd];
+    }
+
+    bool is_closed(Node const& nd)
+    {
+        return closed.find(nd) != closed.end();
+    }
+
+    boost::optional<Node> get_previous(Node const& nd)
+    {
+        auto it = came_from.find(nd);
+        if (it != came_from.end())
+        {
+            return boost::make_optional(it->second);
+        }
+        return boost::optional<Node>();
+    }
+
+private:
+    std::vector<Node> reconstruct_path(Node const& last, NodeMap const& ndmap)
+    {
+        std::vector<Node> ret;
+        ret.push_back(last);
+        auto it = ndmap.find(last);
+        while (it != ndmap.end())
+        {
+            ret.push_back(it->second);
+            it = ndmap.find(it->second);
+        }
+        return ret;
+    }
+
+};
 
 }
 
