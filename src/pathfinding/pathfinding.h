@@ -13,5 +13,6 @@
 #include "PathFinder.h"
 #include "AStarPathFinding.h"
 #include "PathFindAlgorithmFactory.h"
+#include "AStarAreaFinding.h"
 
 #endif /* PATHFINDING_H_ */

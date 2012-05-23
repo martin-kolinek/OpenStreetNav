@@ -20,6 +20,7 @@ public:
     RoadLister(OsmDatabase& db);
     virtual ~RoadLister();
     std::vector<roads::RoadEdgeWithNodes> get_edges();
+    void fill_road_network(roads::RoadNetwork& net);
 private:
     OsmDatabase& db;
 };

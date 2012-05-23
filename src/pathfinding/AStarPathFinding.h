@@ -86,7 +86,7 @@ public:
             ast.add_start(*it, 0.0);
         }
 
-        while (util::any(end | boost::adaptors::filtered([&ast](Node const & nd)
+        while (!ast.done() && util::any(end | boost::adaptors::filtered([&ast](Node const & nd)
     {
         return !ast.is_closed(nd);
         })))

@@ -39,4 +39,13 @@ std::vector<roads::RoadEdgeWithNodes> RoadLister::get_edges()
     return ret;
 }
 
+void RoadLister::fill_road_network(roads::RoadNetwork& net)
+{
+    auto rng = get_edges();
+    for (auto it = rng.begin(); it != rng.end(); ++it)
+    {
+        net.add_edge(*it);
+    }
+}
+
 } /* namespace osmdb */

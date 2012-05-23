@@ -1,13 +1,16 @@
 #ifndef UTIL_FUNC_H_
 #define UTIL_FUNC_H_
 
+namespace util
+{
+
 template<typename T>
-IDFunc
+class IDFunc
 {
 private:
     T t;
 public:
-    IDFunc(T const & t):
+    IDFunc(T const& t):
         t(t)
     {
     }
@@ -21,7 +24,9 @@ public:
 template<typename T>
 IDFunc<T> id_func(T const& t)
 {
-    return IDFunc(t);
+    return IDFunc<T>(t);
+}
+
 }
 
 #endif

@@ -52,6 +52,10 @@ public:
     {
         return st.begin()->second;
     }
+    Cost top_cost()
+    {
+        return st.begin()->first;
+    }
     void pop()
     {
         st.erase(st.begin());

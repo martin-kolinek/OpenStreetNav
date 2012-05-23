@@ -13,6 +13,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <boost/optional.hpp>
+#include <boost/range.hpp>
+#include <boost/range/any_range.hpp>
 
 namespace pathfind
 {
@@ -75,6 +77,21 @@ public:
     bool is_closed(Node const& nd)
     {
         return closed.find(nd) != closed.end();
+    }
+
+    Cost get_next_cost()
+    {
+        return open.top_cost();
+    }
+
+    boost::any_range<Node, boost::forward_traversal_tag, Node, size_t> get_closed()
+    {
+        return closed;
+    }
+
+    bool done()
+    {
+        return open.empty();
     }
 
     boost::optional<Node> get_previous(Node const& nd)
