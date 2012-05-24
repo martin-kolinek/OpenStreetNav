@@ -100,16 +100,20 @@ private:
     display::MapDrawingArea* area;
     display::EdgeHighlighter& high;
     pathfind::PathFinder& finder;
+    pathfind::AreaFinder& afinder;
     Gtk::Entry* startentry;
     Gtk::Entry* endentry;
+    Gtk::Entry* costentry;
     Gtk::TextView* view;
 public:
-    SearchButtonConnector(display::MapDrawingArea* area, display::EdgeHighlighter& high, pathfind::PathFinder& finder, Gtk::Entry* startentry, Gtk::Entry* endentry, Gtk::TextView* view):
+    SearchButtonConnector(display::MapDrawingArea* area, display::EdgeHighlighter& high, pathfind::PathFinder& finder, pathfind::AreaFinder& afinder, Gtk::Entry* startentry, Gtk::Entry* endentry, Gtk::Entry* costentry, Gtk::TextView* view):
         area(area),
         high(high),
         finder(finder),
+        afinder(afinder),
         startentry(startentry),
         endentry(endentry),
+        costentry(costentry),
         view(view)
     {
     }
@@ -117,10 +121,42 @@ public:
     {
         high.clear();
         int64_t start, end;
-        start = util::parse<int64_t>(startentry->get_text());
-        end = util::parse<int64_t>(endentry->get_text());
+        try
+        {
+            start = util::parse<int64_t>(startentry->get_text());
+            end = util::parse<int64_t>(endentry->get_text());
+        }
+        catch (util::ParsingException&)
+        {
+            start = 0;
+            end = 0;
+        }
         std::clock_t stime = std::clock();
         auto r = finder.find_way(start, end);
+        stime = std::clock() - stime;
+        std::ostringstream str;
+        str << "Route searching took " << ((double)stime / CLOCKS_PER_SEC) << " seconds" << std::endl;
+        view->get_buffer()->set_text(str.str() + get_els_text(r));
+        high.add_descriptible(r);
+        area->refresh();
+    }
+    void search_area_click()
+    {
+        high.clear();
+        int64_t start;
+        double cost;
+        try
+        {
+            start = util::parse<int64_t>(startentry->get_text());
+            cost = util::parse<double>(costentry->get_text());
+        }
+        catch (util::ParsingException&)
+        {
+            start = 0;
+            cost = 0;
+        }
+        std::clock_t stime = std::clock();
+        auto r = afinder.get_area(start, cost);
         stime = std::clock() - stime;
         std::ostringstream str;
         str << "Route searching took " << ((double)stime / CLOCKS_PER_SEC) << " seconds" << std::endl;
@@ -199,11 +235,15 @@ int main(int argc, char** argv)
         display::MapDrawingArea* area = 0;
         bldr->get_widget_derived("drawingarea1", area);
         Gtk::Button* searchbutton;
+        Gtk::Button* asearchbutton;
         bldr->get_widget("searchbutton", searchbutton);
+        bldr->get_widget("searchareabutton", asearchbutton);
         Gtk::Entry* startentry;
         Gtk::Entry* endentry;
+        Gtk::Entry* costentry;
         bldr->get_widget("startidentry", startentry);
         bldr->get_widget("endidentry", endentry);
+        bldr->get_widget("maxcostentry", costentry);
         Gtk::SpinButton* zoomer;
         bldr->get_widget("zoomspinbutton", zoomer);
         ZoomerDrawAreaConnector conn(zoomer, area);
@@ -275,6 +315,7 @@ int main(int argc, char** argv)
             area->set_longitude(lon);
 
         std::unique_ptr<pathfind::PathFinder> finder;
+        std::unique_ptr<pathfind::AreaFinder> afinder;
 
         if (road_sch != "")
         {
@@ -286,8 +327,11 @@ int main(int argc, char** argv)
             rl.fill_road_network(*rn);
             finder = std::unique_ptr<pathfind::PathFinder>(new pathfind::PathFinder(rn,
                      pathfind::PathFindAlgorithmFactory::get_astar_algorithm(1)));
-            SearchButtonConnector searchconn(area, *high_path, *finder, startentry, endentry, view);
+            afinder = std::unique_ptr<pathfind::AreaFinder>(new pathfind::AreaFinder(rn,
+                      pathfind::PathFindAlgorithmFactory::get_astar_area_algorithm(10)));
+            SearchButtonConnector searchconn(area, *high_path, *finder, *afinder, startentry, endentry, costentry, view);
             searchbutton->signal_clicked().connect(sigc::mem_fun(&searchconn, &SearchButtonConnector::search_click));
+            asearchbutton->signal_clicked().connect(sigc::mem_fun(&searchconn, &SearchButtonConnector::search_area_click));
         }
         area->show();
 

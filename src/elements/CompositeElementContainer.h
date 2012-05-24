@@ -21,7 +21,7 @@ public:
     void clear();
     virtual ~CompositeElementContainer();
 private:
-    std::map<int64_t, std::shared_ptr<ElementContainer> > way_map;
+    std::multimap<int64_t, std::shared_ptr<ElementContainer> > way_map;
 };
 
 } /* namespace osm */

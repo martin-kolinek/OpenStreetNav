@@ -290,7 +290,55 @@ BOOST_AUTO_TEST_CASE(pathfinder)
         return w->intersects(osm::Edge(osm::Node(0), 0, osm::Node(2), 2, osm::Way(2)));
     }));
     BOOST_CHECK(node);
-    BOOST_CHECK(r.get_description().size() > 0);
+    BOOST_CHECK(r.get_description().size() == 2);
+}
+
+BOOST_AUTO_TEST_CASE(areafinder)
+{
+    psql::Database dst("");
+    dst.set_schema("testing");
+    osmdb::OsmDatabase db(pdb);
+    osmdb::OsmDatabase dest(dst);
+    db.create_tables();
+    db.create_indexes_and_keys();
+    osmdb::ElementInsertion ins(db);
+    ins.insert_node(osm::Node(1, 0, 0));
+    ins.insert_node(osm::Node(2, 0, 1));
+    ins.insert_node(osm::Node(3, 1, 0));
+    ins.insert_node(osm::Node(4, 1, 1));
+    ins.insert_node(osm::Node(5, 2, 0));
+    osm::Way w(1);
+    w.tags.insert(osm::Tag("k", "v"));
+    w.add_node(2);
+    w.add_node(1);
+    w.add_node(3);
+    ins.insert_way(w);
+    w.nodes.clear();
+    w.id = 2;
+    w.add_node(2);
+    w.add_node(3);
+    w.add_node(5);
+    ins.insert_way(w);
+    w.nodes.clear();
+    w.id = 3;
+    w.add_node(4);
+    w.add_node(3);
+    ins.insert_way(w);
+    osmdb::RoadNetworkCreator rnc(db, db, dest, std::multimap<std::string, std::string> {std::make_pair("k", "v")});
+    rnc.create_road_network_table();
+    rnc.copy_road_network_data();
+    osmdb::RoadLister rl(db);
+    auto rn = std::make_shared<roads::RoadNetwork>();
+    rl.fill_road_network(*rn);
+    pathfind::AreaFinder af(rn, pathfind::PathFindAlgorithmFactory::get_astar_area_algorithm(1));
+
+    auto r = af.get_area(1, geo::get_point_distance(EARTH_RADIUS, geo::Point(1.1, 0), geo::Point(0, 0)));
+    bool node = util::any(r.get_highlighted() | util::selected([](std::shared_ptr<osm::HashElementContainer> const & w)
+    {
+        return w->intersects(osm::Edge(osm::Node(2), 0, osm::Node(1), 1, osm::Way(1)));
+    }));
+    BOOST_CHECK(node);
+    BOOST_CHECK(r.get_description().size() == 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

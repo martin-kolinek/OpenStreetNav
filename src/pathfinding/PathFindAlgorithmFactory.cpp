@@ -10,6 +10,7 @@
 #include <boost/range/algorithm.hpp>
 #include "../util/range.h"
 #include "AStarPathFinding.h"
+#include "AStarAreaFinding.h"
 
 namespace pathfind
 {
@@ -34,6 +35,15 @@ std::shared_ptr<PathFindingAlgorithm<roads::RoadNetworkNode const*> > PathFindAl
     [](roads::RoadNetworkNode const * r, std::vector<roads::RoadNetworkNode const*> const & end)
     {
         return get_cost_estimate(r, end);
+    });
+}
+
+std::shared_ptr<AreaAlgorithm<roads::RoadNetworkNode const*, double> > PathFindAlgorithmFactory::get_astar_area_algorithm(int step)
+{
+    return get_astar_area<roads::RoadNetworkNode const*, double>(step,
+            [](roads::RoadNetworkNode const * r)
+    {
+        return r->neighbours;
     });
 }
 

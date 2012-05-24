@@ -22,7 +22,7 @@ Route AreaFinder::get_area(osm::Node const& node, double max_cost)
     if (!cxt.is_valid())
         return Route();
     auto v = alg->find_area(cxt.get_start_nodes(), max_cost);
-    auto v2 = net->resolve_path(v);
+    auto v2 = net->resolve_area(v);
     return Route(v2);
 }
 

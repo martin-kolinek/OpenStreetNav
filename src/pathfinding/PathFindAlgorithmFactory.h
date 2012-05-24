@@ -10,6 +10,7 @@
 
 #include <memory>
 #include "PathFindingAlgorithm.h"
+#include "AreaAlgorithm.h"
 #include "../roads/roads.h"
 
 namespace pathfind
@@ -18,7 +19,8 @@ namespace pathfind
 class PathFindAlgorithmFactory
 {
 public:
-    static std::shared_ptr<PathFindingAlgorithm<roads::RoadNetworkNode const*>> get_astar_algorithm(int step);
+    static std::shared_ptr<PathFindingAlgorithm<roads::RoadNetworkNode const*> > get_astar_algorithm(int step);
+    static std::shared_ptr<AreaAlgorithm<roads::RoadNetworkNode const*, double> > get_astar_area_algorithm(int step);
 };
 
 } /* namespace pathfind */

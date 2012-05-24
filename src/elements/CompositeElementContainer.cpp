@@ -17,7 +17,7 @@ CompositeElementContainer::~CompositeElementContainer()
 void CompositeElementContainer::add_way_container(std::shared_ptr<HashElementContainer> ptr)
 {
     auto i = ptr->get_way_id();
-    way_map[i] = ptr;
+    way_map.insert(std::make_pair(i, ptr));
 }
 
 bool CompositeElementContainer::intersects(Edge const& el) const
