@@ -19,7 +19,8 @@ namespace display
 
 enum class DisplayElementType
 {
-    Line = 0
+    Line = 0,
+    PureLine = 1
 };
 
 class DisplayElement
@@ -30,13 +31,14 @@ public:
     virtual void draw(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const;
     virtual DisplayElementType get_type() const = 0;
     virtual bool operator<(DisplayElement const& other) const = 0;
-    virtual bool operator>(DisplayElement const& other) const = 0;
-    virtual bool operator<=(DisplayElement const& other) const = 0;
-    virtual bool operator>=(DisplayElement const& other) const = 0;
+    virtual bool operator>(DisplayElement const& other) const;
+    virtual bool operator<=(DisplayElement const& other) const;
+    virtual bool operator>=(DisplayElement const& other) const;
     virtual bool operator==(DisplayElement const& other) const = 0;
-    virtual bool operator!=(DisplayElement const& other) const = 0;
-    virtual osm::Edge const& get_edge() const = 0;
+    virtual bool operator!=(DisplayElement const& other) const;
+    virtual osm::ContainedElement const& get_element() const = 0;
     virtual DisplayStyle const& get_style() const = 0;
+    virtual std::shared_ptr<DisplayElement> copy(std::shared_ptr<DisplayStyle> st) = 0;
 protected:
     virtual void draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const = 0;
 

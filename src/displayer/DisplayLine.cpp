@@ -33,32 +33,12 @@ bool DisplayLine::operator <(const DisplayElement& other) const
     return std::pair<geo::Point, geo::Point>(edge.get_start_node().position, edge.get_end_node().position) < std::pair<geo::Point, geo::Point>(ln.edge.get_start_node().position, ln.edge.get_end_node().position);
 }
 
-bool DisplayLine::operator >(const DisplayElement& other) const
-{
-    return !(*this == other) && !(*this < other);
-}
-
-bool DisplayLine::operator <=(const DisplayElement& other) const
-{
-    return *this == other || *this < other;
-}
-
-bool DisplayLine::operator >=(const DisplayElement& other) const
-{
-    return !(*this < other);
-}
-
 bool DisplayLine::operator ==(const DisplayElement& other) const
 {
     if (other.get_type() != DisplayElementType::Line)
         return false;
     DisplayLine const& ln = static_cast<DisplayLine const&>(other);
     return std::pair<geo::Point, geo::Point>(edge.get_start_node().position, edge.get_end_node().position) == std::pair<geo::Point, geo::Point>(ln.edge.get_start_node().position, ln.edge.get_end_node().position);
-}
-
-bool DisplayLine::operator !=(const DisplayElement& other) const
-{
-    return !(*this == other);
 }
 
 void DisplayLine::draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const
@@ -100,9 +80,14 @@ DisplayStyle const& DisplayLine::get_style() const
     return *style;
 }
 
-osm::Edge const& DisplayLine::get_edge() const
+osm::ContainedElement const& DisplayLine::get_element() const
 {
     return edge;
+}
+
+std::shared_ptr<DisplayElement> DisplayLine::copy(std::shared_ptr<DisplayStyle> st)
+{
+    return std::make_shared<DisplayLine>(edge, st);
 }
 
 /* namespace display */

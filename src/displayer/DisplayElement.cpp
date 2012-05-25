@@ -18,6 +18,27 @@ DisplayElement::~DisplayElement()
 {
 }
 
+bool DisplayElement::operator >(const DisplayElement& other) const
+{
+    return !(*this == other) && !(*this < other);
+}
+
+bool DisplayElement::operator <=(const DisplayElement& other) const
+{
+    return *this == other || *this < other;
+}
+
+bool DisplayElement::operator >=(const DisplayElement& other) const
+{
+    return !(*this < other);
+}
+
+bool DisplayElement::operator !=(const DisplayElement& other) const
+{
+    return !(*this == other);
+}
+
+
 void DisplayElement::draw(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const
 {
     get_style().prepare(cr);

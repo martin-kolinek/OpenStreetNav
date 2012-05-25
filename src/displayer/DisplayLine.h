@@ -21,12 +21,9 @@ public:
     DisplayLine(osm::Edge const& edge, std::shared_ptr<DisplayStyle> style);
     DisplayElementType get_type() const;
     bool operator<(DisplayElement const& other) const;
-    bool operator>(DisplayElement const& other) const;
-    bool operator<=(DisplayElement const& other) const;
-    bool operator>=(DisplayElement const& other) const;
     bool operator==(DisplayElement const& other) const;
-    bool operator!=(DisplayElement const& other) const;
-    osm::Edge const& get_edge() const;
+    osm::ContainedElement const& get_element() const;
+    std::shared_ptr<DisplayElement> copy(std::shared_ptr<DisplayStyle> st);
     virtual ~DisplayLine();
     virtual DisplayStyle const& get_style() const;
 protected:

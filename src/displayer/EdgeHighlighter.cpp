@@ -20,8 +20,7 @@ bool highlight_edge_filter(osm::ContainedElement const& e, osm::ElementContainer
 
 std::shared_ptr<DisplayElement> elem_from_edge(std::shared_ptr<DisplayElement> const& de, std::unique_ptr<DisplayStyleChanger> const& s)
 {
-    return std::shared_ptr<DisplayElement>(new DisplayLine(de->get_edge(),
-                                           std::shared_ptr<DisplayStyle>(de->get_style().accept(*s))));
+    return std::shared_ptr<DisplayElement>(de->copy(std::shared_ptr<DisplayStyle>(de->get_style().accept(*s))));
 }
 
 EdgeHighlighter::element_range EdgeHighlighter::get_display_elements()
@@ -31,7 +30,7 @@ EdgeHighlighter::element_range EdgeHighlighter::get_display_elements()
     auto rng = src.get_display_elements() |
                boost::adaptors::filtered([&](std::shared_ptr<DisplayElement> const & ptr)
     {
-        return highlight_edge_filter(ptr->get_edge(), highlight);
+        return highlight_edge_filter(ptr->get_element(), highlight);
     });
     cache.clear();
     for (auto it = rng.begin(); it != rng.end(); ++it)
