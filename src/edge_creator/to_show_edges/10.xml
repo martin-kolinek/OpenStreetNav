@@ -419,6 +419,41 @@
 			</el>
 		</elements>
 	</entry>
+	<entry>
+		<add>
+			<red>
+				0.9
+			</red>
+			<green>
+				0.9
+			</green>
+			<blue>
+				0.9
+			</blue>
+			<alpha>
+				1.0
+			</alpha>
+			<thickness>
+				0.6
+			</thickness>
+			<style>
+				0
+			</style>
+			<priority>
+				0
+			</priority>
+		</add>
+		<elements>
+			<el>
+				<key>
+					highway
+				</key>
+				<value>
+                    service
+				</value>
+			</el>
+		</elements>
+	</entry>
     <entry>
 		<add>
 			<red>

@@ -26,7 +26,7 @@ enum class DisplayElementType
 class DisplayElement
 {
 public:
-    DisplayElement();
+    DisplayElement(std::shared_ptr<DisplayStyle> style);
     virtual ~DisplayElement();
     virtual void draw(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const;
     virtual DisplayElementType get_type() const = 0;
@@ -37,9 +37,10 @@ public:
     virtual bool operator==(DisplayElement const& other) const = 0;
     virtual bool operator!=(DisplayElement const& other) const;
     virtual osm::ContainedElement const& get_element() const = 0;
-    virtual DisplayStyle const& get_style() const = 0;
+    virtual DisplayStyle const& get_style() const;
     virtual std::shared_ptr<DisplayElement> copy(std::shared_ptr<DisplayStyle> st) = 0;
 protected:
+    std::shared_ptr<DisplayStyle> style;
     virtual void draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const = 0;
 
 };

@@ -16,5 +16,6 @@
 #include "Edge.h"
 #include "CompByID.h"
 #include "CompositeElementContainer.h"
+#include "NeverContainedElement.h"
 
 #endif /* OSMELEMENTS_H_ */

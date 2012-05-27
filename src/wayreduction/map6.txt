@@ -13,3 +13,4 @@ highway/primary_link
 highway/secondary_link
 highway/tertiary_link
 highway/motorway_link
+highway/service

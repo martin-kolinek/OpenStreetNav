@@ -10,3 +10,4 @@ highway/trunk
 highway/trunk_link
 highway/residential
 highway/unclassified
+highway/service

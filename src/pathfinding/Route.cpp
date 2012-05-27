@@ -12,7 +12,9 @@ Route::Route()
 Route::Route(std::vector<roads::RoadEdgeWithNodes> const& edges):
     edges(edges)
 {
-
+    tot_cost = 0;
+    for (auto it = edges.begin(); it != edges.end(); ++it)
+        tot_cost += it->cost;
 }
 
 Route::~Route()
@@ -69,4 +71,22 @@ std::vector<std::shared_ptr<osm::HashElementContainer> > Route::get_highlighted(
     }
     return vect;
 }
+
+std::vector<geo::Point> Route::get_points()
+{
+    std::vector<geo::Point> ret;
+    for (auto it = edges.begin(); it != edges.end(); ++it)
+    {
+        ret.push_back(it->get_start_node().position);
+        ret.push_back(it->get_end_node().position);
+    }
+
+    return ret;
+}
+
+double Route::total_cost()
+{
+    return tot_cost;
+}
+
 }

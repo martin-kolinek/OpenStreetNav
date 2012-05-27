@@ -1,4 +1,4 @@
-add_library(displaylib MapDrawingArea.cpp DisplayElement.cpp DisplayStyle.cpp LineDisplayStyle.cpp DisplayLine.cpp DisplayProvider.cpp EdgeHighlighter.cpp Descriptible.cpp DisplayStyleChanger.cpp ColorStyleChanger.cpp DescriptibleElement.cpp Thickener.cpp DescriptibleRoadEdge.cpp)
+add_library(displaylib MapDrawingArea.cpp DisplayElement.cpp DisplayStyle.cpp LineDisplayStyle.cpp DisplayLine.cpp DisplayProvider.cpp EdgeHighlighter.cpp Descriptible.cpp DisplayStyleChanger.cpp ColorStyleChanger.cpp DescriptibleElement.cpp Thickener.cpp DescriptibleRoadEdge.cpp PureDisplayLine.cpp AreaBoundaryDisplayProvider.cpp)
 add_executable(displayer main.cc)
 configure_file(display.glade ${CMAKE_BINARY_DIR}/share/display.glade COPYONLY)
 SET(GLADE_PATH ${CMAKE_BINARY_DIR}/share/display.glade)

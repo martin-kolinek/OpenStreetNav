@@ -1,35 +1,34 @@
 /*
- * DisplayLine.h
+ * PureDisplayLine.h
  *
- *  Created on: Dec 29, 2011
+ *  Created on: May 25, 2012
  *      Author: martin
  */
 
-#ifndef DISPLAYLINE_H_
-#define DISPLAYLINE_H_
+#ifndef PUREDISPLAYLINE_H_
+#define PUREDISPLAYLINE_H_
 
 #include "DisplayElement.h"
-#include "LineDisplayStyle.h"
-#include "../elements/osmelements.h"
 
 namespace display
 {
 
-class DisplayLine : public DisplayElement
+class PureDisplayLine : public DisplayElement
 {
 public:
-    DisplayLine(osm::Edge const& edge, std::shared_ptr<DisplayStyle> style);
+    PureDisplayLine(geo::Point  const& p1, geo::Point const& p2, std::shared_ptr<DisplayStyle> style);
     DisplayElementType get_type() const;
     bool operator<(DisplayElement const& other) const;
     bool operator==(DisplayElement const& other) const;
     osm::ContainedElement const& get_element() const;
     std::shared_ptr<DisplayElement> copy(std::shared_ptr<DisplayStyle> st);
-    virtual ~DisplayLine();
+    virtual ~PureDisplayLine();
 protected:
     virtual void draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const;
 private:
-    osm::Edge const& edge;
+    geo::Point p1, p2;
+    osm::NeverContainedElement el;
 };
 
 } /* namespace display */
-#endif /* DISPLAYLINE_H_ */
+#endif /* PUREDISPLAYLINE_H_ */

@@ -10,7 +10,8 @@
 namespace display
 {
 
-DisplayElement::DisplayElement()
+DisplayElement::DisplayElement(std::shared_ptr<DisplayStyle> style):
+    style(style)
 {
 }
 
@@ -38,6 +39,10 @@ bool DisplayElement::operator !=(const DisplayElement& other) const
     return !(*this == other);
 }
 
+DisplayStyle const& DisplayElement::get_style() const
+{
+    return *style;
+}
 
 void DisplayElement::draw(Cairo::RefPtr<Cairo::Context> cr, proj::MapProjection& pr) const
 {

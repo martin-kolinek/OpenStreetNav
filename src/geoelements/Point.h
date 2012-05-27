@@ -43,6 +43,9 @@ public:
     bool close(Point const& other, double tolerance) const;
 
     double angle_distance(Point const& other) const;
+
+    bool is_in_box(double top, double left, double bottom, double right) const;
+
 };
 
 double get_point_distance(double radius, Point const& p1, Point const& p2);

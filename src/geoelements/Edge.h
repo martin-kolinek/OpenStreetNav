@@ -19,8 +19,12 @@ public:
     Edge(Point const& st, Point const& en);
     Point start;
     Point end;
-    bool operator==(Edge const& other);
-    bool operator!=(Edge const& other);
+    bool operator==(Edge const& other) const;
+    bool operator!=(Edge const& other) const;
+    bool operator<(Edge const& other) const;
+    bool operator>(Edge const& other) const;
+    bool operator<=(Edge const& other) const;
+    bool operator>=(Edge const& other) const;
 };
 
 } /* namespace geo */

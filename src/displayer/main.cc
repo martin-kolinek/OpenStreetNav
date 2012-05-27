@@ -30,6 +30,7 @@
 #include <boost/regex.hpp>
 #include <fstream>
 #include <ctime>
+#include "AreaBoundaryDisplayProvider.h"
 
 class ZoomerDrawAreaConnector
 {
@@ -99,6 +100,7 @@ class SearchButtonConnector
 private:
     display::MapDrawingArea* area;
     display::EdgeHighlighter& high;
+    display::AreaBoundaryDisplayProvider& areabp;
     pathfind::PathFinder& finder;
     pathfind::AreaFinder& afinder;
     Gtk::Entry* startentry;
@@ -106,9 +108,10 @@ private:
     Gtk::Entry* costentry;
     Gtk::TextView* view;
 public:
-    SearchButtonConnector(display::MapDrawingArea* area, display::EdgeHighlighter& high, pathfind::PathFinder& finder, pathfind::AreaFinder& afinder, Gtk::Entry* startentry, Gtk::Entry* endentry, Gtk::Entry* costentry, Gtk::TextView* view):
+    SearchButtonConnector(display::MapDrawingArea* area, display::EdgeHighlighter& high, pathfind::PathFinder& finder, pathfind::AreaFinder& afinder, Gtk::Entry* startentry, Gtk::Entry* endentry, Gtk::Entry* costentry, Gtk::TextView* view, display::AreaBoundaryDisplayProvider& areabp):
         area(area),
         high(high),
+        areabp(areabp),
         finder(finder),
         afinder(afinder),
         startentry(startentry),
@@ -136,6 +139,7 @@ public:
         stime = std::clock() - stime;
         std::ostringstream str;
         str << "Route searching took " << ((double)stime / CLOCKS_PER_SEC) << " seconds" << std::endl;
+        str << "Total cost: " << r.total_cost() << std::endl;
         view->get_buffer()->set_text(str.str() + get_els_text(r));
         high.add_descriptible(r);
         area->refresh();
@@ -162,6 +166,7 @@ public:
         str << "Route searching took " << ((double)stime / CLOCKS_PER_SEC) << " seconds" << std::endl;
         view->get_buffer()->set_text(str.str() + get_els_text(r));
         high.add_descriptible(r);
+        areabp.set_boundary(geo::get_convex_hull(r.get_points()));
         area->refresh();
     }
 };
@@ -329,7 +334,10 @@ int main(int argc, char** argv)
                      pathfind::PathFindAlgorithmFactory::get_astar_algorithm(1)));
             afinder = std::unique_ptr<pathfind::AreaFinder>(new pathfind::AreaFinder(rn,
                       pathfind::PathFindAlgorithmFactory::get_astar_area_algorithm(10)));
-            SearchButtonConnector searchconn(area, *high_path, *finder, *afinder, startentry, endentry, costentry, view);
+            auto areabp = std::make_shared<display::AreaBoundaryDisplayProvider>(
+                              std::make_shared<display::LineDisplayStyle>(1, 1, 1, 1, 2, display::ArrowStyle::None));
+            area->add_dp(0, areabp);
+            SearchButtonConnector searchconn(area, *high_path, *finder, *afinder, startentry, endentry, costentry, view, *areabp);
             searchbutton->signal_clicked().connect(sigc::mem_fun(&searchconn, &SearchButtonConnector::search_click));
             asearchbutton->signal_clicked().connect(sigc::mem_fun(&searchconn, &SearchButtonConnector::search_area_click));
         }

@@ -15,8 +15,11 @@ public:
     ~Route();
     boost::property_tree::ptree get_description() const;
     std::vector<std::shared_ptr<osm::HashElementContainer> > get_highlighted() const;
+    std::vector<geo::Point> get_points();
+    double total_cost();
 private:
     std::vector<roads::RoadEdgeWithNodes> edges;
+    double tot_cost;
 };
 
 }

@@ -84,4 +84,9 @@ double get_point_distance(double radius, Point const& p1, Point const& p2)
     return d;
 }
 
+bool Point::is_in_box(double top, double left, double bottom, double right) const
+{
+    return lat <= top && lat >= bottom && lon <= right && lon >= left;
+}
+
 } /* namespace geo */

@@ -11,7 +11,7 @@ namespace display
 {
 
 DisplayLine::DisplayLine(osm::Edge const& edge, std::shared_ptr<DisplayStyle> style):
-    style(std::move(style)),
+    DisplayElement(style),
     edge(edge)
 {
 }
@@ -73,13 +73,8 @@ void DisplayLine::draw_internal(Cairo::RefPtr<Cairo::Context> cr, proj::MapProje
         cr->move_to(pp1.x, pp1.y);
         cr->line_to(pp2.x, pp2.y);
     }
-}
 
-DisplayStyle const& DisplayLine::get_style() const
-{
-    return *style;
 }
-
 osm::ContainedElement const& DisplayLine::get_element() const
 {
     return edge;
