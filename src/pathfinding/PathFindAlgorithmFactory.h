@@ -20,6 +20,7 @@ class PathFindAlgorithmFactory
 {
 public:
     static std::shared_ptr<PathFindingAlgorithm<roads::RoadNetworkNode const*> > get_astar_algorithm(int step);
+    static std::shared_ptr<PathFindingAlgorithm<roads::RoadNetworkNode const*> > get_dijkstra_algorithm(int step);
     static std::shared_ptr<AreaAlgorithm<roads::RoadNetworkNode const*, double> > get_astar_area_algorithm(int step);
 };
 

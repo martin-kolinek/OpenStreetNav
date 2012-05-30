@@ -89,4 +89,9 @@ double Route::total_cost()
     return tot_cost;
 }
 
+int Route::edge_count()
+{
+    return edges.size();
+}
+
 }

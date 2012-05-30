@@ -194,7 +194,7 @@ void MapDrawingArea::redraw_from_db()
 {
     auto cr = Cairo::Context::create(surface);
     cr->transform(matrix);
-    cr->set_source_rgb(0, 0, 0);
+    cr->set_source_rgb(1, 1, 1);
     cr->paint();
     cr->set_line_width(0.005);
     cr->set_source_rgb(0.8, 0.8, 0.8);

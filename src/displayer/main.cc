@@ -140,6 +140,7 @@ public:
         std::ostringstream str;
         str << "Route searching took " << ((double)stime / CLOCKS_PER_SEC) << " seconds" << std::endl;
         str << "Total cost: " << r.total_cost() << std::endl;
+        str << "Traversed edges: " << r.edge_count() << std::endl;
         view->get_buffer()->set_text(str.str() + get_els_text(r));
         high.add_descriptible(r);
         area->refresh();
@@ -291,13 +292,13 @@ int main(int argc, char** argv)
         std::shared_ptr<osmdb::DisplayDB> dispdb(new osmdb::DisplayDB(odb, p.second, p.first, tr));
         area->add_dp(1, dispdb);
         std::shared_ptr<display::EdgeHighlighter> high(new display::EdgeHighlighter(*dispdb,
-                std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0, 1, 1, 1, 0.5))));
+                std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0.0, 0.8, 0.8, 1, 0.5))));
         area->add_dp(3, high);
         std::unique_ptr<display::DisplayStyleChanger> path_style_changer;
         if (road_desc)
             path_style_changer = std::unique_ptr<display::DisplayStyleChanger>(new display::Thickener(2));
         else
-            path_style_changer = std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0.5, 0.3, 0, 1, 0.5));
+            path_style_changer = std::unique_ptr<display::DisplayStyleChanger>(new display::ColorStyleChanger(0.7, 0.5, 0, 2, 0.5));
         std::shared_ptr<display::EdgeHighlighter> high_path(new display::EdgeHighlighter(*dispdb,
                 std::move(path_style_changer)));
         area->add_dp(2, high_path);
@@ -331,11 +332,12 @@ int main(int argc, char** argv)
             auto rn = std::make_shared<roads::RoadNetwork>();
             rl.fill_road_network(*rn);
             finder = std::unique_ptr<pathfind::PathFinder>(new pathfind::PathFinder(rn,
+                     //pathfind::PathFindAlgorithmFactory::get_dijkstra_algorithm(1)));
                      pathfind::PathFindAlgorithmFactory::get_astar_algorithm(1)));
             afinder = std::unique_ptr<pathfind::AreaFinder>(new pathfind::AreaFinder(rn,
                       pathfind::PathFindAlgorithmFactory::get_astar_area_algorithm(10)));
             auto areabp = std::make_shared<display::AreaBoundaryDisplayProvider>(
-                              std::make_shared<display::LineDisplayStyle>(1, 1, 1, 1, 2, display::ArrowStyle::None));
+                              std::make_shared<display::LineDisplayStyle>(0, 0, 0, 1, 2, display::ArrowStyle::None));
             area->add_dp(0, areabp);
             SearchButtonConnector searchconn(area, *high_path, *finder, *afinder, startentry, endentry, costentry, view, *areabp);
             searchbutton->signal_clicked().connect(sigc::mem_fun(&searchconn, &SearchButtonConnector::search_click));

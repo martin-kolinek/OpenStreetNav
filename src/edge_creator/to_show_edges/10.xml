@@ -282,13 +282,13 @@
     <entry>
 		<add>
 			<red>
-				0.8
+				0.73
 			</red>
 			<green>
-				0.9
+				0.73
 			</green>
 			<blue>
-				0.4
+				0.0
 			</blue>
 			<alpha>
 				1.0
@@ -317,13 +317,13 @@
     <entry>
 		<add>
 			<red>
-				0.8
+				0.73
 			</red>
 			<green>
-				0.9
+				0.73
 			</green>
 			<blue>
-				0.4
+				0.0
 			</blue>
 			<alpha>
 				1.0
@@ -352,13 +352,13 @@
     <entry>
 		<add>
 			<red>
-				0.9
+				0.1
 			</red>
 			<green>
-				0.9
+				0.1
 			</green>
 			<blue>
-				0.9
+				0.1
 			</blue>
 			<alpha>
 				1.0
@@ -387,13 +387,13 @@
     <entry>
 		<add>
 			<red>
-				0.9
+				0.1
 			</red>
 			<green>
-				0.9
+				0.1
 			</green>
 			<blue>
-				0.9
+				0.1
 			</blue>
 			<alpha>
 				1.0
@@ -422,13 +422,13 @@
 	<entry>
 		<add>
 			<red>
-				0.9
+				0.1
 			</red>
 			<green>
-				0.9
+				0.1
 			</green>
 			<blue>
-				0.9
+				0.1
 			</blue>
 			<alpha>
 				1.0
@@ -437,7 +437,7 @@
 				0.6
 			</thickness>
 			<style>
-				0
+				1
 			</style>
 			<priority>
 				0
@@ -457,13 +457,13 @@
     <entry>
 		<add>
 			<red>
-				0.3
+				0.6
 			</red>
 			<green>
-				0.3
+				0.6
 			</green>
 			<blue>
-				0.3
+				0.6
 			</blue>
 			<alpha>
 				1.0

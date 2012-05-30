@@ -16,12 +16,13 @@
 namespace pathfind
 {
 
-template<typename Node, typename Cost, typename NeighFunc, typename HeuristicEstimate, typename CostCompare = std::less<Cost>, typename ClosedSet = std::unordered_set<Node>, typename OpenSet = OrderedCostNodeSet<Node, Cost, CostCompare>, typename CostMap = std::unordered_map<Node, Cost>, typename NodeMap = std::unordered_map<Node, Node> >
+template<typename Node, typename Cost, typename NeighFunc, typename HeuristicEstimate, typename HeuristicEqual, typename CostCompare = std::less<Cost>, typename ClosedSet = std::unordered_set<Node>, typename OpenSet = OrderedCostNodeSet<Node, Cost, CostCompare>, typename CostMap = std::unordered_map<Node, Cost>, typename NodeMap = std::unordered_map<Node, Node> >
 class AStarPathFinding : public PathFindingAlgorithm<Node>
 {
 private:
     NeighFunc get_neighbours;
     HeuristicEstimate distance_estimate;
+    HeuristicEqual heur_eq;
     CostCompare cost_less;
     int stepcount;
 
@@ -68,9 +69,10 @@ private:
         return ret2;
     }
 public:
-    AStarPathFinding(int stepcount = 1, NeighFunc get_neighbours = NeighFunc(), HeuristicEstimate distance_estimate = HeuristicEstimate(), CostCompare cost_less = CostCompare()):
+    AStarPathFinding(int stepcount = 1, NeighFunc get_neighbours = NeighFunc(), HeuristicEstimate distance_estimate = HeuristicEstimate(), HeuristicEqual heur_eq = HeuristicEqual(), CostCompare cost_less = CostCompare()):
         get_neighbours(get_neighbours),
         distance_estimate(distance_estimate),
+        heur_eq(heur_eq),
         cost_less(cost_less),
         stepcount(stepcount)
     {
@@ -78,8 +80,18 @@ public:
 
     std::vector<Node> find_path(std::vector<Node> const& start, std::vector<Node> const& end)
     {
+        std::vector<Node> filtend;
+        for (auto it = end.begin(); it != end.end(); ++it)
+        {
+            if (!util::any(filtend | boost::adaptors::filtered([&heur_eq, &it](Node const & nd)
+        {
+            return heur_eq(*it, nd);
+            })))
+            filtend.push_back(*it);
+        }
+
         AStarType ast(get_neighbours,
-                      FixedHeuristicEstimate(this, end),
+                      FixedHeuristicEstimate(this, filtend),
                       cost_less);
         for (auto it = start.begin(); it != start.end(); ++it)
         {
@@ -117,10 +129,10 @@ public:
     }
 };
 
-template<typename Node, typename Cost, typename NeighFunc, typename HeuristicEstimate, typename CostCompare = std::less<Cost>, typename ClosedSet = std::unordered_set<Node>, typename OpenSet = OrderedCostNodeSet<Node, Cost, CostCompare>, typename CostMap = std::unordered_map<Node, Cost>, typename NodeMap = std::unordered_map<Node, Node> >
-std::shared_ptr<AStarPathFinding<Node, Cost, NeighFunc, HeuristicEstimate, CostCompare, ClosedSet, OpenSet, CostMap, NodeMap> > get_astar(int count, NeighFunc get_neighbours = NeighFunc(), HeuristicEstimate cost_estimate = HeuristicEstimate(), CostCompare cost_less = CostCompare())
+template<typename Node, typename Cost, typename NeighFunc, typename HeuristicEstimate, typename HeuristicEqual, typename CostCompare = std::less<Cost>, typename ClosedSet = std::unordered_set<Node>, typename OpenSet = OrderedCostNodeSet<Node, Cost, CostCompare>, typename CostMap = std::unordered_map<Node, Cost>, typename NodeMap = std::unordered_map<Node, Node> >
+std::shared_ptr<AStarPathFinding<Node, Cost, NeighFunc, HeuristicEstimate, HeuristicEqual, CostCompare, ClosedSet, OpenSet, CostMap, NodeMap> > get_astar(int count, NeighFunc get_neighbours = NeighFunc(), HeuristicEstimate cost_estimate = HeuristicEstimate(), HeuristicEqual heur_eq = HeuristicEqual(), CostCompare cost_less = CostCompare())
 {
-    return std::make_shared<AStarPathFinding<Node, Cost, NeighFunc, HeuristicEstimate, CostCompare, ClosedSet, OpenSet, CostMap, NodeMap> >(count, get_neighbours, cost_estimate, cost_less);
+    return std::make_shared<AStarPathFinding<Node, Cost, NeighFunc, HeuristicEstimate, HeuristicEqual, CostCompare, ClosedSet, OpenSet, CostMap, NodeMap> >(count, get_neighbours, cost_estimate, heur_eq, cost_less);
 }
 
 } /* namespace pathfinding */

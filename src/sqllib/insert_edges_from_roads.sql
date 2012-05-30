@@ -6,11 +6,10 @@
 
 INSERT INTO Edges (WayID, StartSequenceNo, EndSequenceNo, StartNodeID, EndNodeID, Red, Green, Blue, Alpha, Thickness, Style, Priority, Location)
     SELECT r.WayID, r.StartSequenceNo, r.EndSequenceNo, MIN(r.StartNodeID), MIN(r.EndNodeID), 
-        1, 
         CASE WHEN ST_Distance(ST_MakePoint(MIN(r.StartLon), MIN(r.StartLat))::geography, ST_MakePoint(MIN(r.EndLon), MIN(r.EndLat))::geography) < 0.000001 THEN 0
-            ELSE (ST_Distance(ST_MakePoint(MIN(r.StartLon), MIN(r.StartLat))::geography, ST_MakePoint(MIN(r.EndLon), MIN(r.EndLat))::geography)/(MIN(r.Cost)*1000))^2 END,
-        CASE WHEN ST_Distance(ST_MakePoint(MIN(r.StartLon), MIN(r.StartLat))::geography, ST_MakePoint(MIN(r.EndLon), MIN(r.EndLat))::geography) < 0.000001 THEN 0
-            ELSE (ST_Distance(ST_MakePoint(MIN(r.StartLon), MIN(r.StartLat))::geography, ST_MakePoint(MIN(r.EndLon), MIN(r.EndLat))::geography)/(MIN(r.Cost)*1000))^2 END, 
+            ELSE 1 - (ST_Distance(ST_MakePoint(MIN(r.StartLon), MIN(r.StartLat))::geography, ST_MakePoint(MIN(r.EndLon), MIN(r.EndLat))::geography)/(MIN(r.Cost)*1000))^2 END,
+        0,
+        0,
         1, 1,
         CASE WHEN BOOL_OR(Forward) AND NOT BOOL_AND(Forward) THEN 0 WHEN BOOL_OR(Forward) THEN 1 ELSE 2 END, 
         1, 

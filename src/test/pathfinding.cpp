@@ -72,7 +72,10 @@ BOOST_AUTO_TEST_CASE(astar_test)
             return 0;
         }
     };
-    auto pf = pathfind::get_astar<int, int>(1, GetNeighbours(graph), Heuristic());
+    auto pf = pathfind::get_astar<int, int>(1, GetNeighbours(graph), Heuristic(), [](int, int)
+    {
+        return false;
+    });
     auto path = pf->find_path(std::vector<int> {1}, std::vector<int> {7});
     std::vector<int> correct
     {
@@ -137,7 +140,10 @@ BOOST_AUTO_TEST_CASE(astar_test2)
         }
     };
 
-    auto pf = pathfind::get_astar<int, int>(1, GetNeighbours(graph), Heuristic(heur));
+    auto pf = pathfind::get_astar<int, int>(1, GetNeighbours(graph), Heuristic(heur), [](int, int)
+    {
+        return false;
+    });
     auto path = pf->find_path(std::vector<int> {1}, std::vector<int> {5});
     std::vector<int> correct
     {
